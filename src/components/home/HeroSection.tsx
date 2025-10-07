@@ -18,10 +18,15 @@ const HeroSection = () => {
             Quality Healthcare at{" "}
             <span className="text-primary">Affordable Prices</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-10">
+          <p className="text-lg md:text-xl text-muted-foreground mb-8">
             Connect with India's top hospitals and specialists. Save up to 70% on medical treatments
             without compromising on quality.
           </p>
+          <div className="mb-10">
+            <Button size="lg" className="text-lg px-8" onClick={() => window.location.href = '/auth'}>
+              Get Started
+            </Button>
+          </div>
 
           {/* Search Form */}
           <div className="bg-card rounded-2xl shadow-lg p-6 max-w-3xl mx-auto">

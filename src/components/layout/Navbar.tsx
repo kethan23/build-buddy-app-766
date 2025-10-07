@@ -68,10 +68,9 @@ const Navbar = () => {
               </SelectContent>
             </Select>
 
-            {/* Emergency Contact */}
-            <Button variant="ghost" size="sm" className="hidden lg:flex">
-              <Phone className="h-4 w-4 mr-2" />
-              24/7 Support
+            {/* Sign In Button */}
+            <Button size="sm" className="hidden lg:flex" onClick={() => window.location.href = '/auth'}>
+              Sign In
             </Button>
 
             {/* Mobile Menu */}
