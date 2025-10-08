@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/patient/ProtectedRoute";
+import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute";
+import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
 import Index from "./pages/Index";
 import Hospitals from "./pages/Hospitals";
 import Treatments from "./pages/Treatments";
@@ -18,6 +20,16 @@ import Search from "./pages/patient/Search";
 import Inquiries from "./pages/patient/Inquiries";
 import Bookings from "./pages/patient/Bookings";
 import Payments from "./pages/patient/Payments";
+import HospitalDashboard from "./pages/hospital/Dashboard";
+import HospitalProfile from "./pages/hospital/Profile";
+import HospitalPackages from "./pages/hospital/Packages";
+import HospitalInquiries from "./pages/hospital/Inquiries";
+import HospitalAppointments from "./pages/hospital/Appointments";
+import HospitalAnalytics from "./pages/hospital/Analytics";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminHospitals from "./pages/admin/Hospitals";
+import AdminUsers from "./pages/admin/Users";
+import AdminAnalytics from "./pages/admin/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -53,6 +65,16 @@ const App = () => {
               <Route path="/patient/inquiries" element={<ProtectedRoute><Inquiries /></ProtectedRoute>} />
               <Route path="/patient/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
               <Route path="/patient/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
+              <Route path="/hospital/dashboard" element={<ProtectedHospitalRoute><HospitalDashboard /></ProtectedHospitalRoute>} />
+              <Route path="/hospital/profile" element={<ProtectedHospitalRoute><HospitalProfile /></ProtectedHospitalRoute>} />
+              <Route path="/hospital/packages" element={<ProtectedHospitalRoute><HospitalPackages /></ProtectedHospitalRoute>} />
+              <Route path="/hospital/inquiries" element={<ProtectedHospitalRoute><HospitalInquiries /></ProtectedHospitalRoute>} />
+              <Route path="/hospital/appointments" element={<ProtectedHospitalRoute><HospitalAppointments /></ProtectedHospitalRoute>} />
+              <Route path="/hospital/analytics" element={<ProtectedHospitalRoute><HospitalAnalytics /></ProtectedHospitalRoute>} />
+              <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
+              <Route path="/admin/hospitals" element={<ProtectedAdminRoute><AdminHospitals /></ProtectedAdminRoute>} />
+              <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
+              <Route path="/admin/analytics" element={<ProtectedAdminRoute><AdminAnalytics /></ProtectedAdminRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

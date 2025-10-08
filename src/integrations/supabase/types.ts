@@ -14,6 +14,103 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      appointments: {
+        Row: {
+          appointment_date: string
+          booking_id: string | null
+          created_at: string | null
+          doctor_id: string | null
+          duration_minutes: number | null
+          hospital_id: string
+          id: string
+          notes: string | null
+          patient_id: string
+          status: string | null
+          timezone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          appointment_date: string
+          booking_id?: string | null
+          created_at?: string | null
+          doctor_id?: string | null
+          duration_minutes?: number | null
+          hospital_id: string
+          id?: string
+          notes?: string | null
+          patient_id: string
+          status?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          appointment_date?: string
+          booking_id?: string | null
+          created_at?: string | null
+          doctor_id?: string | null
+          duration_minutes?: number | null
+          hospital_id?: string
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          status?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           appointment_date: string | null
@@ -59,10 +156,73 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "bookings_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "bookings_inquiry_id_fkey"
             columns: ["inquiry_id"]
             isOneToOne: false
             referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctors: {
+        Row: {
+          bio: string | null
+          consultation_fee: number | null
+          created_at: string | null
+          experience_years: number | null
+          hospital_id: string
+          id: string
+          is_available: boolean | null
+          languages: Json | null
+          name: string
+          photo_url: string | null
+          qualification: string | null
+          specialty: string
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          consultation_fee?: number | null
+          created_at?: string | null
+          experience_years?: number | null
+          hospital_id: string
+          id?: string
+          is_available?: boolean | null
+          languages?: Json | null
+          name: string
+          photo_url?: string | null
+          qualification?: string | null
+          specialty: string
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          consultation_fee?: number | null
+          created_at?: string | null
+          experience_years?: number | null
+          hospital_id?: string
+          id?: string
+          is_available?: boolean | null
+          languages?: Json | null
+          name?: string
+          photo_url?: string | null
+          qualification?: string | null
+          specialty?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctors_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
             referencedColumns: ["id"]
           },
         ]
@@ -103,6 +263,192 @@ export type Database = {
         }
         Relationships: []
       }
+      hospital_certifications: {
+        Row: {
+          certification_name: string
+          created_at: string | null
+          document_url: string | null
+          expiry_date: string | null
+          hospital_id: string
+          id: string
+          issue_date: string | null
+          issuing_body: string | null
+        }
+        Insert: {
+          certification_name: string
+          created_at?: string | null
+          document_url?: string | null
+          expiry_date?: string | null
+          hospital_id: string
+          id?: string
+          issue_date?: string | null
+          issuing_body?: string | null
+        }
+        Update: {
+          certification_name?: string
+          created_at?: string | null
+          document_url?: string | null
+          expiry_date?: string | null
+          hospital_id?: string
+          id?: string
+          issue_date?: string | null
+          issuing_body?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_certifications_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospital_gallery: {
+        Row: {
+          caption: string | null
+          created_at: string | null
+          display_order: number | null
+          hospital_id: string
+          id: string
+          image_url: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          hospital_id: string
+          id?: string
+          image_url: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          hospital_id?: string
+          id?: string
+          image_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_gallery_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospital_specialties: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          hospital_id: string
+          id: string
+          specialty_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          hospital_id: string
+          id?: string
+          specialty_name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          hospital_id?: string
+          id?: string
+          specialty_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_specialties_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospitals: {
+        Row: {
+          address: string | null
+          bed_capacity: number | null
+          city: string | null
+          country: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          established_year: number | null
+          id: string
+          is_active: boolean | null
+          logo_url: string | null
+          name: string
+          phone: string | null
+          postal_code: string | null
+          rating: number | null
+          state: string | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_id: string
+          verification_status: string | null
+          website: string | null
+          working_hours: Json | null
+        }
+        Insert: {
+          address?: string | null
+          bed_capacity?: number | null
+          city?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          established_year?: number | null
+          id?: string
+          is_active?: boolean | null
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          postal_code?: string | null
+          rating?: number | null
+          state?: string | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id: string
+          verification_status?: string | null
+          website?: string | null
+          working_hours?: Json | null
+        }
+        Update: {
+          address?: string | null
+          bed_capacity?: number | null
+          city?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          established_year?: number | null
+          id?: string
+          is_active?: boolean | null
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          postal_code?: string | null
+          rating?: number | null
+          state?: string | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string
+          verification_status?: string | null
+          website?: string | null
+          working_hours?: Json | null
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           created_at: string | null
@@ -137,7 +483,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "inquiries_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       inquiry_messages: {
         Row: {
@@ -343,6 +697,68 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      treatment_packages: {
+        Row: {
+          category: string
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          duration_days: number | null
+          exclusions: Json | null
+          hospital_id: string
+          id: string
+          inclusions: Json | null
+          is_active: boolean | null
+          name: string
+          popularity_score: number | null
+          price: number
+          recovery_days: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          duration_days?: number | null
+          exclusions?: Json | null
+          hospital_id: string
+          id?: string
+          inclusions?: Json | null
+          is_active?: boolean | null
+          name: string
+          popularity_score?: number | null
+          price: number
+          recovery_days?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          duration_days?: number | null
+          exclusions?: Json | null
+          hospital_id?: string
+          id?: string
+          inclusions?: Json | null
+          is_active?: boolean | null
+          name?: string
+          popularity_score?: number | null
+          price?: number
+          recovery_days?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treatment_packages_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
