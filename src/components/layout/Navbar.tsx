@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Globe, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
 import {
   Sheet,
   SheetContent,
@@ -17,6 +19,7 @@ import {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const navLinks = [
     { label: "Home", href: "/" },
@@ -26,6 +29,10 @@ const Navbar = () => {
     { label: "About", href: "/about" },
     { label: "Support", href: "/support" },
   ];
+
+  if (user) {
+    navLinks.splice(3, 0, { label: "Messages", href: "/patient/chat" });
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -68,10 +75,24 @@ const Navbar = () => {
               </SelectContent>
             </Select>
 
-            {/* Sign In Button */}
-            <Button size="sm" className="hidden lg:flex" onClick={() => window.location.href = '/auth'}>
-              Sign In
-            </Button>
+            {/* Notification Center (for logged-in users) */}
+            {user && <NotificationCenter />}
+
+            {/* Auth Buttons */}
+            {user ? (
+              <>
+                <Button size="sm" variant="ghost" className="hidden lg:flex" asChild>
+                  <Link to="/patient/dashboard">Dashboard</Link>
+                </Button>
+                <Button size="sm" variant="outline" className="hidden lg:flex" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" className="hidden lg:flex" asChild>
+                <Link to="/auth">Sign In</Link>
+              </Button>
+            )}
 
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>

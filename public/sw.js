@@ -33,3 +33,43 @@ self.addEventListener('activate', (event) => {
     })
   );
 });
+
+// Push notification handling
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : {};
+  const options = {
+    body: data.body || 'New notification from MediConnect',
+    icon: '/favicon.ico',
+    badge: '/favicon.ico',
+    vibrate: [200, 100, 200],
+    data: {
+      dateOfArrival: Date.now(),
+      url: data.url || '/',
+    },
+    actions: [
+      {
+        action: 'explore',
+        title: 'View',
+      },
+      {
+        action: 'close',
+        title: 'Close',
+      },
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'MediConnect', options)
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'explore') {
+    const urlToOpen = event.notification.data.url || '/';
+    event.waitUntil(
+      clients.openWindow(urlToOpen)
+    );
+  }
+});

@@ -20,6 +20,7 @@ import Search from "./pages/patient/Search";
 import Inquiries from "./pages/patient/Inquiries";
 import Bookings from "./pages/patient/Bookings";
 import Payments from "./pages/patient/Payments";
+import Chat from "./pages/patient/Chat";
 import HospitalDashboard from "./pages/hospital/Dashboard";
 import HospitalProfile from "./pages/hospital/Profile";
 import HospitalPackages from "./pages/hospital/Packages";
@@ -65,6 +66,7 @@ const App = () => {
               <Route path="/patient/inquiries" element={<ProtectedRoute><Inquiries /></ProtectedRoute>} />
               <Route path="/patient/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
               <Route path="/patient/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
+              <Route path="/patient/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
               <Route path="/hospital/dashboard" element={<ProtectedHospitalRoute><HospitalDashboard /></ProtectedHospitalRoute>} />
               <Route path="/hospital/profile" element={<ProtectedHospitalRoute><HospitalProfile /></ProtectedHospitalRoute>} />
               <Route path="/hospital/packages" element={<ProtectedHospitalRoute><HospitalPackages /></ProtectedHospitalRoute>} />
