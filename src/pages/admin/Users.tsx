@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, User, Building2, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AdminUsers = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -113,11 +116,16 @@ const AdminUsers = () => {
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="space-y-8">
-          <div>
-            <h1 className="text-3xl font-bold">User Management</h1>
-            <p className="text-muted-foreground">
-              View and manage platform users
-            </p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">User Management</h1>
+              <p className="text-muted-foreground">
+                View and manage platform users
+              </p>
+            </div>
+            <Button onClick={() => navigate("/admin/create-admin")}>
+              Create Admin User
+            </Button>
           </div>
 
           <div className="relative">
