@@ -16,7 +16,6 @@ import About from "./pages/About";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Terms from "./pages/Terms";
-import CreateAdmin from "./pages/admin/CreateAdmin";
 import Dashboard from "./pages/patient/Dashboard";
 import Profile from "./pages/patient/Profile";
 import Search from "./pages/patient/Search";
@@ -81,7 +80,6 @@ const App = () => {
               <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
               <Route path="/admin/hospitals" element={<ProtectedAdminRoute><AdminHospitals /></ProtectedAdminRoute>} />
               <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
-              <Route path="/admin/create-admin" element={<ProtectedAdminRoute><CreateAdmin /></ProtectedAdminRoute>} />
               <Route path="/admin/analytics" element={<ProtectedAdminRoute><AdminAnalytics /></ProtectedAdminRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
