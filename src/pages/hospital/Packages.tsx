@@ -7,9 +7,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Plus, Edit, Trash2, DollarSign } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { PackageDialog } from '@/components/hospital/PackageDialog';
+import { useToast } from '@/hooks/use-toast';
 
 const HospitalPackages = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [packages, setPackages] = useState<any[]>([]);
   const [hospital, setHospital] = useState<any>(null);
 
@@ -39,6 +42,18 @@ const HospitalPackages = () => {
     fetchData();
   }, [user]);
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this package?')) return;
+    
+    const { error } = await supabase.from('treatment_packages').delete().eq('id', id);
+    if (!error) {
+      toast({ title: 'Success', description: 'Package deleted successfully' });
+      setPackages(packages.filter(p => p.id !== id));
+    } else {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -51,10 +66,22 @@ const HospitalPackages = () => {
                 Manage your hospital's treatment packages and pricing
               </p>
             </div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Package
-            </Button>
+            {hospital && (
+              <PackageDialog
+                hospitalId={hospital.id}
+                onSuccess={() => {
+                  const fetchData = async () => {
+                    const { data } = await supabase
+                      .from('treatment_packages')
+                      .select('*')
+                      .eq('hospital_id', hospital.id)
+                      .order('created_at', { ascending: false });
+                    setPackages(data || []);
+                  };
+                  fetchData();
+                }}
+              />
+            )}
           </div>
 
           {packages.length === 0 ? (
@@ -65,10 +92,22 @@ const HospitalPackages = () => {
                 <p className="text-muted-foreground text-center mb-4">
                   Create your first treatment package to start attracting patients
                 </p>
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Package
-                </Button>
+                {hospital && (
+                  <PackageDialog
+                    hospitalId={hospital.id}
+                    onSuccess={() => {
+                      const fetchData = async () => {
+                        const { data } = await supabase
+                          .from('treatment_packages')
+                          .select('*')
+                          .eq('hospital_id', hospital.id)
+                          .order('created_at', { ascending: false });
+                        setPackages(data || []);
+                      };
+                      fetchData();
+                    }}
+                  />
+                )}
               </CardContent>
             </Card>
           ) : (
@@ -101,11 +140,7 @@ const HospitalPackages = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleDelete(pkg.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

@@ -14,6 +14,9 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Building2, Users, Award, Image } from 'lucide-react';
+import { DepartmentManager } from '@/components/hospital/DepartmentManager';
+import { DoctorManager } from '@/components/hospital/DoctorManager';
+import { CertificationManager } from '@/components/hospital/CertificationManager';
 
 const hospitalFormSchema = z.object({
   name: z.string().min(2, 'Hospital name must be at least 2 characters').max(100),
@@ -352,17 +355,31 @@ const HospitalProfile = () => {
             </TabsContent>
 
             <TabsContent value="departments">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Departments & Specialties</CardTitle>
-                  <CardDescription>
-                    Manage your hospital's departments and medical specialties
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">Department management coming soon...</p>
-                </CardContent>
-              </Card>
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Departments & Specialties</CardTitle>
+                    <CardDescription>
+                      Manage your hospital's departments and medical specialties
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {hospital && <DepartmentManager hospitalId={hospital.id} />}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Medical Staff</CardTitle>
+                    <CardDescription>
+                      Add and manage doctors and medical professionals
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {hospital && <DoctorManager hospitalId={hospital.id} />}
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             <TabsContent value="certifications">
@@ -374,7 +391,7 @@ const HospitalProfile = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">Certification management coming soon...</p>
+                  {hospital && <CertificationManager hospitalId={hospital.id} />}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -384,11 +401,11 @@ const HospitalProfile = () => {
                 <CardHeader>
                   <CardTitle>Hospital Gallery</CardTitle>
                   <CardDescription>
-                    Manage your hospital's photo gallery
+                    Manage your hospital's photo gallery (Coming soon)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">Gallery management coming soon...</p>
+                  <p className="text-muted-foreground">Gallery management will be available soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>

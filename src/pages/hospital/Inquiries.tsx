@@ -8,6 +8,7 @@ import { MessageSquare, Clock, CheckCircle, XCircle } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { QuoteDialog } from '@/components/hospital/QuoteDialog';
 
 const HospitalInquiries = () => {
   const { user } = useAuth();
@@ -123,9 +124,7 @@ const HospitalInquiries = () => {
                 </div>
               )}
               <div className="flex gap-2">
-                <Button variant="default" size="sm">
-                  Respond
-                </Button>
+                <QuoteDialog inquiry={inquiry} hospitalId={inquiry.hospital_id} />
                 <Button variant="outline" size="sm">
                   View Details
                 </Button>
