@@ -88,12 +88,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         variant: "destructive",
       });
     } else {
-      // Update user role if signup successful
-      if (data.user && role === 'hospital') {
-        await supabase.from('user_roles').delete().eq('user_id', data.user.id);
-        await supabase.from('user_roles').insert({ user_id: data.user.id, role: 'hospital' });
-      }
-      
+      // Role assignment is now handled securely by the database trigger
+      // The handle_new_user() function automatically assigns roles based on signup metadata
       toast({
         title: "Account created!",
         description: "Please check your email to verify your account.",
