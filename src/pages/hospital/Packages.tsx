@@ -140,6 +140,23 @@ const HospitalPackages = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      {hospital && (
+                        <PackageDialog
+                          hospitalId={hospital.id}
+                          package_={pkg}
+                          onSuccess={() => {
+                            const fetchData = async () => {
+                              const { data } = await supabase
+                                .from('treatment_packages')
+                                .select('*')
+                                .eq('hospital_id', hospital.id)
+                                .order('created_at', { ascending: false });
+                              setPackages(data || []);
+                            };
+                            fetchData();
+                          }}
+                        />
+                      )}
                       <Button variant="outline" size="sm" onClick={() => handleDelete(pkg.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>

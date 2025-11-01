@@ -219,17 +219,29 @@ const HospitalDashboard = () => {
               <CardDescription>Manage your hospital operations</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-3">
-              <Button variant="outline" className="h-20">
+              <Button 
+                variant="outline" 
+                className="h-20" 
+                onClick={() => window.location.href = '/hospital/profile'}
+              >
                 <Users className="mr-2 h-4 w-4" />
-                Manage Doctors
+                Manage Profile & Staff
               </Button>
-              <Button variant="outline" className="h-20">
+              <Button 
+                variant="outline" 
+                className="h-20"
+                onClick={() => window.location.href = '/hospital/packages'}
+              >
                 <TrendingUp className="mr-2 h-4 w-4" />
-                View Analytics
+                Manage Packages
               </Button>
-              <Button variant="outline" className="h-20">
+              <Button 
+                variant="outline" 
+                className="h-20"
+                onClick={() => window.location.href = '/hospital/inquiries'}
+              >
                 <MessageSquare className="mr-2 h-4 w-4" />
-                Respond to Inquiries
+                View Inquiries
               </Button>
             </CardContent>
           </Card>
