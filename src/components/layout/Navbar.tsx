@@ -4,6 +4,7 @@ import { Menu, X, Globe, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
+import { useTranslation } from "react-i18next";
 import {
   Sheet,
   SheetContent,
@@ -20,19 +21,24 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { t, i18n } = useTranslation();
 
   const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Hospitals", href: "/hospitals" },
-    { label: "Treatments", href: "/treatments" },
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "About", href: "/about" },
-    { label: "Support", href: "/support" },
+    { label: t('nav.home'), href: "/" },
+    { label: t('nav.hospitals'), href: "/hospitals" },
+    { label: t('nav.treatments'), href: "/treatments" },
+    { label: t('nav.howItWorks'), href: "/how-it-works" },
+    { label: t('nav.about'), href: "/about" },
+    { label: t('nav.support'), href: "/support" },
   ];
 
   if (user) {
-    navLinks.splice(3, 0, { label: "Messages", href: "/patient/chat" });
+    navLinks.splice(3, 0, { label: t('nav.messages'), href: "/patient/chat" });
   }
+
+  const handleLanguageChange = (value: string) => {
+    i18n.changeLanguage(value);
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -62,16 +68,16 @@ const Navbar = () => {
           {/* Right Section */}
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
-            <Select defaultValue="en">
+            <Select value={i18n.language} onValueChange={handleLanguageChange}>
               <SelectTrigger className="w-24 h-9">
                 <Globe className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
-                <SelectItem value="ar">Arabic</SelectItem>
-                <SelectItem value="es">Spanish</SelectItem>
-                <SelectItem value="fr">French</SelectItem>
+                <SelectItem value="ar">العربية</SelectItem>
+                <SelectItem value="es">Español</SelectItem>
+                <SelectItem value="fr">Français</SelectItem>
               </SelectContent>
             </Select>
 
@@ -82,15 +88,15 @@ const Navbar = () => {
             {user ? (
               <>
                 <Button size="sm" variant="ghost" className="hidden lg:flex" asChild>
-                  <Link to="/patient/dashboard">Dashboard</Link>
+                  <Link to="/patient/dashboard">{t('nav.dashboard')}</Link>
                 </Button>
                 <Button size="sm" variant="outline" className="hidden lg:flex" onClick={() => signOut()}>
-                  Sign Out
+                  {t('nav.signOut')}
                 </Button>
               </>
             ) : (
               <Button size="sm" className="hidden lg:flex" asChild>
-                <Link to="/auth">Sign In</Link>
+                <Link to="/auth">{t('nav.signIn')}</Link>
               </Button>
             )}
 
@@ -115,7 +121,7 @@ const Navbar = () => {
                   ))}
                   <Button className="w-full mt-4">
                     <Phone className="h-4 w-4 mr-2" />
-                    24/7 Support
+                    {t('nav.support247')}
                   </Button>
                 </div>
               </SheetContent>

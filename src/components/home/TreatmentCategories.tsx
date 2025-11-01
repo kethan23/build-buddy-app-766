@@ -10,6 +10,7 @@ import {
   Smile
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const categories = [
   { icon: Heart, name: "Cardiology", count: "150+ Hospitals", color: "text-red-500" },
@@ -23,15 +24,17 @@ const categories = [
 ];
 
 const TreatmentCategories = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="py-16 bg-muted/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
-            Popular <span className="text-primary">Treatments</span>
+            {t('categories.title')}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Explore treatments across various specialties with experienced doctors and modern facilities
+            {t('categories.subtitle')}
           </p>
         </div>
 

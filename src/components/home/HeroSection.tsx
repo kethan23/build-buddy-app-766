@@ -1,6 +1,7 @@
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -10,21 +11,21 @@ import {
 } from "@/components/ui/select";
 
 const HeroSection = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-20 md:py-32">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl mb-6 text-foreground">
-            Quality Healthcare at{" "}
-            <span className="text-primary">Affordable Prices</span>
+            {t('hero.title')}
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-8">
-            Connect with India's top hospitals and specialists. Save up to 70% on medical treatments
-            without compromising on quality.
+            {t('hero.subtitle')}
           </p>
           <div className="mb-10">
             <Button size="lg" className="text-lg px-8" onClick={() => window.location.href = '/auth'}>
-              Get Started
+              {t('hero.getStarted')}
             </Button>
           </div>
 
@@ -54,7 +55,7 @@ const HeroSection = () => {
               <div className="md:col-span-1">
                 <Button className="w-full h-full" size="lg">
                   <Search className="h-5 w-5 mr-2" />
-                  Search Hospitals
+                  {t('hero.searchButton')}
                 </Button>
               </div>
             </div>

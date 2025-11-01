@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "hospitals": "Hôpitaux",
+    "treatments": "Traitements",
+    "howItWorks": "Comment Ça Marche",
+    "about": "À Propos",
+    "support": "Support",
+    "messages": "Messages",
+    "dashboard": "Tableau de Bord",
+    "signIn": "Se Connecter",
+    "signOut": "Se Déconnecter",
+    "support247": "Support 24/7"
+  },
+  "hero": {
+    "title": "Soins de Santé de Classe Mondiale à Prix Abordables",
+    "subtitle": "Connectez-vous avec les meilleurs hôpitaux en Inde pour des traitements médicaux de qualité jusqu'à 70% moins chers",
+    "searchPlaceholder": "Rechercher des traitements ou des hôpitaux...",
+    "searchButton": "Rechercher",
+    "orBrowse": "Ou parcourir par",
+    "specialties": "Spécialités",
+    "treatments": "Traitements",
+    "getStarted": "Commencer",
+    "learnMore": "En Savoir Plus"
+  },
+  "howItWorks": {
+    "title": "Comment Ça Marche",
+    "subtitle": "Votre voyage vers des soins de santé abordables en 4 étapes simples",
+    "step1Title": "Rechercher et Comparer",
+    "step1Desc": "Parcourez les hôpitaux et les traitements qui correspondent à vos besoins",
+    "step2Title": "Connecter et Consulter",
+    "step2Desc": "Chattez avec les coordinateurs hospitaliers et réservez des consultations vidéo",
+    "step3Title": "Planifier et Réserver",
+    "step3Desc": "Obtenez des devis personnalisés et planifiez votre voyage médical",
+    "step4Title": "Voyager et Guérir",
+    "step4Desc": "Nous vous aidons avec le visa, l'hébergement et le soutien local"
+  },
+  "featured": {
+    "title": "Hôpitaux en Vedette",
+    "subtitle": "Établissements de soins de santé les mieux notés et fiables par les patients internationaux",
+    "viewAll": "Voir Tous les Hôpitaux",
+    "specialists": "Spécialistes",
+    "rating": "Évaluation",
+    "viewProfile": "Voir le Profil"
+  },
+  "categories": {
+    "title": "Catégories de Traitement Populaires",
+    "subtitle": "Explorez les traitements médicaux de classe mondiale",
+    "procedures": "procédures",
+    "startingFrom": "À partir de"
+  },
+  "testimonials": {
+    "title": "Témoignages de Réussite des Patients",
+    "subtitle": "Expériences réelles de patients qui ont trouvé des soins de qualité grâce à MediConnect"
+  },
+  "newsletter": {
+    "title": "Restez Informé",
+    "subtitle": "Recevez les dernières informations sur la santé et des offres exclusives",
+    "placeholder": "Entrez votre email",
+    "subscribe": "S'abonner",
+    "subscribed": "Abonnement réussi à notre newsletter!",
+    "error": "Veuillez entrer une adresse e-mail valide"
+  },
+  "footer": {
+    "tagline": "Connecter les patients avec des soins de santé de classe mondiale",
+    "company": "Entreprise",
+    "aboutUs": "À Propos de Nous",
+    "howItWorks": "Comment Ça Marche",
+    "hospitals": "Hôpitaux",
+    "treatments": "Traitements",
+    "support": "Support",
+    "helpCenter": "Centre d'Aide",
+    "faq": "FAQ",
+    "contact": "Nous Contacter",
+    "legal": "Légal",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "allRights": "Tous droits réservés"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "viewMore": "Voir Plus",
+    "viewLess": "Voir Moins"
+  }
+}

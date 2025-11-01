@@ -2,6 +2,7 @@ import { Star, MapPin, Award } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import {
   Carousel,
   CarouselContent,
@@ -54,15 +55,17 @@ const hospitals = [
 ];
 
 const FeaturedHospitals = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
-            Featured <span className="text-primary">Hospitals</span>
+            {t('featured.title')}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            India's most trusted hospitals with world-class facilities and experienced specialists
+            {t('featured.subtitle')}
           </p>
         </div>
 
@@ -109,7 +112,7 @@ const FeaturedHospitals = () => {
                       ))}
                     </div>
                     <Button className="w-full" variant="outline">
-                      View Details
+                      {t('featured.viewProfile')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -121,7 +124,7 @@ const FeaturedHospitals = () => {
         </Carousel>
 
         <div className="text-center mt-8">
-          <Button size="lg">View All Hospitals</Button>
+          <Button size="lg">{t('featured.viewAll')}</Button>
         </div>
       </div>
     </section>

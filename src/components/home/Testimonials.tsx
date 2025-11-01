@@ -1,6 +1,7 @@
 import { Star, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTranslation } from "react-i18next";
 
 const testimonials = [
   {
@@ -33,15 +34,17 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
-            Patient <span className="text-primary">Success Stories</span>
+            {t('testimonials.title')}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Read what our international patients say about their treatment experience in India
+            {t('testimonials.subtitle')}
           </p>
         </div>
 

@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const footerLinks = {
     "For Patients": [
       { label: "Find Hospitals", href: "/hospitals" },
@@ -41,7 +43,7 @@ const Footer = () => {
               <span className="font-heading font-bold text-xl text-primary">MediConnect</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
-              Connecting patients worldwide with quality healthcare in India.
+              {t('footer.tagline')}
             </p>
             <div className="flex space-x-3">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
@@ -100,14 +102,14 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-8 pt-8 border-t flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-sm text-muted-foreground">
-            © 2025 MediConnect. All rights reserved.
+            © 2025 MediConnect. {t('footer.allRights')}
           </p>
           <div className="flex space-x-6">
             <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              Privacy Policy
+              {t('footer.privacy')}
             </Link>
             <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              Terms of Service
+              {t('footer.terms')}
             </Link>
             <Link to="/cookies" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Cookie Policy

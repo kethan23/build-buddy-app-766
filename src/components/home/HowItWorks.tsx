@@ -1,4 +1,5 @@
 import { Search, FileText, Plane, Stethoscope } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const steps = [
   {
@@ -24,20 +25,45 @@ const steps = [
 ];
 
 const HowItWorks = () => {
+  const { t } = useTranslation();
+  
+  const localizedSteps = [
+    {
+      icon: Search,
+      title: t('howItWorks.step1Title'),
+      description: t('howItWorks.step1Desc'),
+    },
+    {
+      icon: FileText,
+      title: t('howItWorks.step2Title'),
+      description: t('howItWorks.step2Desc'),
+    },
+    {
+      icon: Plane,
+      title: t('howItWorks.step3Title'),
+      description: t('howItWorks.step3Desc'),
+    },
+    {
+      icon: Stethoscope,
+      title: t('howItWorks.step4Title'),
+      description: t('howItWorks.step4Desc'),
+    },
+  ];
+  
   return (
     <section className="py-16 bg-muted/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">
-            How <span className="text-primary">It Works</span>
+            {t('howItWorks.title')}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Your journey to affordable healthcare in just four simple steps
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => {
+          {localizedSteps.map((step, index) => {
             const Icon = step.icon;
             return (
               <div key={index} className="relative">
@@ -51,7 +77,7 @@ const HowItWorks = () => {
                   <h3 className="font-heading font-semibold text-xl mb-3">{step.title}</h3>
                   <p className="text-muted-foreground">{step.description}</p>
                 </div>
-                {index < steps.length - 1 && (
+                {index < localizedSteps.length - 1 && (
                   <div className="hidden lg:block absolute top-10 left-[60%] w-full h-0.5 bg-gradient-to-r from-primary/50 to-primary/10"></div>
                 )}
               </div>

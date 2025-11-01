@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "home": "Home",
+    "hospitals": "Hospitals",
+    "treatments": "Treatments",
+    "howItWorks": "How It Works",
+    "about": "About",
+    "support": "Support",
+    "messages": "Messages",
+    "dashboard": "Dashboard",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "support247": "24/7 Support"
+  },
+  "hero": {
+    "title": "World-Class Healthcare at Affordable Prices",
+    "subtitle": "Connect with top hospitals in India for quality medical treatments at up to 70% lower costs",
+    "searchPlaceholder": "Search treatments or hospitals...",
+    "searchButton": "Search",
+    "orBrowse": "Or browse by",
+    "specialties": "Specialties",
+    "treatments": "Treatments",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Your journey to affordable healthcare in 4 simple steps",
+    "step1Title": "Search & Compare",
+    "step1Desc": "Browse hospitals and treatments that match your needs",
+    "step2Title": "Connect & Consult",
+    "step2Desc": "Chat with hospital coordinators and book video consultations",
+    "step3Title": "Plan & Book",
+    "step3Desc": "Get personalized quotes and plan your medical trip",
+    "step4Title": "Travel & Heal",
+    "step4Desc": "We assist with visa, accommodation, and local support"
+  },
+  "featured": {
+    "title": "Featured Hospitals",
+    "subtitle": "Top-rated healthcare facilities trusted by international patients",
+    "viewAll": "View All Hospitals",
+    "specialists": "Specialists",
+    "rating": "Rating",
+    "viewProfile": "View Profile"
+  },
+  "categories": {
+    "title": "Popular Treatment Categories",
+    "subtitle": "Explore world-class medical treatments",
+    "procedures": "procedures",
+    "startingFrom": "Starting from"
+  },
+  "testimonials": {
+    "title": "Patient Success Stories",
+    "subtitle": "Real experiences from patients who found quality care through MediConnect"
+  },
+  "newsletter": {
+    "title": "Stay Updated",
+    "subtitle": "Get the latest healthcare insights and exclusive offers",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "subscribed": "Successfully subscribed to our newsletter!",
+    "error": "Please enter a valid email address"
+  },
+  "footer": {
+    "tagline": "Connecting patients with world-class healthcare",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "howItWorks": "How It Works",
+    "hospitals": "Hospitals",
+    "treatments": "Treatments",
+    "support": "Support",
+    "helpCenter": "Help Center",
+    "faq": "FAQ",
+    "contact": "Contact Us",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "allRights": "All rights reserved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "viewMore": "View More",
+    "viewLess": "View Less"
+  }
+}
