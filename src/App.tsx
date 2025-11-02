@@ -14,6 +14,7 @@ import Hospitals from "./pages/Hospitals";
 import Treatments from "./pages/Treatments";
 import Support from "./pages/Support";
 import About from "./pages/About";
+import HowItWorks from "./pages/HowItWorks";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Terms from "./pages/Terms";
@@ -66,6 +67,7 @@ const App = () => {
                 <Route path="/treatments" element={<Treatments />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
