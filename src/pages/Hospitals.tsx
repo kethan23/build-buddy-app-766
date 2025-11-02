@@ -23,8 +23,8 @@ const Hospitals = () => {
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedSpecialty, setSelectedSpecialty] = useState("");
+  const [selectedCity, setSelectedCity] = useState("all");
+  const [selectedSpecialty, setSelectedSpecialty] = useState("all");
 
   useEffect(() => {
     fetchHospitals();
@@ -63,9 +63,9 @@ const Hospitals = () => {
       hospital.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       hospital.city?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesCity = selectedCity === "" || hospital.city === selectedCity;
+    const matchesCity = selectedCity === "all" || hospital.city === selectedCity;
     
-    const matchesSpecialty = selectedSpecialty === "" || 
+    const matchesSpecialty = selectedSpecialty === "all" || 
       hospital.hospital_specialties?.some((s: any) => 
         s.specialty_name === selectedSpecialty
       );
@@ -113,7 +113,7 @@ const Hospitals = () => {
                             <SelectValue placeholder="All cities" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">All cities</SelectItem>
+                            <SelectItem value="all">All cities</SelectItem>
                             {cities.map(city => (
                               <SelectItem key={city} value={city}>{city}</SelectItem>
                             ))}
@@ -128,7 +128,7 @@ const Hospitals = () => {
                             <SelectValue placeholder="All specialties" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">All specialties</SelectItem>
+                            <SelectItem value="all">All specialties</SelectItem>
                             {specialties.map(specialty => (
                               <SelectItem key={specialty} value={specialty}>{specialty}</SelectItem>
                             ))}
@@ -139,8 +139,8 @@ const Hospitals = () => {
                       <Button 
                         className="w-full"
                         onClick={() => {
-                          setSelectedCity("");
-                          setSelectedSpecialty("");
+                          setSelectedCity("all");
+                          setSelectedSpecialty("all");
                           setSearchTerm("");
                         }}
                       >
