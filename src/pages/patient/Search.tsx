@@ -18,8 +18,8 @@ const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState([0, 50000]);
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [minRating, setMinRating] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [minRating, setMinRating] = useState('all');
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,14 +62,14 @@ const Search = () => {
       hospital.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       hospital.city?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesLocation = selectedLocation === "" || hospital.city === selectedLocation;
+    const matchesLocation = selectedLocation === "all" || selectedLocation === "" || hospital.city === selectedLocation;
     
     const matchesSpecialty = selectedSpecialties.length === 0 || 
       hospital.hospital_specialties?.some((s: any) => 
         selectedSpecialties.includes(s.specialty_name)
       );
 
-    const matchesRating = minRating === "" || 
+    const matchesRating = minRating === "all" || minRating === "" || 
       (hospital.rating && hospital.rating >= parseFloat(minRating));
 
     const minPrice = hospital.treatment_packages?.length > 0
@@ -123,7 +123,7 @@ const Search = () => {
                       <SelectValue placeholder="All locations" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All locations</SelectItem>
+                      <SelectItem value="all">All locations</SelectItem>
                       {[...new Set(hospitals.map(h => h.city).filter(Boolean))].map(city => (
                         <SelectItem key={city} value={city}>{city}</SelectItem>
                       ))}
@@ -174,7 +174,7 @@ const Search = () => {
                       <SelectValue placeholder="Any rating" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Any rating</SelectItem>
+                      <SelectItem value="all">Any rating</SelectItem>
                       <SelectItem value="4.5">4.5+ Stars</SelectItem>
                       <SelectItem value="4.0">4.0+ Stars</SelectItem>
                       <SelectItem value="3.5">3.5+ Stars</SelectItem>
@@ -188,8 +188,8 @@ const Search = () => {
                     setSearchTerm('');
                     setPriceRange([0, 50000]);
                     setSelectedSpecialties([]);
-                    setSelectedLocation('');
-                    setMinRating('');
+                    setSelectedLocation('all');
+                    setMinRating('all');
                   }}
                 >
                   Clear Filters
@@ -237,8 +237,8 @@ const Search = () => {
                     setSearchTerm('');
                     setPriceRange([0, 50000]);
                     setSelectedSpecialties([]);
-                    setSelectedLocation('');
-                    setMinRating('');
+                    setSelectedLocation('all');
+                    setMinRating('all');
                   }}
                 >
                   Clear All Filters

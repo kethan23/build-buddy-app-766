@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { Building2, Users, AlertCircle, TrendingUp, CheckCircle, XCircle } from 'lucide-react';
+import { Building2, Users, AlertCircle, TrendingUp, CheckCircle, XCircle, Settings, BarChart3 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalHospitals: 0,
     pendingVerifications: 0,
@@ -156,6 +158,40 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           )}
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+              <CardDescription>Manage platform operations</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-3">
+              <Button 
+                variant="outline" 
+                className="h-20" 
+                onClick={() => navigate('/admin/hospitals')}
+              >
+                <Settings className="mr-2 h-4 w-4" />
+                Manage Hospitals
+              </Button>
+              <Button 
+                variant="outline" 
+                className="h-20"
+                onClick={() => navigate('/admin/users')}
+              >
+                <Users className="mr-2 h-4 w-4" />
+                Manage Users
+              </Button>
+              <Button 
+                variant="outline" 
+                className="h-20"
+                onClick={() => navigate('/admin/analytics')}
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                View Analytics
+              </Button>
+            </CardContent>
+          </Card>
 
           {/* Platform Growth Charts */}
           <div className="grid gap-4 md:grid-cols-2">

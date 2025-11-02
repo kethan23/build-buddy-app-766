@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Calendar, Users, DollarSign, Activity, MessageSquare, TrendingUp } from 'lucide-react';
+import { Calendar, Users, DollarSign, Activity, MessageSquare, TrendingUp, Settings } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 const HospitalDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalInquiries: 0,
     totalBookings: 0,
@@ -218,19 +220,19 @@ const HospitalDashboard = () => {
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Manage your hospital operations</CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-3">
+            <CardContent className="grid gap-4 md:grid-cols-4">
               <Button 
                 variant="outline" 
                 className="h-20" 
-                onClick={() => window.location.href = '/hospital/profile'}
+                onClick={() => navigate('/hospital/profile')}
               >
-                <Users className="mr-2 h-4 w-4" />
-                Manage Profile & Staff
+                <Settings className="mr-2 h-4 w-4" />
+                Manage Profile
               </Button>
               <Button 
                 variant="outline" 
                 className="h-20"
-                onClick={() => window.location.href = '/hospital/packages'}
+                onClick={() => navigate('/hospital/packages')}
               >
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Manage Packages
@@ -238,10 +240,18 @@ const HospitalDashboard = () => {
               <Button 
                 variant="outline" 
                 className="h-20"
-                onClick={() => window.location.href = '/hospital/inquiries'}
+                onClick={() => navigate('/hospital/inquiries')}
               >
                 <MessageSquare className="mr-2 h-4 w-4" />
-                View Inquiries
+                Patient Inquiries
+              </Button>
+              <Button 
+                variant="outline" 
+                className="h-20"
+                onClick={() => navigate('/hospital/appointments')}
+              >
+                <Calendar className="mr-2 h-4 w-4" />
+                Appointments
               </Button>
             </CardContent>
           </Card>
