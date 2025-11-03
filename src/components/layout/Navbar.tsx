@@ -34,8 +34,28 @@ const Navbar = () => {
     { label: t('nav.support'), href: "/support" },
   ];
 
-  if (user) {
-    navLinks.splice(3, 0, { label: t('nav.messages'), href: "/patient/chat" });
+  // Add role-specific navigation
+  if (user && role === 'admin') {
+    navLinks.push(
+      { label: 'Admin Dashboard', href: "/admin/dashboard" },
+      { label: 'Manage Hospitals', href: "/admin/hospitals" },
+      { label: 'Manage Users', href: "/admin/users" },
+      { label: 'Analytics', href: "/admin/analytics" }
+    );
+  } else if (user && role === 'hospital') {
+    navLinks.push(
+      { label: 'Hospital Dashboard', href: "/hospital/dashboard" },
+      { label: 'Profile', href: "/hospital/profile" },
+      { label: 'Packages', href: "/hospital/packages" },
+      { label: 'Inquiries', href: "/hospital/inquiries" }
+    );
+  } else if (user && role === 'patient') {
+    navLinks.push(
+      { label: 'My Dashboard', href: "/patient/dashboard" },
+      { label: 'Search', href: "/patient/search" },
+      { label: 'Messages', href: "/patient/chat" },
+      { label: 'Bookings', href: "/patient/bookings" }
+    );
   }
 
   const handleLanguageChange = (value: string) => {
