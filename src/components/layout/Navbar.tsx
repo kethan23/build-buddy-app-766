@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu, X, Globe, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserRole } from "@/hooks/useUserRole";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import { useTranslation } from "react-i18next";
 import {
@@ -21,6 +22,7 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { role } = useUserRole();
   const { t, i18n } = useTranslation();
 
   const navLinks = [
@@ -88,7 +90,13 @@ const Navbar = () => {
             {user ? (
               <>
                 <Button size="sm" variant="ghost" className="hidden lg:flex" asChild>
-                  <Link to="/patient/dashboard">{t('nav.dashboard')}</Link>
+                  <Link to={
+                    role === 'admin' ? '/admin/dashboard' :
+                    role === 'hospital' ? '/hospital/dashboard' :
+                    '/patient/dashboard'
+                  }>
+                    {t('nav.dashboard')}
+                  </Link>
                 </Button>
                 <Button size="sm" variant="outline" className="hidden lg:flex" onClick={() => signOut()}>
                   {t('nav.signOut')}
