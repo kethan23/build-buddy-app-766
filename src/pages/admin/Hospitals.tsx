@@ -8,6 +8,8 @@ import { Search, CheckCircle, XCircle, Eye } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AddHospitalDialog } from '@/components/admin/AddHospitalDialog';
+import { AddPackageDialog } from '@/components/admin/AddPackageDialog';
 
 const AdminHospitals = () => {
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -131,11 +133,17 @@ const AdminHospitals = () => {
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="space-y-8">
-          <div>
-            <h1 className="text-3xl font-bold">Hospital Management</h1>
-            <p className="text-muted-foreground">
-              Review and manage hospital registrations
-            </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold">Hospital Management</h1>
+              <p className="text-muted-foreground">
+                Review and manage hospital registrations
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <AddHospitalDialog onSuccess={fetchHospitals} />
+              <AddPackageDialog onSuccess={() => {}} />
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
