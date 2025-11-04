@@ -8,113 +8,157 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MediConnect Medical Theme - Light Mode */
-    --background: 0 0% 100%;
-    --foreground: 210 15% 20%;
+    /* MediConnect Premium Medical Tourism - Light Mode */
+    --background: 200 20% 98%;
+    --foreground: 200 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 20%;
+    --card-foreground: 200 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 20%;
+    --popover-foreground: 200 15% 15%;
 
-    /* Primary: Medical Blue #0078FF */
-    --primary: 211 100% 50%;
+    /* Primary: Aqua Blue #00B4D8 */
+    --primary: 193 100% 43%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 211 100% 60%;
+    --primary-glow: 193 100% 55%;
+    --primary-light: 193 90% 85%;
 
-    /* Secondary: Clean White with subtle tint */
-    --secondary: 210 20% 98%;
-    --secondary-foreground: 210 15% 20%;
+    /* Secondary: Teal #007F8C */
+    --secondary: 185 100% 28%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 185 70% 85%;
 
-    /* Muted backgrounds */
-    --muted: 210 20% 96%;
-    --muted-foreground: 210 10% 45%;
+    /* Muted backgrounds with subtle teal tint */
+    --muted: 193 30% 96%;
+    --muted-foreground: 200 10% 45%;
 
-    /* Accent: Medical Green #1ABC9C */
-    --accent: 168 76% 42%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Gold #E0B84E */
+    --accent: 42 69% 59%;
+    --accent-foreground: 200 15% 15%;
+    --accent-glow: 42 80% 70%;
 
-    /* Supporting: Warning Orange #FF6B35 */
-    --warning: 14 100% 60%;
+    /* Silver accent for subtle highlights */
+    --silver: 0 0% 75%;
+    --silver-light: 0 0% 90%;
+
+    /* Success: Teal variant */
+    --success: 168 76% 42%;
+    --success-light: 168 60% 85%;
+
+    /* Info: Aqua variant */
+    --info: 193 100% 50%;
+    --info-light: 193 80% 85%;
+
+    /* Warning: Gold variant */
+    --warning: 42 100% 50%;
     --warning-foreground: 0 0% 100%;
+    --warning-light: 42 80% 85%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Supporting: Light Gray #F8F9FA */
-    --border: 210 20% 92%;
-    --input: 210 20% 92%;
-    --ring: 211 100% 50%;
+    /* Premium borders and inputs with glassmorphism */
+    --border: 193 20% 88%;
+    --input: 193 20% 94%;
+    --ring: 193 100% 43%;
 
-    /* Supporting: Dark Gray #343A40 */
-    --dark-gray: 210 10% 23%;
+    /* Premium shadows */
+    --shadow-soft: 193 30% 70%;
+    --shadow-medium: 193 40% 50%;
+    --shadow-strong: 185 50% 30%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Medical theme specific tokens */
-    --trust-badge: 168 76% 42%;
-    --success: 168 76% 42%;
-    --info: 211 100% 50%;
+    /* Gradient definitions */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(193 80% 96%) 50%, hsl(185 70% 94%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.9) 0%, hsl(193 90% 98% / 0.8) 100%);
+    
+    /* Glassmorphism effects */
+    --glass-bg: 0 0% 100% / 0.7;
+    --glass-border: 193 40% 90% / 0.5;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 210 15% 20%;
-    --sidebar-primary: 211 100% 50%;
+    /* Sidebar with premium glassmorphism */
+    --sidebar-background: 0 0% 100% / 0.95;
+    --sidebar-foreground: 200 15% 15%;
+    --sidebar-primary: 193 100% 43%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 20% 96%;
-    --sidebar-accent-foreground: 210 15% 20%;
-    --sidebar-border: 210 20% 92%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-accent: 193 30% 96%;
+    --sidebar-accent-foreground: 200 15% 15%;
+    --sidebar-border: 193 20% 88%;
+    --sidebar-ring: 193 100% 43%;
   }
 
   .dark {
-    /* MediConnect Medical Theme - Dark Mode */
-    --background: 210 15% 8%;
-    --foreground: 210 20% 98%;
+    /* MediConnect Premium Medical Tourism - Dark Mode */
+    --background: 200 20% 8%;
+    --foreground: 193 15% 95%;
 
-    --card: 210 15% 10%;
-    --card-foreground: 210 20% 98%;
+    --card: 200 18% 12%;
+    --card-foreground: 193 15% 95%;
 
-    --popover: 210 15% 10%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 200 18% 12%;
+    --popover-foreground: 193 15% 95%;
 
-    --primary: 211 100% 55%;
+    /* Primary: Aqua Blue (brighter in dark) */
+    --primary: 193 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 211 100% 65%;
+    --primary-glow: 193 100% 60%;
+    --primary-light: 193 80% 25%;
 
-    --secondary: 210 15% 15%;
-    --secondary-foreground: 210 20% 98%;
+    /* Secondary: Teal (adjusted for dark) */
+    --secondary: 185 90% 35%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 185 60% 20%;
 
-    --muted: 210 15% 15%;
-    --muted-foreground: 210 10% 60%;
+    --muted: 200 15% 15%;
+    --muted-foreground: 193 10% 60%;
 
-    --accent: 168 76% 42%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Gold (warmer in dark) */
+    --accent: 42 75% 65%;
+    --accent-foreground: 200 20% 10%;
+    --accent-glow: 42 85% 75%;
 
-    --warning: 14 100% 60%;
-    --warning-foreground: 0 0% 100%;
+    --silver: 0 0% 70%;
+    --silver-light: 0 0% 30%;
 
-    --destructive: 0 62% 45%;
+    --success: 168 70% 45%;
+    --success-light: 168 50% 25%;
+
+    --info: 193 90% 55%;
+    --info-light: 193 70% 25%;
+
+    --warning: 42 95% 60%;
+    --warning-foreground: 200 20% 10%;
+    --warning-light: 42 70% 25%;
+
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 20%;
-    --input: 210 15% 20%;
-    --ring: 211 100% 55%;
+    --border: 200 15% 22%;
+    --input: 200 15% 18%;
+    --ring: 193 100% 50%;
 
-    --dark-gray: 210 10% 23%;
+    --shadow-soft: 193 50% 10%;
+    --shadow-medium: 193 60% 8%;
+    --shadow-strong: 185 70% 5%;
 
-    --trust-badge: 168 76% 42%;
-    --success: 168 76% 42%;
-    --info: 211 100% 55%;
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(200 18% 12%) 0%, hsl(193 30% 10%) 50%, hsl(185 40% 8%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(200 18% 14% / 0.9) 0%, hsl(193 30% 12% / 0.8) 100%);
 
-    --sidebar-background: 210 15% 10%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 211 100% 55%;
+    --glass-bg: 200 18% 12% / 0.7;
+    --glass-border: 193 20% 25% / 0.5;
+
+    --sidebar-background: 200 18% 10% / 0.95;
+    --sidebar-foreground: 193 15% 95%;
+    --sidebar-primary: 193 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 15% 15%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 210 15% 20%;
-    --sidebar-ring: 211 100% 55%;
+    --sidebar-accent: 200 15% 15%;
+    --sidebar-accent-foreground: 193 15% 95%;
+    --sidebar-border: 200 15% 22%;
+    --sidebar-ring: 193 100% 50%;
   }
 }
 
@@ -124,6 +168,144 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    background: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(193 80% 96%) 50%, hsl(185 70% 94%) 100%);
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background: linear-gradient(180deg, hsl(200 18% 12%) 0%, hsl(193 30% 10%) 50%, hsl(185 40% 8%) 100%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  /* Premium glassmorphism card */
+  .glass-card {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 8px 32px 0 hsl(var(--shadow-soft) / 0.12);
+  }
+
+  /* Premium elevated card */
+  .premium-card {
+    background: hsl(var(--card));
+    box-shadow: 
+      0 2px 8px -2px hsl(var(--shadow-soft) / 0.08),
+      0 8px 24px -4px hsl(var(--shadow-medium) / 0.12),
+      0 0 0 1px hsl(var(--border));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 4px 16px -2px hsl(var(--shadow-soft) / 0.12),
+      0 12px 32px -4px hsl(var(--shadow-medium) / 0.16),
+      0 0 0 1px hsl(var(--border));
+  }
+
+  /* Gradient button */
+  .btn-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+    box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-gradient:hover {
+    box-shadow: 0 6px 20px hsl(var(--primary) / 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-gradient:active {
+    transform: translateY(0);
+  }
+
+  /* Glow effect */
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--primary-glow) / 0.5);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsl(var(--accent-glow) / 0.5);
+  }
+
+  /* Soft shadow variations */
+  .shadow-soft {
+    box-shadow: 0 2px 8px hsl(var(--shadow-soft) / 0.1);
+  }
+
+  .shadow-medium {
+    box-shadow: 0 4px 16px hsl(var(--shadow-medium) / 0.15);
+  }
+
+  .shadow-strong {
+    box-shadow: 0 8px 32px hsl(var(--shadow-strong) / 0.2);
+  }
+
+  /* Premium gradient backgrounds */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-soft {
+    background: var(--gradient-soft);
+  }
+
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+
+  /* Micro-interactions */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .hover-glow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 24px hsl(var(--primary) / 0.4);
+  }
+
+  /* Pulse animation for important elements */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 20px 8px hsl(var(--primary) / 0);
+    }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Fade transitions */
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
