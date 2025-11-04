@@ -3,11 +3,19 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+interface HospitalData {
+  hospitalName?: string;
+  city?: string;
+  country?: string;
+  phone?: string;
+  description?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName: string, role: 'patient' | 'hospital') => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithMagicLink: (email: string) => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<{ error: any }>;
@@ -66,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital') => {
+  const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -87,9 +95,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         description: error.message,
         variant: "destructive",
       });
+      return { error };
+    }
+
+    // Create hospital record if hospital role
+    if (role === 'hospital' && data.user && hospitalData) {
+      const { error: hospitalError } = await supabase
+        .from('hospitals')
+        .insert({
+          user_id: data.user.id,
+          name: hospitalData.hospitalName || '',
+          city: hospitalData.city || '',
+          country: hospitalData.country || '',
+          phone: hospitalData.phone || '',
+          description: hospitalData.description || '',
+          email: email,
+          verification_status: 'pending',
+          is_active: false,
+        });
+
+      if (hospitalError) {
+        toast({
+          title: "Error creating hospital profile",
+          description: hospitalError.message,
+          variant: "destructive",
+        });
+        return { error: hospitalError };
+      }
+
+      toast({
+        title: "Hospital registration submitted!",
+        description: "Your application is pending admin approval. You'll be notified once approved.",
+      });
     } else {
-      // Role assignment is now handled securely by the database trigger
-      // The handle_new_user() function automatically assigns roles based on signup metadata
       toast({
         title: "Account created!",
         description: "Please check your email to verify your account.",

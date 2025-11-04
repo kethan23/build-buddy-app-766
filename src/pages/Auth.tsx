@@ -24,10 +24,24 @@ const signUpSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
   role: z.enum(["patient", "hospital"]),
+  // Hospital-specific fields
+  hospitalName: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  phone: z.string().optional(),
+  description: z.string().optional(),
   acceptTerms: z.boolean().refine(val => val === true, "You must accept the terms and conditions"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
+}).refine((data) => {
+  if (data.role === "hospital") {
+    return data.hospitalName && data.city && data.country && data.phone;
+  }
+  return true;
+}, {
+  message: "Hospital details are required",
+  path: ["hospitalName"],
 });
 
 const magicLinkSchema = z.object({
@@ -62,9 +76,16 @@ const Auth = () => {
       password: "", 
       confirmPassword: "",
       role: "patient",
+      hospitalName: "",
+      city: "",
+      country: "",
+      phone: "",
+      description: "",
       acceptTerms: false,
     },
   });
+
+  const selectedRole = signUpForm.watch("role");
 
   const magicLinkForm = useForm<z.infer<typeof magicLinkSchema>>({
     resolver: zodResolver(magicLinkSchema),
@@ -82,9 +103,24 @@ const Auth = () => {
   };
 
   const onSignUp = async (values: z.infer<typeof signUpSchema>) => {
-    const { error } = await signUp(values.email, values.password, values.fullName, values.role);
+    const hospitalData = values.role === 'hospital' ? {
+      hospitalName: values.hospitalName,
+      city: values.city,
+      country: values.country,
+      phone: values.phone,
+      description: values.description,
+    } : undefined;
+
+    const { error } = await signUp(
+      values.email, 
+      values.password, 
+      values.fullName, 
+      values.role,
+      hospitalData
+    );
+    
     if (!error && values.role === 'hospital') {
-      navigate("/hospital/profile");
+      navigate("/hospital/dashboard");
     } else if (!error) {
       navigate("/patient/dashboard");
     }
@@ -296,6 +332,79 @@ const Auth = () => {
                       </FormItem>
                     )}
                   />
+
+                  {selectedRole === "hospital" && (
+                    <>
+                      <FormField
+                        control={signUpForm.control}
+                        name="hospitalName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Hospital Name *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="City Medical Center" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={signUpForm.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>City *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Mumbai" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={signUpForm.control}
+                          name="country"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Country *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="India" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={signUpForm.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="+91 1234567890" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={signUpForm.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Hospital Description</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Brief description of your hospital" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
                   <FormField
                     control={signUpForm.control}
                     name="acceptTerms"
