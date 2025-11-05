@@ -8,6 +8,9 @@ import { Building2, Users, AlertCircle, TrendingUp, CheckCircle, XCircle, Settin
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { DocumentVerification } from '@/components/admin/DocumentVerification';
+import { VisaApproval } from '@/components/admin/VisaApproval';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -69,11 +72,17 @@ const AdminDashboard = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="space-y-8">
-          <div>
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-            <p className="text-muted-foreground">Platform oversight and management</p>
-          </div>
+        <h1 className="text-3xl font-bold mb-8 gradient-text">Admin Dashboard</h1>
+        
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="visa">Visa Applications</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
 
           {/* Stats Grid */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -232,7 +241,8 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </main>
       <Footer />
     </div>

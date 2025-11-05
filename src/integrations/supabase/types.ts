@@ -147,6 +147,7 @@ export type Database = {
           status: Database["public"]["Enums"]["booking_status"] | null
           total_amount: number | null
           treatment_name: string
+          treatment_stage: string | null
           updated_at: string | null
           user_id: string
         }
@@ -161,6 +162,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["booking_status"] | null
           total_amount?: number | null
           treatment_name: string
+          treatment_stage?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -175,6 +177,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["booking_status"] | null
           total_amount?: number | null
           treatment_name?: string
+          treatment_stage?: string | null
           updated_at?: string | null
           user_id?: string
         }
@@ -301,6 +304,7 @@ export type Database = {
       }
       documents: {
         Row: {
+          category: string | null
           created_at: string | null
           description: string | null
           document_type: string
@@ -310,8 +314,12 @@ export type Database = {
           file_url: string
           id: string
           user_id: string
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
           document_type: string
@@ -321,8 +329,12 @@ export type Database = {
           file_url: string
           id?: string
           user_id: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
           document_type?: string
@@ -332,6 +344,9 @@ export type Database = {
           file_url?: string
           id?: string
           user_id?: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: []
       }
@@ -779,7 +794,9 @@ export type Database = {
           emergency_contact_relationship: string | null
           full_name: string
           gender: string | null
+          health_condition: string | null
           id: string
+          medical_notes: string | null
           nationality: string | null
           phone: string | null
           profile_image_url: string | null
@@ -798,7 +815,9 @@ export type Database = {
           emergency_contact_relationship?: string | null
           full_name: string
           gender?: string | null
+          health_condition?: string | null
           id?: string
+          medical_notes?: string | null
           nationality?: string | null
           phone?: string | null
           profile_image_url?: string | null
@@ -817,7 +836,9 @@ export type Database = {
           emergency_contact_relationship?: string | null
           full_name?: string
           gender?: string | null
+          health_condition?: string | null
           id?: string
+          medical_notes?: string | null
           nationality?: string | null
           phone?: string | null
           profile_image_url?: string | null
@@ -1006,6 +1027,59 @@ export type Database = {
             columns: ["appointment_id"]
             isOneToOne: false
             referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visa_applications: {
+        Row: {
+          admin_notes: string | null
+          application_status: string | null
+          booking_id: string | null
+          country_of_origin: string
+          created_at: string | null
+          destination_country: string | null
+          id: string
+          passport_expiry: string | null
+          passport_number: string | null
+          travel_purpose: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          application_status?: string | null
+          booking_id?: string | null
+          country_of_origin: string
+          created_at?: string | null
+          destination_country?: string | null
+          id?: string
+          passport_expiry?: string | null
+          passport_number?: string | null
+          travel_purpose?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          application_status?: string | null
+          booking_id?: string | null
+          country_of_origin?: string
+          created_at?: string | null
+          destination_country?: string | null
+          id?: string
+          passport_expiry?: string | null
+          passport_number?: string | null
+          travel_purpose?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visa_applications_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
         ]
