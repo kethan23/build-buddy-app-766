@@ -7,7 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus } from 'lucide-react';
+import { Plus, X, UserPlus } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { z } from 'zod';
 
 const hospitalSchema = z.object({
@@ -23,6 +25,20 @@ const hospitalSchema = z.object({
   bed_capacity: z.number().min(1).max(10000),
   established_year: z.number().min(1800).max(new Date().getFullYear()),
 });
+
+type Doctor = {
+  name: string;
+  specialty: string;
+  qualification: string;
+  experience_years: string;
+  bio: string;
+};
+
+type Specialty = {
+  specialty_name: string;
+  description: string;
+  doctors: Doctor[];
+};
 
 export const AddHospitalDialog = ({ onSuccess }: { onSuccess: () => void }) => {
   const [open, setOpen] = useState(false);
@@ -41,6 +57,49 @@ export const AddHospitalDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     established_year: '',
     verification_status: 'verified',
   });
+
+  const [specialties, setSpecialties] = useState<Specialty[]>([]);
+
+  const addSpecialty = () => {
+    setSpecialties([...specialties, { specialty_name: '', description: '', doctors: [] }]);
+  };
+
+  const removeSpecialty = (index: number) => {
+    setSpecialties(specialties.filter((_, i) => i !== index));
+  };
+
+  const updateSpecialty = (index: number, field: keyof Specialty, value: any) => {
+    const updated = [...specialties];
+    updated[index] = { ...updated[index], [field]: value };
+    setSpecialties(updated);
+  };
+
+  const addDoctor = (specialtyIndex: number) => {
+    const updated = [...specialties];
+    updated[specialtyIndex].doctors.push({
+      name: '',
+      specialty: updated[specialtyIndex].specialty_name,
+      qualification: '',
+      experience_years: '',
+      bio: '',
+    });
+    setSpecialties(updated);
+  };
+
+  const removeDoctor = (specialtyIndex: number, doctorIndex: number) => {
+    const updated = [...specialties];
+    updated[specialtyIndex].doctors = updated[specialtyIndex].doctors.filter((_, i) => i !== doctorIndex);
+    setSpecialties(updated);
+  };
+
+  const updateDoctor = (specialtyIndex: number, doctorIndex: number, field: keyof Doctor, value: string) => {
+    const updated = [...specialties];
+    updated[specialtyIndex].doctors[doctorIndex] = {
+      ...updated[specialtyIndex].doctors[doctorIndex],
+      [field]: value,
+    };
+    setSpecialties(updated);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +150,53 @@ export const AddHospitalDialog = ({ onSuccess }: { onSuccess: () => void }) => {
 
       if (insertError) throw insertError;
 
-      toast.success('Hospital created successfully');
+      // Get the hospital ID from the inserted data
+      const { data: hospitalData, error: fetchError } = await supabase
+        .from('hospitals')
+        .select('id')
+        .eq('user_id', authData.user.id)
+        .single();
+
+      if (fetchError || !hospitalData) {
+        throw new Error('Failed to retrieve hospital ID');
+      }
+
+      const hospitalId = hospitalData.id;
+
+      // Insert specialties and doctors
+      for (const specialty of specialties) {
+        if (specialty.specialty_name.trim()) {
+          const { error: specialtyError } = await supabase
+            .from('hospital_specialties')
+            .insert({
+              hospital_id: hospitalId,
+              specialty_name: specialty.specialty_name,
+              description: specialty.description,
+            });
+
+          if (specialtyError) throw specialtyError;
+
+          // Insert doctors for this specialty
+          for (const doctor of specialty.doctors) {
+            if (doctor.name.trim()) {
+              const { error: doctorError } = await supabase
+                .from('doctors')
+                .insert({
+                  hospital_id: hospitalId,
+                  name: doctor.name,
+                  specialty: doctor.specialty || specialty.specialty_name,
+                  qualification: doctor.qualification,
+                  experience_years: doctor.experience_years ? parseInt(doctor.experience_years) : null,
+                  bio: doctor.bio,
+                });
+
+              if (doctorError) throw doctorError;
+            }
+          }
+        }
+      }
+
+      toast.success('Hospital created successfully with specialties and doctors');
       setOpen(false);
       setFormData({
         name: '',
@@ -107,6 +212,7 @@ export const AddHospitalDialog = ({ onSuccess }: { onSuccess: () => void }) => {
         established_year: '',
         verification_status: 'verified',
       });
+      setSpecialties([]);
       onSuccess();
     } catch (error: any) {
       console.error('Error creating hospital:', error);
@@ -124,14 +230,14 @@ export const AddHospitalDialog = ({ onSuccess }: { onSuccess: () => void }) => {
           Add Hospital
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Hospital</DialogTitle>
           <DialogDescription>
-            Create a new hospital account. A random secure password will be generated.
+            Create a new hospital account with specialties and doctors. A random secure password will be generated.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Hospital Name *</Label>
@@ -264,6 +370,139 @@ export const AddHospitalDialog = ({ onSuccess }: { onSuccess: () => void }) => {
               rows={3}
             />
           </div>
+
+          <Separator className="my-6" />
+
+          {/* Specialties and Doctors Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Specialties & Doctors</h3>
+                <p className="text-sm text-muted-foreground">Add hospital specialties with specialized doctors</p>
+              </div>
+              <Button type="button" variant="premium" size="sm" onClick={addSpecialty}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Specialty
+              </Button>
+            </div>
+
+            {specialties.map((specialty, specialtyIndex) => (
+              <Card key={specialtyIndex} className="premium-card">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base">Specialty {specialtyIndex + 1}</CardTitle>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeSpecialty(specialtyIndex)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Specialty Name *</Label>
+                      <Input
+                        value={specialty.specialty_name}
+                        onChange={(e) => updateSpecialty(specialtyIndex, 'specialty_name', e.target.value)}
+                        placeholder="e.g., Cardiology, Orthopedics"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Input
+                        value={specialty.description}
+                        onChange={(e) => updateSpecialty(specialtyIndex, 'description', e.target.value)}
+                        placeholder="Brief description"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Doctors Section */}
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium">Specialized Doctors</Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => addDoctor(specialtyIndex)}
+                      >
+                        <UserPlus className="mr-2 h-3 w-3" />
+                        Add Doctor
+                      </Button>
+                    </div>
+
+                    {specialty.doctors.map((doctor, doctorIndex) => (
+                      <div key={doctorIndex} className="glass-card p-4 space-y-3 rounded-lg border">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-muted-foreground">Doctor {doctorIndex + 1}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeDoctor(specialtyIndex, doctorIndex)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Doctor Name *</Label>
+                            <Input
+                              value={doctor.name}
+                              onChange={(e) => updateDoctor(specialtyIndex, doctorIndex, 'name', e.target.value)}
+                              placeholder="Dr. John Smith"
+                              required
+                              className="h-9"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Qualification</Label>
+                            <Input
+                              value={doctor.qualification}
+                              onChange={(e) => updateDoctor(specialtyIndex, doctorIndex, 'qualification', e.target.value)}
+                              placeholder="MBBS, MD"
+                              className="h-9"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Experience (Years)</Label>
+                            <Input
+                              type="number"
+                              value={doctor.experience_years}
+                              onChange={(e) => updateDoctor(specialtyIndex, doctorIndex, 'experience_years', e.target.value)}
+                              placeholder="10"
+                              min="0"
+                              max="70"
+                              className="h-9"
+                            />
+                          </div>
+                          <div className="space-y-1 col-span-2">
+                            <Label className="text-xs">Bio</Label>
+                            <Textarea
+                              value={doctor.bio}
+                              onChange={(e) => updateDoctor(specialtyIndex, doctorIndex, 'bio', e.target.value)}
+                              placeholder="Brief professional bio..."
+                              rows={2}
+                              className="resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Separator className="my-4" />
+
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
