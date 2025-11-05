@@ -90,11 +90,11 @@ const Footer = () => {
             </div>
             <div className="flex items-center space-x-3">
               <Phone className="h-5 w-5 text-primary" />
-              <span className="text-sm text-muted-foreground">+91 1800 123 4567</span>
+              <span className="text-sm text-muted-foreground">+91 9014883449</span>
             </div>
             <div className="flex items-center space-x-3">
               <MapPin className="h-5 w-5 text-primary" />
-              <span className="text-sm text-muted-foreground">Mumbai, Maharashtra, India</span>
+              <span className="text-sm text-muted-foreground">Vishakapatnam, Andhra Pradesh, India</span>
             </div>
           </div>
         </div>
