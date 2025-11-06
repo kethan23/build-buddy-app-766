@@ -11,6 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { TreatmentStageManager } from '@/components/hospital/TreatmentStageManager';
+import { VisaSupportUpload } from '@/components/hospital/VisaSupportUpload';
 
 const HospitalDashboard = () => {
   const { user } = useAuth();
@@ -304,11 +305,19 @@ const HospitalDashboard = () => {
                         </div>
                         <Badge variant="outline">{booking.treatment_name}</Badge>
                       </div>
-                      <TreatmentStageManager 
-                        bookingId={booking.id} 
-                        currentStage={booking.treatment_stage}
-                        onUpdate={() => window.location.reload()}
-                      />
+                      <div className="space-y-4">
+                        <TreatmentStageManager 
+                          bookingId={booking.id}
+                          currentStage={booking.treatment_stage}
+                          onUpdate={() => window.location.reload()}
+                        />
+                        
+                        <VisaSupportUpload
+                          bookingId={booking.id}
+                          patientName={booking.profiles?.full_name || 'Patient'}
+                          treatmentName={booking.treatment_name}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OnboardingForm } from '@/components/patient/OnboardingForm';
 import { DocumentUpload } from '@/components/patient/DocumentUpload';
 import { StatusTracking } from '@/components/patient/StatusTracking';
+import { VisaProgressTracker } from '@/components/patient/VisaProgressTracker';
 import { useNavigate } from 'react-router-dom';
 import { Search, FileText, Calendar, Bell, TrendingUp } from 'lucide-react';
 
@@ -78,11 +79,12 @@ const Dashboard = () => {
         <h1 className="text-3xl font-bold mb-8 gradient-text">Patient Dashboard</h1>
         
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+          <TabsList className="grid w-full grid-cols-5 max-w-3xl">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="onboarding">Profile</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
             <TabsTrigger value="status">Status Tracking</TabsTrigger>
+            <TabsTrigger value="visa">Visa</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -226,6 +228,10 @@ const Dashboard = () => {
 
           <TabsContent value="status">
             <StatusTracking />
+          </TabsContent>
+
+          <TabsContent value="visa">
+            <VisaProgressTracker />
           </TabsContent>
         </Tabs>
       </main>

@@ -317,6 +317,7 @@ export type Database = {
           verification_status: string | null
           verified_at: string | null
           verified_by: string | null
+          visa_application_id: string | null
         }
         Insert: {
           category?: string | null
@@ -332,6 +333,7 @@ export type Database = {
           verification_status?: string | null
           verified_at?: string | null
           verified_by?: string | null
+          visa_application_id?: string | null
         }
         Update: {
           category?: string | null
@@ -347,8 +349,17 @@ export type Database = {
           verification_status?: string | null
           verified_at?: string | null
           verified_by?: string | null
+          visa_application_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "documents_visa_application_id_fkey"
+            columns: ["visa_application_id"]
+            isOneToOne: false
+            referencedRelation: "visa_applications"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       hospital_certifications: {
         Row: {
@@ -1039,12 +1050,20 @@ export type Database = {
           country_of_origin: string
           created_at: string | null
           destination_country: string | null
+          hospital_letter_verified: boolean | null
           id: string
           passport_expiry: string | null
           passport_number: string | null
+          patient_documents_verified: boolean | null
+          rejection_reason: string | null
+          stage_updated_at: string | null
           travel_purpose: string | null
           updated_at: string | null
           user_id: string
+          verified_at: string | null
+          verified_by: string | null
+          visa_support_document_url: string | null
+          workflow_stage: string | null
         }
         Insert: {
           admin_notes?: string | null
@@ -1053,12 +1072,20 @@ export type Database = {
           country_of_origin: string
           created_at?: string | null
           destination_country?: string | null
+          hospital_letter_verified?: boolean | null
           id?: string
           passport_expiry?: string | null
           passport_number?: string | null
+          patient_documents_verified?: boolean | null
+          rejection_reason?: string | null
+          stage_updated_at?: string | null
           travel_purpose?: string | null
           updated_at?: string | null
           user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+          visa_support_document_url?: string | null
+          workflow_stage?: string | null
         }
         Update: {
           admin_notes?: string | null
@@ -1067,12 +1094,20 @@ export type Database = {
           country_of_origin?: string
           created_at?: string | null
           destination_country?: string | null
+          hospital_letter_verified?: boolean | null
           id?: string
           passport_expiry?: string | null
           passport_number?: string | null
+          patient_documents_verified?: boolean | null
+          rejection_reason?: string | null
+          stage_updated_at?: string | null
           travel_purpose?: string | null
           updated_at?: string | null
           user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+          visa_support_document_url?: string | null
+          workflow_stage?: string | null
         }
         Relationships: [
           {
@@ -1080,6 +1115,104 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visa_document_checklist: {
+        Row: {
+          created_at: string | null
+          document_id: string | null
+          document_type: string
+          id: string
+          is_uploaded: boolean | null
+          is_verified: boolean | null
+          updated_at: string | null
+          verification_notes: string | null
+          verified_at: string | null
+          verified_by: string | null
+          visa_application_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          document_id?: string | null
+          document_type: string
+          id?: string
+          is_uploaded?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          verification_notes?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          visa_application_id: string
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string | null
+          document_type?: string
+          id?: string
+          is_uploaded?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          verification_notes?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          visa_application_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visa_document_checklist_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visa_document_checklist_visa_application_id_fkey"
+            columns: ["visa_application_id"]
+            isOneToOne: false
+            referencedRelation: "visa_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visa_workflow_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          notes: string | null
+          performed_by: string
+          stage: string
+          visa_application_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          performed_by: string
+          stage: string
+          visa_application_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          performed_by?: string
+          stage?: string
+          visa_application_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visa_workflow_logs_visa_application_id_fkey"
+            columns: ["visa_application_id"]
+            isOneToOne: false
+            referencedRelation: "visa_applications"
             referencedColumns: ["id"]
           },
         ]
