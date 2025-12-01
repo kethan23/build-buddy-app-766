@@ -20,7 +20,8 @@ const AdminUsers = () => {
   }, []);
 
   const fetchUsers = async () => {
-    const { data } = await supabase
+    // Fetch profiles with roles
+    const { data: profilesData } = await supabase
       .from('profiles')
       .select(`
         *,
@@ -28,7 +29,32 @@ const AdminUsers = () => {
       `)
       .order('created_at', { ascending: false });
 
-    setUsers(data || []);
+    if (!profilesData) {
+      setUsers([]);
+      return;
+    }
+
+    // For each user, fetch their hospital info if they're a hospital user
+    const usersWithHospitals = await Promise.all(
+      profilesData.map(async (profile) => {
+        const userRoles = Array.isArray(profile.user_roles) ? profile.user_roles : [];
+        const isHospital = userRoles.some((r: any) => r.role === 'hospital');
+        
+        if (isHospital) {
+          const { data: hospitalData } = await supabase
+            .from('hospitals')
+            .select('id, name, verification_status, created_at')
+            .eq('user_id', profile.user_id)
+            .single();
+          
+          return { ...profile, hospital: hospitalData };
+        }
+        
+        return profile;
+      })
+    );
+
+    setUsers(usersWithHospitals);
   };
 
   const filterUsers = (role?: string) => {
@@ -70,6 +96,19 @@ const AdminUsers = () => {
     return <Badge className={colors[role as keyof typeof colors]}>{role}</Badge>;
   };
 
+  const getVerificationBadge = (status: string) => {
+    switch (status) {
+      case 'verified':
+        return <Badge className="bg-green-100 text-green-800">Verified</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-100 text-red-800">Rejected</Badge>;
+      default:
+        return null;
+    }
+  };
+
   const UserList = ({ role }: { role?: string }) => {
     const filtered = filterUsers(role);
 
@@ -84,21 +123,45 @@ const AdminUsers = () => {
             <Card key={user.id}>
               <CardContent className="pt-6">
                 <div className="flex justify-between items-start">
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-3 flex-1">
                     <div className="p-2 rounded-full bg-muted">
                       {getRoleIcon(user.user_roles || [])}
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-semibold">{user.full_name}</h3>
                       <p className="text-sm text-muted-foreground">{user.email}</p>
                       {user.phone && (
                         <p className="text-sm text-muted-foreground">{user.phone}</p>
                       )}
+                      {user.hospital && (
+                        <div className="mt-2 space-y-1">
+                          <p className="text-sm font-medium text-primary">
+                            Hospital: {user.hospital.name}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            {getVerificationBadge(user.hospital.verification_status)}
+                            <span className="text-xs text-muted-foreground">
+                              Registered: {new Date(user.hospital.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  {getRoleBadge(user.user_roles || [])}
+                  <div className="flex flex-col items-end gap-2">
+                    {getRoleBadge(user.user_roles || [])}
+                    {user.hospital && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigate('/admin/hospitals')}
+                      >
+                        View Hospital
+                      </Button>
+                    )}
+                  </div>
                 </div>
-                {user.country && (
+                {user.country && !user.hospital && (
                   <p className="text-sm text-muted-foreground mt-2">
                     {user.city}, {user.country}
                   </p>
