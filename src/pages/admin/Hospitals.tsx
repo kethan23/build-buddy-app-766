@@ -4,16 +4,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, CheckCircle, XCircle, Eye } from 'lucide-react';
+import { Search, CheckCircle, XCircle, Eye, FileCheck } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AddHospitalDialog } from '@/components/admin/AddHospitalDialog';
 import { AddPackageDialog } from '@/components/admin/AddPackageDialog';
+import { HospitalReviewDialog } from '@/components/admin/HospitalReviewDialog';
 
 const AdminHospitals = () => {
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedHospital, setSelectedHospital] = useState<any>(null);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchHospitals();
@@ -28,15 +31,9 @@ const AdminHospitals = () => {
     setHospitals(data || []);
   };
 
-  const handleVerification = async (hospitalId: string, status: 'verified' | 'rejected') => {
-    const { error } = await supabase
-      .from('hospitals')
-      .update({ verification_status: status })
-      .eq('id', hospitalId);
-
-    if (!error) {
-      fetchHospitals();
-    }
+  const openReviewDialog = (hospital: any) => {
+    setSelectedHospital(hospital);
+    setReviewDialogOpen(true);
   };
 
   const filterHospitals = (status?: string) => {
@@ -96,29 +93,14 @@ const AdminHospitals = () => {
                   {hospital.description || 'No description available'}
                 </p>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline">
-                    <Eye className="mr-2 h-4 w-4" />
-                    View Details
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => openReviewDialog(hospital)}
+                  >
+                    <FileCheck className="mr-2 h-4 w-4" />
+                    Review & {hospital.verification_status === 'pending' ? 'Approve' : 'View'}
                   </Button>
-                  {hospital.verification_status === 'pending' && (
-                    <>
-                      <Button
-                        size="sm"
-                        onClick={() => handleVerification(hospital.id, 'verified')}
-                      >
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Approve
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleVerification(hospital.id, 'rejected')}
-                      >
-                        <XCircle className="mr-2 h-4 w-4" />
-                        Reject
-                      </Button>
-                    </>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -223,6 +205,13 @@ const AdminHospitals = () => {
         </div>
       </main>
       <Footer />
+
+      <HospitalReviewDialog
+        hospital={selectedHospital}
+        open={reviewDialogOpen}
+        onOpenChange={setReviewDialogOpen}
+        onSuccess={fetchHospitals}
+      />
     </div>
   );
 };
