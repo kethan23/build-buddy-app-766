@@ -1222,6 +1222,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_hospital_profile: {
+        Args: {
+          p_city: string
+          p_country: string
+          p_description: string
+          p_email: string
+          p_name: string
+          p_phone: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

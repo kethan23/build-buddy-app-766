@@ -98,23 +98,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { error };
     }
 
-    // Create hospital record if hospital role
+    // Create hospital record if hospital role using secure function
     if (role === 'hospital' && data.user && hospitalData) {
-      const { error: hospitalError } = await supabase
-        .from('hospitals')
-        .insert({
-          user_id: data.user.id,
-          name: hospitalData.hospitalName || '',
-          city: hospitalData.city || '',
-          country: hospitalData.country || '',
-          phone: hospitalData.phone || '',
-          description: hospitalData.description || '',
-          email: email,
-          verification_status: 'pending',
-          is_active: false,
+      const { data: hospitalId, error: hospitalError } = await supabase
+        .rpc('create_hospital_profile', {
+          p_user_id: data.user.id,
+          p_name: hospitalData.hospitalName || '',
+          p_email: email,
+          p_city: hospitalData.city || '',
+          p_country: hospitalData.country || '',
+          p_phone: hospitalData.phone || '',
+          p_description: hospitalData.description || '',
         });
 
       if (hospitalError) {
+        console.error('Hospital creation error:', hospitalError);
         toast({
           title: "Error creating hospital profile",
           description: hospitalError.message,
