@@ -242,6 +242,28 @@ const AdminDashboard = () => {
             </Card>
           </div>
           </TabsContent>
+
+          <TabsContent value="documents" className="space-y-6">
+            <DocumentVerification />
+          </TabsContent>
+
+          <TabsContent value="visa" className="space-y-6">
+            <VisaApproval />
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Analytics Dashboard</CardTitle>
+                <CardDescription>Platform analytics and insights</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Detailed analytics available in <Button variant="link" onClick={() => navigate('/admin/analytics')}>Analytics Page</Button>
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </main>
       <Footer />
