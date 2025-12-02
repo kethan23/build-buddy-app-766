@@ -11,6 +11,7 @@ import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute
 import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
 import Index from "./pages/Index";
 import Hospitals from "./pages/Hospitals";
+import PublicHospitalProfile from "./pages/PublicHospitalProfile";
 import Treatments from "./pages/Treatments";
 import Support from "./pages/Support";
 import About from "./pages/About";
@@ -65,6 +66,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/hospitals" element={<Hospitals />} />
+                <Route path="/hospital/:id" element={<PublicHospitalProfile />} />
                 <Route path="/treatments" element={<Treatments />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/about" element={<About />} />
