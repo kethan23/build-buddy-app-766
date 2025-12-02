@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AddHospitalDialog } from '@/components/admin/AddHospitalDialog';
 import { AddPackageDialog } from '@/components/admin/AddPackageDialog';
 import { HospitalReviewDialog } from '@/components/admin/HospitalReviewDialog';
+import { AdminDebugInfo } from '@/components/admin/AdminDebugInfo';
 
 const AdminHospitals = () => {
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -23,10 +24,20 @@ const AdminHospitals = () => {
   }, []);
 
   const fetchHospitals = async () => {
-    const { data } = await supabase
+    console.log('Admin fetching hospitals...');
+    
+    const { data, error } = await supabase
       .from('hospitals')
       .select('*')
       .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching hospitals:', error);
+    } else {
+      console.log('Fetched hospitals:', data);
+      console.log('Total hospitals:', data?.length);
+      console.log('Pending hospitals:', data?.filter(h => h.verification_status === 'pending').length);
+    }
 
     setHospitals(data || []);
   };
@@ -115,6 +126,8 @@ const AdminHospitals = () => {
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="space-y-8">
+          <AdminDebugInfo />
+          
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold">Hospital Management</h1>

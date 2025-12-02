@@ -11,6 +11,7 @@ import Footer from '@/components/layout/Footer';
 import { DocumentVerification } from '@/components/admin/DocumentVerification';
 import { VisaApproval } from '@/components/admin/VisaApproval';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AdminDebugInfo } from '@/components/admin/AdminDebugInfo';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -24,9 +25,18 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('Admin Dashboard: Fetching data...');
+      
       // Fetch hospitals
-      const { data: hospitals } = await supabase.from('hospitals').select('*');
+      const { data: hospitals, error: hospitalsError } = await supabase.from('hospitals').select('*');
+      if (hospitalsError) {
+        console.error('Admin Dashboard: Error fetching hospitals:', hospitalsError);
+      } else {
+        console.log('Admin Dashboard: Fetched hospitals:', hospitals);
+      }
+      
       const pending = hospitals?.filter(h => h.verification_status === 'pending') || [];
+      console.log('Admin Dashboard: Pending hospitals:', pending.length);
 
       // Fetch users
       const { data: profiles } = await supabase.from('profiles').select('*');
@@ -72,6 +82,8 @@ const AdminDashboard = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
+        <AdminDebugInfo />
+        
         <h1 className="text-3xl font-bold mb-8 gradient-text">Admin Dashboard</h1>
         
         <Tabs defaultValue="overview" className="space-y-6">
