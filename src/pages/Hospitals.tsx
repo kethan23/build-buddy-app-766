@@ -6,9 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Award, Search, SlidersHorizontal } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Star, MapPin, Award, Search, SlidersHorizontal, GitCompare, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useComparison } from "@/contexts/ComparisonContext";
+import ComparisonBar from "@/components/hospital/ComparisonBar";
 import {
   Select,
   SelectContent,
@@ -20,11 +23,26 @@ import {
 const Hospitals = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addToComparison, removeFromComparison, isSelected, canAddMore } = useComparison();
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCity, setSelectedCity] = useState("all");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
+
+  const handleCompareToggle = (hospital: any) => {
+    if (isSelected(hospital.id)) {
+      removeFromComparison(hospital.id);
+    } else if (canAddMore) {
+      addToComparison(hospital);
+    } else {
+      toast({
+        title: "Maximum reached",
+        description: "You can compare up to 3 hospitals at a time",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     fetchHospitals();
@@ -188,17 +206,33 @@ const Hospitals = () => {
                     <p className="text-muted-foreground">No hospitals found matching your criteria.</p>
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-6 pb-20">
                     {filteredHospitals.map((hospital) => (
-                      <Card key={hospital.id} className="hover:shadow-lg transition-shadow">
+                      <Card key={hospital.id} className={`hover:shadow-lg transition-all ${isSelected(hospital.id) ? 'ring-2 ring-primary' : ''}`}>
                         <CardContent className="p-6">
                           <div className="flex flex-col md:flex-row gap-6">
-                            <div className="md:w-48 h-48 bg-muted rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="md:w-48 h-48 bg-muted rounded-lg overflow-hidden flex-shrink-0 relative">
                               <img
                                 src={hospital.cover_image_url || hospital.logo_url || "/placeholder.svg"}
                                 alt={hospital.name}
                                 className="w-full h-full object-cover"
                               />
+                              {/* Compare checkbox overlay */}
+                              <button
+                                onClick={() => handleCompareToggle(hospital)}
+                                className={`absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all ${
+                                  isSelected(hospital.id) 
+                                    ? 'bg-primary text-primary-foreground' 
+                                    : 'bg-background/90 hover:bg-background text-foreground'
+                                }`}
+                              >
+                                {isSelected(hospital.id) ? (
+                                  <Check className="h-3 w-3" />
+                                ) : (
+                                  <GitCompare className="h-3 w-3" />
+                                )}
+                                {isSelected(hospital.id) ? 'Selected' : 'Compare'}
+                              </button>
                             </div>
                             <div className="flex-1">
                               <div className="flex justify-between items-start mb-2">
@@ -245,12 +279,20 @@ const Hospitals = () => {
                                   {hospital.treatment_packages.length} treatment packages available
                                 </p>
                               )}
-                              <div className="flex gap-3">
+                              <div className="flex gap-3 flex-wrap">
                                 <Button onClick={() => navigate(`/hospital/${hospital.id}`)}>
                                   View Details
                                 </Button>
                                 <Button variant="outline" onClick={() => navigate('/auth?tab=signup')}>
                                   Get Quote
+                                </Button>
+                                <Button 
+                                  variant={isSelected(hospital.id) ? "secondary" : "outline"}
+                                  onClick={() => handleCompareToggle(hospital)}
+                                  className="hidden md:flex"
+                                >
+                                  <GitCompare className="h-4 w-4 mr-2" />
+                                  {isSelected(hospital.id) ? 'Remove from Compare' : 'Add to Compare'}
                                 </Button>
                               </div>
                             </div>
@@ -265,6 +307,7 @@ const Hospitals = () => {
           </div>
         </section>
       </main>
+      <ComparisonBar />
       <Footer />
     </div>
   );
