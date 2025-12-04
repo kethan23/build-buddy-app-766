@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,14 +9,20 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 import { 
   MapPin, Phone, Mail, Globe, Building2, Star, 
-  Calendar, Users, Award, Image as ImageIcon 
+  Calendar, Users, Award, Image as ImageIcon, Send
 } from 'lucide-react';
 
 const PublicHospitalProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [hospital, setHospital] = useState<any>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
   const [packages, setPackages] = useState<any[]>([]);
@@ -23,6 +30,15 @@ const PublicHospitalProfile = () => {
   const [specialties, setSpecialties] = useState<any[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('about');
+  const [inquiryDialogOpen, setInquiryDialogOpen] = useState(false);
+  const [inquiryType, setInquiryType] = useState<'consultation' | 'inquiry'>('inquiry');
+  const [submitting, setSubmitting] = useState(false);
+  const [inquiryForm, setInquiryForm] = useState({
+    treatmentType: '',
+    message: '',
+    preferredDate: ''
+  });
 
   useEffect(() => {
     if (id) {
@@ -64,6 +80,60 @@ const PublicHospitalProfile = () => {
     setSpecialties(specialtiesRes.data || []);
     setGallery(galleryRes.data || []);
     setLoading(false);
+  };
+
+  const handleOpenInquiry = (type: 'consultation' | 'inquiry') => {
+    if (!user) {
+      toast.error('Please login to send an inquiry');
+      navigate('/auth');
+      return;
+    }
+    setInquiryType(type);
+    setInquiryDialogOpen(true);
+  };
+
+  const handleSubmitInquiry = async () => {
+    if (!user || !hospital) return;
+    
+    if (!inquiryForm.treatmentType.trim()) {
+      toast.error('Please enter treatment type');
+      return;
+    }
+    if (!inquiryForm.message.trim()) {
+      toast.error('Please enter your message');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from('inquiries').insert({
+        user_id: user.id,
+        hospital_id: hospital.id,
+        treatment_type: inquiryForm.treatmentType,
+        message: inquiryType === 'consultation' 
+          ? `[Consultation Request] ${inquiryForm.message}` 
+          : inquiryForm.message,
+        preferred_date: inquiryForm.preferredDate || null,
+        status: 'pending'
+      });
+
+      if (error) throw error;
+
+      toast.success(inquiryType === 'consultation' 
+        ? 'Consultation request sent successfully!' 
+        : 'Inquiry sent successfully!');
+      setInquiryDialogOpen(false);
+      setInquiryForm({ treatmentType: '', message: '', preferredDate: '' });
+      navigate('/patient/inquiries');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to send inquiry');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleViewPackages = () => {
+    setActiveTab('packages');
   };
 
   if (loading) {
@@ -142,7 +212,11 @@ const PublicHospitalProfile = () => {
                   )}
                 </div>
               </div>
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90"
+                onClick={() => handleOpenInquiry('consultation')}
+              >
                 Request Consultation
               </Button>
             </div>
@@ -154,7 +228,7 @@ const PublicHospitalProfile = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Content Area */}
             <div className="lg:col-span-2 space-y-6">
-              <Tabs defaultValue="about" className="w-full">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="w-full justify-start">
                   <TabsTrigger value="about">About</TabsTrigger>
                   <TabsTrigger value="doctors">Doctors ({doctors.length})</TabsTrigger>
@@ -303,7 +377,15 @@ const PublicHospitalProfile = () => {
                             )}
                           </div>
 
-                          <Button className="w-full">Request Quote</Button>
+                          <Button 
+                            className="w-full"
+                            onClick={() => {
+                              setInquiryForm(prev => ({ ...prev, treatmentType: pkg.name }));
+                              handleOpenInquiry('inquiry');
+                            }}
+                          >
+                            Request Quote
+                          </Button>
                         </CardContent>
                       </Card>
                     ))
@@ -392,13 +474,26 @@ const PublicHospitalProfile = () => {
                   <CardTitle>Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <Button className="w-full" variant="default">
+                  <Button 
+                    className="w-full" 
+                    variant="default"
+                    onClick={() => handleOpenInquiry('consultation')}
+                  >
                     Request Consultation
                   </Button>
-                  <Button className="w-full" variant="outline">
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => handleOpenInquiry('inquiry')}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
                     Send Inquiry
                   </Button>
-                  <Button className="w-full" variant="outline">
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={handleViewPackages}
+                  >
                     View All Packages
                   </Button>
                 </CardContent>
@@ -406,6 +501,65 @@ const PublicHospitalProfile = () => {
             </div>
           </div>
         </div>
+
+        {/* Inquiry Dialog */}
+        <Dialog open={inquiryDialogOpen} onOpenChange={setInquiryDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {inquiryType === 'consultation' ? 'Request Consultation' : 'Send Inquiry'}
+              </DialogTitle>
+              <DialogDescription>
+                {inquiryType === 'consultation' 
+                  ? `Request a consultation with ${hospital?.name}` 
+                  : `Send an inquiry to ${hospital?.name}`}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="treatmentType">Treatment Type *</Label>
+                <Input
+                  id="treatmentType"
+                  placeholder="e.g., Cardiac Surgery, Orthopedic, etc."
+                  value={inquiryForm.treatmentType}
+                  onChange={(e) => setInquiryForm(prev => ({ ...prev, treatmentType: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="preferredDate">Preferred Date (optional)</Label>
+                <Input
+                  id="preferredDate"
+                  type="date"
+                  value={inquiryForm.preferredDate}
+                  onChange={(e) => setInquiryForm(prev => ({ ...prev, preferredDate: e.target.value }))}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="message">Message *</Label>
+                <Textarea
+                  id="message"
+                  placeholder="Describe your medical condition and requirements..."
+                  rows={4}
+                  value={inquiryForm.message}
+                  onChange={(e) => setInquiryForm(prev => ({ ...prev, message: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setInquiryDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSubmitInquiry} disabled={submitting}>
+                {submitting ? 'Sending...' : 'Send'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </main>
       <Footer />
     </div>
