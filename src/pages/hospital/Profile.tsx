@@ -18,6 +18,8 @@ import { DepartmentManager } from '@/components/hospital/DepartmentManager';
 import { DoctorManager } from '@/components/hospital/DoctorManager';
 import { CertificationManager } from '@/components/hospital/CertificationManager';
 import { GalleryManager } from '@/components/hospital/GalleryManager';
+import { ImageCropUpload } from '@/components/hospital/ImageCropUpload';
+import { Separator } from '@/components/ui/separator';
 
 const hospitalFormSchema = z.object({
   name: z.string().min(2, 'Hospital name must be at least 2 characters').max(100),
@@ -168,7 +170,28 @@ const HospitalProfile = () => {
                     Update your hospital's basic information
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-6">
+                  {/* Logo and Cover Image Section */}
+                  {hospital && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <ImageCropUpload
+                          hospitalId={hospital.id}
+                          type="logo"
+                          currentImageUrl={hospital.logo_url}
+                          onUploadComplete={(url) => setHospital({ ...hospital, logo_url: url || null })}
+                        />
+                        <ImageCropUpload
+                          hospitalId={hospital.id}
+                          type="cover"
+                          currentImageUrl={hospital.cover_image_url}
+                          onUploadComplete={(url) => setHospital({ ...hospital, cover_image_url: url || null })}
+                        />
+                      </div>
+                      <Separator />
+                    </div>
+                  )}
+                  
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
