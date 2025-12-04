@@ -17,6 +17,7 @@ import { Building2, Users, Award, Image } from 'lucide-react';
 import { DepartmentManager } from '@/components/hospital/DepartmentManager';
 import { DoctorManager } from '@/components/hospital/DoctorManager';
 import { CertificationManager } from '@/components/hospital/CertificationManager';
+import { GalleryManager } from '@/components/hospital/GalleryManager';
 
 const hospitalFormSchema = z.object({
   name: z.string().min(2, 'Hospital name must be at least 2 characters').max(100),
@@ -401,11 +402,11 @@ const HospitalProfile = () => {
                 <CardHeader>
                   <CardTitle>Hospital Gallery</CardTitle>
                   <CardDescription>
-                    Manage your hospital's photo gallery (Coming soon)
+                    Upload and manage your hospital's photos
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">Gallery management will be available soon...</p>
+                  {hospital && <GalleryManager hospitalId={hospital.id} />}
                 </CardContent>
               </Card>
             </TabsContent>
