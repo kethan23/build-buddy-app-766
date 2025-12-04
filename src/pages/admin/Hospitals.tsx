@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, CheckCircle, XCircle, Eye, FileCheck } from 'lucide-react';
+import { Search, CheckCircle, XCircle, Eye, FileCheck, Trash2 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,6 +12,8 @@ import { AddHospitalDialog } from '@/components/admin/AddHospitalDialog';
 import { AddPackageDialog } from '@/components/admin/AddPackageDialog';
 import { HospitalReviewDialog } from '@/components/admin/HospitalReviewDialog';
 import { AdminDebugInfo } from '@/components/admin/AdminDebugInfo';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { toast } from 'sonner';
 
 const AdminHospitals = () => {
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -45,6 +47,31 @@ const AdminHospitals = () => {
   const openReviewDialog = (hospital: any) => {
     setSelectedHospital(hospital);
     setReviewDialogOpen(true);
+  };
+
+  const handleDeleteHospital = async (hospital: any) => {
+    try {
+      // Delete related data first
+      await supabase.from('hospital_gallery').delete().eq('hospital_id', hospital.id);
+      await supabase.from('hospital_certifications').delete().eq('hospital_id', hospital.id);
+      await supabase.from('hospital_specialties').delete().eq('hospital_id', hospital.id);
+      await supabase.from('doctors').delete().eq('hospital_id', hospital.id);
+      await supabase.from('treatment_packages').delete().eq('hospital_id', hospital.id);
+
+      // Delete the hospital
+      const { error } = await supabase
+        .from('hospitals')
+        .delete()
+        .eq('id', hospital.id);
+
+      if (error) throw error;
+
+      toast.success(`Hospital "${hospital.name}" deleted successfully`);
+      fetchHospitals();
+    } catch (error: any) {
+      console.error('Delete error:', error);
+      toast.error(error.message || 'Failed to delete hospital');
+    }
   };
 
   const filterHospitals = (status?: string) => {
@@ -112,6 +139,32 @@ const AdminHospitals = () => {
                     <FileCheck className="mr-2 h-4 w-4" />
                     Review & {hospital.verification_status === 'pending' ? 'Approve' : 'View'}
                   </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button size="sm" variant="destructive">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Hospital</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{hospital.name}"? This action cannot be undone
+                          and will remove all associated data including doctors, packages, and images.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => handleDeleteHospital(hospital)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>
