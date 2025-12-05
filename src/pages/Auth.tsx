@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -57,10 +58,29 @@ const Auth = () => {
   const navigate = useNavigate();
   const [authMode, setAuthMode] = useState<"signin" | "signup" | "magic" | "reset">("signin");
 
+  // Redirect based on user role
   useEffect(() => {
-    if (user && !loading) {
-      navigate("/patient/dashboard");
-    }
+    const redirectBasedOnRole = async () => {
+      if (user && !loading) {
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .single();
+
+        const role = roleData?.role || 'patient';
+
+        if (role === 'admin') {
+          navigate('/admin/dashboard');
+        } else if (role === 'hospital') {
+          navigate('/hospital/dashboard');
+        } else {
+          navigate('/patient/dashboard');
+        }
+      }
+    };
+
+    redirectBasedOnRole();
   }, [user, loading, navigate]);
 
   const signInForm = useForm<z.infer<typeof signInSchema>>({
@@ -99,7 +119,7 @@ const Auth = () => {
 
   const onSignIn = async (values: z.infer<typeof signInSchema>) => {
     const { error } = await signIn(values.email, values.password);
-    if (!error) navigate("/patient/dashboard");
+    // Role-based redirect handled in useEffect
   };
 
   const onSignUp = async (values: z.infer<typeof signUpSchema>) => {
@@ -111,19 +131,14 @@ const Auth = () => {
       description: values.description,
     } : undefined;
 
-    const { error } = await signUp(
+    await signUp(
       values.email, 
       values.password, 
       values.fullName, 
       values.role,
       hospitalData
     );
-    
-    if (!error && values.role === 'hospital') {
-      navigate("/hospital/dashboard");
-    } else if (!error) {
-      navigate("/patient/dashboard");
-    }
+    // Role-based redirect handled in useEffect after user state updates
   };
 
   const onMagicLink = async (values: z.infer<typeof magicLinkSchema>) => {
