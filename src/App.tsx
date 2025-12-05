@@ -19,6 +19,7 @@ import Support from "./pages/Support";
 import About from "./pages/About";
 import HowItWorks from "./pages/HowItWorks";
 import Auth from "./pages/Auth";
+import AuthCallback from "./pages/AuthCallback";
 import ResetPassword from "./pages/ResetPassword";
 import Terms from "./pages/Terms";
 import Dashboard from "./pages/patient/Dashboard";
@@ -77,6 +78,7 @@ const App = () => {
                   <Route path="/how-it-works" element={<HowItWorks />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/patient/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/patient/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
