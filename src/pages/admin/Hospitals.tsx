@@ -3,8 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, CheckCircle, XCircle, Eye, FileCheck, Trash2 } from 'lucide-react';
+import { Search, CheckCircle, XCircle, Eye, FileCheck, Trash2, Power } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -74,6 +75,24 @@ const AdminHospitals = () => {
     }
   };
 
+  const handleToggleActive = async (hospital: any) => {
+    try {
+      const newStatus = !hospital.is_active;
+      const { error } = await supabase
+        .from('hospitals')
+        .update({ is_active: newStatus })
+        .eq('id', hospital.id);
+
+      if (error) throw error;
+
+      toast.success(`Hospital "${hospital.name}" ${newStatus ? 'activated' : 'deactivated'} successfully`);
+      fetchHospitals();
+    } catch (error: any) {
+      console.error('Toggle active error:', error);
+      toast.error(error.message || 'Failed to update hospital status');
+    }
+  };
+
   const filterHospitals = (status?: string) => {
     let filtered = hospitals;
     
@@ -125,12 +144,17 @@ const AdminHospitals = () => {
                       {hospital.city}, {hospital.country}
                     </p>
                   </div>
-                  {getStatusBadge(hospital.verification_status)}
+                  <div className="flex items-center gap-2">
+                    {getStatusBadge(hospital.verification_status)}
+                    <Badge className={hospital.is_active ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-800"}>
+                      {hospital.is_active ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4">
                   {hospital.description || 'No description available'}
                 </p>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 items-center">
                   <Button 
                     size="sm" 
                     variant="outline"
@@ -139,6 +163,18 @@ const AdminHospitals = () => {
                     <FileCheck className="mr-2 h-4 w-4" />
                     Review & {hospital.verification_status === 'pending' ? 'Approve' : 'View'}
                   </Button>
+                  
+                  {hospital.verification_status === 'verified' && (
+                    <Button
+                      size="sm"
+                      variant={hospital.is_active ? "secondary" : "default"}
+                      onClick={() => handleToggleActive(hospital)}
+                    >
+                      <Power className="mr-2 h-4 w-4" />
+                      {hospital.is_active ? 'Deactivate' : 'Activate'}
+                    </Button>
+                  )}
+                  
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button size="sm" variant="destructive">
