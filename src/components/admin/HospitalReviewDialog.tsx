@@ -11,10 +11,11 @@ import { toast } from 'sonner';
 import { 
   Building2, Mail, Phone, Globe, MapPin, Calendar, 
   FileText, CheckCircle, XCircle, User, Award, Users,
-  ExternalLink, AlertCircle
+  ExternalLink, AlertCircle, Image
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { AdminHospitalImageUpload } from './AdminHospitalImageUpload';
 
 interface HospitalReviewDialogProps {
   hospital: any;
@@ -40,6 +41,8 @@ export function HospitalReviewDialog({ hospital, open, onOpenChange, onSuccess }
   const [doctors, setDoctors] = useState<any[]>([]);
   const [specialties, setSpecialties] = useState<any[]>([]);
   const [packages, setPackages] = useState<any[]>([]);
+  const [galleryImages, setGalleryImages] = useState<any[]>([]);
+  const [hospitalData, setHospitalData] = useState<any>(hospital);
 
   useEffect(() => {
     if (hospital && open) {
@@ -49,6 +52,17 @@ export function HospitalReviewDialog({ hospital, open, onOpenChange, onSuccess }
 
   const loadHospitalDetails = async () => {
     if (!hospital) return;
+
+    // Refresh hospital data
+    const { data: freshHospital } = await supabase
+      .from('hospitals')
+      .select('*')
+      .eq('id', hospital.id)
+      .single();
+    
+    if (freshHospital) {
+      setHospitalData(freshHospital);
+    }
 
     // Load documents uploaded by the hospital owner
     const { data: docsData } = await supabase
@@ -90,6 +104,15 @@ export function HospitalReviewDialog({ hospital, open, onOpenChange, onSuccess }
       .eq('hospital_id', hospital.id);
 
     setPackages(packagesData || []);
+
+    // Load gallery images
+    const { data: galleryData } = await supabase
+      .from('hospital_gallery')
+      .select('*')
+      .eq('hospital_id', hospital.id)
+      .order('display_order', { ascending: true });
+
+    setGalleryImages(galleryData || []);
   };
 
   const handleApproval = async (status: 'verified' | 'rejected') => {
@@ -167,24 +190,28 @@ export function HospitalReviewDialog({ hospital, open, onOpenChange, onSuccess }
 
         <ScrollArea className="h-[60vh] pr-4">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="images">
+                <Image className="h-3 w-3 mr-1" />
+                Images
+              </TabsTrigger>
               <TabsTrigger value="documents">
-                Documents
+                Docs
                 {documents.length > 0 && (
-                  <Badge variant="secondary" className="ml-2">{documents.length}</Badge>
+                  <Badge variant="secondary" className="ml-1 text-xs">{documents.length}</Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger value="certifications">
-                Certifications
+                Certs
                 {certifications.length > 0 && (
-                  <Badge variant="secondary" className="ml-2">{certifications.length}</Badge>
+                  <Badge variant="secondary" className="ml-1 text-xs">{certifications.length}</Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger value="staff">
                 Staff
                 {doctors.length > 0 && (
-                  <Badge variant="secondary" className="ml-2">{doctors.length}</Badge>
+                  <Badge variant="secondary" className="ml-1 text-xs">{doctors.length}</Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
@@ -278,6 +305,39 @@ export function HospitalReviewDialog({ hospital, open, onOpenChange, onSuccess }
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="images" className="space-y-4 mt-4">
+              <AdminHospitalImageUpload 
+                hospitalId={hospital.id}
+                currentLogoUrl={hospitalData?.logo_url}
+                currentCoverUrl={hospitalData?.cover_image_url}
+                onUpdate={loadHospitalDetails}
+              />
+              
+              {galleryImages.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Current Gallery Images</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3 gap-4">
+                      {galleryImages.map((img) => (
+                        <div key={img.id} className="relative group">
+                          <img 
+                            src={img.image_url} 
+                            alt={img.caption || 'Gallery image'}
+                            className="w-full h-24 object-cover rounded-lg"
+                          />
+                          {img.caption && (
+                            <p className="text-xs text-muted-foreground mt-1 truncate">{img.caption}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
             <TabsContent value="documents" className="space-y-4 mt-4">
