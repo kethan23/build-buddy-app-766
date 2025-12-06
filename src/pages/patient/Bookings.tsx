@@ -7,23 +7,38 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft, Calendar, DollarSign, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { AppointmentExport } from '@/components/dashboard/AppointmentExport';
 
 const Bookings = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
   const [bookings, setBookings] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
       loadBookings();
+      loadProfile();
     }
   }, [user]);
+
+  const loadProfile = async () => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', user?.id)
+      .single();
+    setProfile(data);
+  };
 
   const loadBookings = async () => {
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select(`
+        *,
+        hospitals(name, address, city, country, logo_url)
+      `)
       .eq('user_id', user?.id)
       .order('created_at', { ascending: false });
 
@@ -40,14 +55,32 @@ const Bookings = () => {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      pending: 'bg-warning',
-      confirmed: 'bg-success',
-      in_progress: 'bg-primary',
-      completed: 'bg-success',
-      cancelled: 'bg-destructive',
+      pending: 'bg-yellow-100 text-yellow-800',
+      confirmed: 'bg-green-100 text-green-800',
+      in_progress: 'bg-blue-100 text-blue-800',
+      completed: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800',
     };
     return colors[status] || 'bg-muted';
   };
+
+  const exportAppointments = bookings.map(booking => ({
+    appointment_id: booking.appointment_id || booking.id.slice(0, 12),
+    patient_name: profile?.full_name || 'Unknown',
+    scheduled_date: booking.appointment_date 
+      ? new Date(booking.appointment_date).toLocaleString() 
+      : 'Not scheduled',
+    caretaker_name: profile?.caretaker_name,
+    caretaker_phone: profile?.caretaker_phone,
+    hospital_name: booking.hospitals?.name || 'N/A',
+    hospital_address: booking.hospitals 
+      ? `${booking.hospitals.address || ''}, ${booking.hospitals.city || ''}, ${booking.hospitals.country || ''}`.trim()
+      : 'N/A',
+    treatment_name: booking.treatment_name,
+    status: booking.status,
+    total_amount: booking.total_amount,
+    currency: booking.currency,
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,9 +102,17 @@ const Bookings = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-heading font-bold mb-2">My Bookings</h1>
-          <p className="text-muted-foreground">View and manage your treatment bookings and appointments</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <div>
+            <h1 className="text-3xl font-heading font-bold mb-2">My Bookings</h1>
+            <p className="text-muted-foreground">View and manage your treatment bookings and appointments</p>
+          </div>
+          {bookings.length > 0 && (
+            <AppointmentExport 
+              appointments={exportAppointments}
+              role="patient"
+            />
+          )}
         </div>
 
         {bookings.length === 0 ? (
@@ -94,11 +135,20 @@ const Bookings = () => {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle>{booking.treatment_name}</CardTitle>
+                      <div className="flex items-center gap-2 mb-1">
+                        <CardTitle>{booking.treatment_name}</CardTitle>
+                      </div>
                       <CardDescription>
-                        Booking ID: {booking.id.slice(0, 8)}
+                        <span className="font-medium text-primary">
+                          Appointment ID: {booking.appointment_id || booking.id.slice(0, 12)}
+                        </span>
                         {booking.appointment_date && ` • ${new Date(booking.appointment_date).toLocaleDateString()}`}
                       </CardDescription>
+                      {booking.hospitals && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Hospital: {booking.hospitals.name}
+                        </p>
+                      )}
                     </div>
                     <Badge className={getStatusColor(booking.status)}>
                       {booking.status}

@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { GlassCard, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Upload, File, Trash2, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Upload, File, Trash2, CheckCircle, XCircle, Clock, Download } from 'lucide-react';
 
 interface Document {
   id: string;
   file_name: string;
   file_type: string;
   file_size: number;
+  file_url: string;
   category: string;
   verification_status: string;
   created_at: string;
@@ -32,6 +33,12 @@ export function DocumentUpload() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('medical_report');
 
+  useEffect(() => {
+    if (user) {
+      loadDocuments();
+    }
+  }, [user]);
+
   const loadDocuments = async () => {
     if (!user) return;
 
@@ -50,9 +57,35 @@ export function DocumentUpload() {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
+      return;
+    }
+
     setUploading(true);
 
     try {
+      // Create unique file path
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('medical-documents')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL (or signed URL for private bucket)
+      const { data: urlData } = supabase.storage
+        .from('medical-documents')
+        .getPublicUrl(fileName);
+
+      // Save document metadata to database
       const { data, error } = await supabase
         .from('documents')
         .insert({
@@ -60,7 +93,7 @@ export function DocumentUpload() {
           file_name: file.name,
           file_type: file.type,
           file_size: file.size,
-          file_url: 'pending',
+          file_url: urlData.publicUrl,
           document_type: selectedCategory,
           category: selectedCategory,
           verification_status: 'pending',
@@ -73,18 +106,31 @@ export function DocumentUpload() {
       toast.success('Document uploaded successfully');
       loadDocuments();
     } catch (error: any) {
+      console.error('Upload error:', error);
       toast.error(error.message || 'Failed to upload document');
     } finally {
       setUploading(false);
+      // Reset file input
+      event.target.value = '';
     }
   };
 
-  const handleDelete = async (docId: string) => {
+  const handleDelete = async (doc: Document) => {
     try {
+      // Extract file path from URL
+      const urlParts = doc.file_url.split('/');
+      const filePath = `${user?.id}/${urlParts[urlParts.length - 1]}`;
+
+      // Delete from storage
+      await supabase.storage
+        .from('medical-documents')
+        .remove([filePath]);
+
+      // Delete from database
       const { error } = await supabase
         .from('documents')
         .delete()
-        .eq('id', docId);
+        .eq('id', doc.id);
 
       if (error) throw error;
 
@@ -92,6 +138,14 @@ export function DocumentUpload() {
       loadDocuments();
     } catch (error: any) {
       toast.error(error.message || 'Failed to delete document');
+    }
+  };
+
+  const handleDownload = async (doc: Document) => {
+    try {
+      window.open(doc.file_url, '_blank');
+    } catch (error) {
+      toast.error('Failed to download document');
     }
   };
 
@@ -103,6 +157,17 @@ export function DocumentUpload() {
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return <Clock className="h-4 w-4 text-yellow-500" />;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'verified':
+        return <Badge className="bg-green-100 text-green-800">Verified</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-100 text-red-800">Rejected</Badge>;
+      default:
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
     }
   };
 
@@ -132,7 +197,10 @@ export function DocumentUpload() {
               <div className="flex flex-col items-center">
                 <Upload className="h-8 w-8 text-primary mb-2" />
                 <span className="text-sm text-muted-foreground">
-                  {uploading ? 'Uploading...' : 'Click to upload or drag and drop'}
+                  {uploading ? 'Uploading...' : 'Click to upload (Max 10MB)'}
+                </span>
+                <span className="text-xs text-muted-foreground mt-1">
+                  PDF, JPG, PNG, DOC, DOCX
                 </span>
               </div>
               <input
@@ -176,14 +244,20 @@ export function DocumentUpload() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <div className="flex items-center space-x-2">
-                      {getStatusIcon(doc.verification_status)}
-                      <span className="text-sm capitalize">{doc.verification_status}</span>
-                    </div>
+                    {getStatusBadge(doc.verification_status)}
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleDelete(doc.id)}
+                      onClick={() => handleDownload(doc)}
+                      title="Download"
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(doc)}
+                      title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
