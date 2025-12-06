@@ -17,8 +17,8 @@ import { Building2, Users, Award, Image } from 'lucide-react';
 import { DepartmentManager } from '@/components/hospital/DepartmentManager';
 import { DoctorManager } from '@/components/hospital/DoctorManager';
 import { CertificationManager } from '@/components/hospital/CertificationManager';
-import { GalleryManager } from '@/components/hospital/GalleryManager';
-import { ImageCropUpload } from '@/components/hospital/ImageCropUpload';
+import { GalleryManagerWithUrl } from '@/components/hospital/GalleryManagerWithUrl';
+import { ImageUploadWithUrl } from '@/components/hospital/ImageUploadWithUrl';
 import { Separator } from '@/components/ui/separator';
 
 const hospitalFormSchema = z.object({
@@ -175,13 +175,13 @@ const HospitalProfile = () => {
                   {hospital && (
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <ImageCropUpload
+                        <ImageUploadWithUrl
                           hospitalId={hospital.id}
                           type="logo"
                           currentImageUrl={hospital.logo_url}
                           onUploadComplete={(url) => setHospital({ ...hospital, logo_url: url || null })}
                         />
-                        <ImageCropUpload
+                        <ImageUploadWithUrl
                           hospitalId={hospital.id}
                           type="cover"
                           currentImageUrl={hospital.cover_image_url}
@@ -429,7 +429,7 @@ const HospitalProfile = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {hospital && <GalleryManager hospitalId={hospital.id} />}
+                  {hospital && <GalleryManagerWithUrl hospitalId={hospital.id} />}
                 </CardContent>
               </Card>
             </TabsContent>
