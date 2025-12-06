@@ -84,11 +84,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => {
-    // Use the deployed URL for redirects to avoid localhost issues
-    const baseUrl = window.location.hostname === 'localhost' 
-      ? 'https://preview--build-buddy-app-766.lovable.app'
-      : window.location.origin;
-    const redirectUrl = `${baseUrl}/auth/callback`;
+    // Always use current origin for redirects
+    const redirectUrl = `${window.location.origin}/auth/callback`;
     
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -153,13 +150,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signInWithGoogle = async () => {
-    const baseUrl = window.location.hostname === 'localhost' 
-      ? 'https://preview--build-buddy-app-766.lovable.app'
-      : window.location.origin;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${baseUrl}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
     
@@ -175,13 +169,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signInWithMagicLink = async (email: string) => {
-    const baseUrl = window.location.hostname === 'localhost' 
-      ? 'https://preview--build-buddy-app-766.lovable.app'
-      : window.location.origin;
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${baseUrl}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
     
@@ -202,11 +193,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetPassword = async (email: string) => {
-    const baseUrl = window.location.hostname === 'localhost' 
-      ? 'https://preview--build-buddy-app-766.lovable.app'
-      : window.location.origin;
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${baseUrl}/reset-password`,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     
     if (error) {
