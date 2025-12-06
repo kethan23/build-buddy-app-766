@@ -10,11 +10,6 @@ const AuthCallback = () => {
   const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
-    console.log('AuthCallback: Starting auth callback handling');
-    console.log('AuthCallback: Current URL:', window.location.href);
-    console.log('AuthCallback: Hash:', window.location.hash);
-    console.log('AuthCallback: Search:', window.location.search);
-
     // Check URL for error parameters first
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const queryParams = new URLSearchParams(window.location.search);
@@ -23,7 +18,6 @@ const AuthCallback = () => {
     const errorDescription = hashParams.get('error_description') || queryParams.get('error_description');
     
     if (errorParam) {
-      console.log('AuthCallback: Found error in URL:', errorParam, errorDescription);
       const friendlyError = errorDescription?.includes('expired') || errorDescription?.includes('invalid')
         ? 'This login link has expired or was already used. Please request a new one.'
         : (errorDescription || errorParam);
@@ -35,7 +29,6 @@ const AuthCallback = () => {
     // Set up auth state listener to handle the token exchange
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('AuthCallback: Auth event:', event, 'User:', session?.user?.email);
         
         if (event === 'SIGNED_IN' && session?.user) {
           setIsProcessing(false);
@@ -55,8 +48,6 @@ const AuthCallback = () => {
                 .single();
 
               const role = roleData?.role || 'patient';
-              console.log('AuthCallback: User role:', role);
-
               // Redirect based on role
               if (role === 'admin') {
                 navigate('/admin/dashboard', { replace: true });
@@ -66,7 +57,6 @@ const AuthCallback = () => {
                 navigate('/patient/dashboard', { replace: true });
               }
             } catch (err) {
-              console.error('AuthCallback: Error fetching role:', err);
               navigate('/patient/dashboard', { replace: true });
             }
           }, 100);
@@ -80,10 +70,7 @@ const AuthCallback = () => {
     const checkExistingSession = async () => {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      console.log('AuthCallback: Existing session check:', session?.user?.email, 'Error:', sessionError);
-      
       if (sessionError) {
-        console.error('AuthCallback: Session error:', sessionError);
         setError(sessionError.message);
         setIsProcessing(false);
         return;
@@ -99,8 +86,6 @@ const AuthCallback = () => {
             .single();
 
           const role = roleData?.role || 'patient';
-          console.log('AuthCallback: Existing session, role:', role);
-
           if (role === 'admin') {
             navigate('/admin/dashboard', { replace: true });
           } else if (role === 'hospital') {
@@ -109,7 +94,6 @@ const AuthCallback = () => {
             navigate('/patient/dashboard', { replace: true });
           }
         } catch (err) {
-          console.error('AuthCallback: Error fetching role:', err);
           navigate('/patient/dashboard', { replace: true });
         }
       }
@@ -120,7 +104,6 @@ const AuthCallback = () => {
 
     // Set a timeout for if no auth event fires
     const timeout = setTimeout(() => {
-      console.log('AuthCallback: Timeout reached, checking final state');
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (!session) {
           setError('Authentication timed out. The link may have expired or was already used. Please request a new login link.');
