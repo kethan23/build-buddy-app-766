@@ -138,6 +138,7 @@ export type Database = {
       bookings: {
         Row: {
           appointment_date: string | null
+          appointment_id: string | null
           created_at: string | null
           currency: string | null
           hospital_id: string | null
@@ -153,6 +154,7 @@ export type Database = {
         }
         Insert: {
           appointment_date?: string | null
+          appointment_id?: string | null
           created_at?: string | null
           currency?: string | null
           hospital_id?: string | null
@@ -168,6 +170,7 @@ export type Database = {
         }
         Update: {
           appointment_date?: string | null
+          appointment_id?: string | null
           created_at?: string | null
           currency?: string | null
           hospital_id?: string | null
@@ -249,6 +252,7 @@ export type Database = {
       doctors: {
         Row: {
           bio: string | null
+          cabin_number: string | null
           consultation_fee: number | null
           created_at: string | null
           experience_years: number | null
@@ -264,6 +268,7 @@ export type Database = {
         }
         Insert: {
           bio?: string | null
+          cabin_number?: string | null
           consultation_fee?: number | null
           created_at?: string | null
           experience_years?: number | null
@@ -279,6 +284,7 @@ export type Database = {
         }
         Update: {
           bio?: string | null
+          cabin_number?: string | null
           consultation_fee?: number | null
           created_at?: string | null
           experience_years?: number | null
@@ -795,6 +801,8 @@ export type Database = {
       profiles: {
         Row: {
           address: string | null
+          caretaker_name: string | null
+          caretaker_phone: string | null
           city: string | null
           country: string | null
           created_at: string | null
@@ -816,6 +824,8 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          caretaker_name?: string | null
+          caretaker_phone?: string | null
           city?: string | null
           country?: string | null
           created_at?: string | null
@@ -837,6 +847,8 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          caretaker_name?: string | null
+          caretaker_phone?: string | null
           city?: string | null
           country?: string | null
           created_at?: string | null
@@ -1234,6 +1246,7 @@ export type Database = {
         }
         Returns: string
       }
+      generate_appointment_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
