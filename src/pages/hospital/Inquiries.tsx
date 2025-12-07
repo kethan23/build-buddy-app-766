@@ -28,16 +28,37 @@ const HospitalInquiries = () => {
       setHospital(hospitalData);
 
       if (hospitalData) {
-        const { data: inquiriesData } = await supabase
+        const { data: inquiriesData, error } = await supabase
           .from('inquiries')
-          .select(`
-            *,
-            profiles(full_name, email)
-          `)
+          .select('*')
           .eq('hospital_id', hospitalData.id)
           .order('created_at', { ascending: false });
 
-        setInquiries(inquiriesData || []);
+        if (error) {
+          console.error('Error fetching inquiries:', error);
+          setInquiries([]);
+          return;
+        }
+
+        // Fetch patient profiles separately
+        if (inquiriesData && inquiriesData.length > 0) {
+          const userIds = [...new Set(inquiriesData.map(i => i.user_id))];
+          const { data: profilesData } = await supabase
+            .from('profiles')
+            .select('user_id, full_name, email')
+            .in('user_id', userIds);
+
+          const profilesMap = new Map(profilesData?.map(p => [p.user_id, p]) || []);
+          
+          const inquiriesWithProfiles = inquiriesData.map(inquiry => ({
+            ...inquiry,
+            profiles: profilesMap.get(inquiry.user_id) || null
+          }));
+          
+          setInquiries(inquiriesWithProfiles);
+        } else {
+          setInquiries([]);
+        }
       }
     };
 
