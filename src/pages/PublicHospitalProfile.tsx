@@ -16,8 +16,13 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { 
   MapPin, Phone, Mail, Globe, Building2, Star, 
-  Calendar, Users, Award, Image as ImageIcon, Send
+  Calendar, Users, Award, Image as ImageIcon, Send, Upload, X, File
 } from 'lucide-react';
+
+interface UploadedDocument {
+  file: File;
+  reason: string;
+}
 
 const PublicHospitalProfile = () => {
   const { id } = useParams();
@@ -34,6 +39,7 @@ const PublicHospitalProfile = () => {
   const [inquiryDialogOpen, setInquiryDialogOpen] = useState(false);
   const [inquiryType, setInquiryType] = useState<'consultation' | 'inquiry'>('inquiry');
   const [submitting, setSubmitting] = useState(false);
+  const [uploadedDocs, setUploadedDocs] = useState<UploadedDocument[]>([]);
   const [inquiryForm, setInquiryForm] = useState({
     treatmentType: '',
     message: '',
@@ -89,7 +95,67 @@ const PublicHospitalProfile = () => {
       return;
     }
     setInquiryType(type);
+    setUploadedDocs([]);
     setInquiryDialogOpen(true);
+  };
+
+  const handleFileAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
+      return;
+    }
+
+    setUploadedDocs(prev => [...prev, { file, reason: '' }]);
+    event.target.value = '';
+  };
+
+  const handleReasonChange = (index: number, reason: string) => {
+    setUploadedDocs(prev => 
+      prev.map((doc, i) => i === index ? { ...doc, reason } : doc)
+    );
+  };
+
+  const handleRemoveDoc = (index: number) => {
+    setUploadedDocs(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadDocuments = async (inquiryId: string) => {
+    const uploadPromises = uploadedDocs.map(async (doc) => {
+      const fileExt = doc.file.name.split('.').pop();
+      const fileName = `${user?.id}/${inquiryId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('medical-documents')
+        .upload(fileName, doc.file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('medical-documents')
+        .getPublicUrl(fileName);
+
+      await supabase
+        .from('documents')
+        .insert({
+          user_id: user?.id,
+          file_name: doc.file.name,
+          file_type: doc.file.type,
+          file_size: doc.file.size,
+          file_url: urlData.publicUrl,
+          document_type: 'inquiry_document',
+          category: 'inquiry_document',
+          description: doc.reason,
+          verification_status: 'pending',
+        });
+    });
+
+    await Promise.all(uploadPromises);
   };
 
   const handleSubmitInquiry = async () => {
@@ -106,7 +172,7 @@ const PublicHospitalProfile = () => {
 
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('inquiries').insert({
+      const { data: inquiry, error } = await supabase.from('inquiries').insert({
         user_id: user.id,
         hospital_id: hospital.id,
         treatment_type: inquiryForm.treatmentType,
@@ -115,15 +181,21 @@ const PublicHospitalProfile = () => {
           : inquiryForm.message,
         preferred_date: inquiryForm.preferredDate || null,
         status: 'pending'
-      });
+      }).select().single();
 
       if (error) throw error;
+
+      // Upload documents if any
+      if (uploadedDocs.length > 0 && inquiry) {
+        await uploadDocuments(inquiry.id);
+      }
 
       toast.success(inquiryType === 'consultation' 
         ? 'Consultation request sent successfully!' 
         : 'Inquiry sent successfully!');
       setInquiryDialogOpen(false);
       setInquiryForm({ treatmentType: '', message: '', preferredDate: '' });
+      setUploadedDocs([]);
       navigate('/patient/inquiries');
     } catch (error: any) {
       toast.error(error.message || 'Failed to send inquiry');
@@ -504,7 +576,7 @@ const PublicHospitalProfile = () => {
 
         {/* Inquiry Dialog */}
         <Dialog open={inquiryDialogOpen} onOpenChange={setInquiryDialogOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {inquiryType === 'consultation' ? 'Request Consultation' : 'Send Inquiry'}
@@ -547,6 +619,63 @@ const PublicHospitalProfile = () => {
                   value={inquiryForm.message}
                   onChange={(e) => setInquiryForm(prev => ({ ...prev, message: e.target.value }))}
                 />
+              </div>
+
+              {/* Document Upload Section */}
+              <div className="space-y-3">
+                <Label>Supporting Documents (Optional)</Label>
+                <p className="text-xs text-muted-foreground">
+                  Upload medical reports, prescriptions, or other relevant documents
+                </p>
+                
+                {/* Uploaded Documents List */}
+                {uploadedDocs.length > 0 && (
+                  <div className="space-y-2">
+                    {uploadedDocs.map((doc, index) => (
+                      <div key={index} className="border rounded-lg p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <File className="h-4 w-4 text-primary shrink-0" />
+                            <span className="text-sm truncate">{doc.file.name}</span>
+                            <span className="text-xs text-muted-foreground shrink-0">
+                              ({(doc.file.size / 1024).toFixed(1)} KB)
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveDoc(index)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Input
+                          placeholder="Reason for uploading this document..."
+                          value={doc.reason}
+                          onChange={(e) => handleReasonChange(index, e.target.value)}
+                          className="text-sm"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Upload Button */}
+                <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex flex-col items-center">
+                    <Upload className="h-5 w-5 text-muted-foreground mb-1" />
+                    <span className="text-xs text-muted-foreground">
+                      Click to upload (Max 10MB per file)
+                    </span>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileAdd}
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  />
+                </label>
               </div>
             </div>
 
