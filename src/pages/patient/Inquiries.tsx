@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Plus, MessageSquare, FileText, DollarSign, Building2 } from 'lucide-react';
+import { Plus, MessageSquare, FileText, DollarSign, Building2, Upload, X, File } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+
+interface UploadedDocument {
+  file: File;
+  reason: string;
+  uploading?: boolean;
+}
 
 const inquirySchema = z.object({
   hospital_id: z.string().min(1, 'Please select a hospital'),
@@ -32,6 +38,8 @@ const Inquiries = () => {
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [uploadedDocs, setUploadedDocs] = useState<UploadedDocument[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewQuotesDialog, setViewQuotesDialog] = useState<{ open: boolean; inquiry: any; quotes: any[] }>({
     open: false,
     inquiry: null,
@@ -108,32 +116,107 @@ const Inquiries = () => {
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof inquirySchema>) => {
-    const { error } = await supabase.from('inquiries').insert([
-      {
-        user_id: user?.id,
-        hospital_id: values.hospital_id,
-        treatment_type: values.treatment_type,
-        preferred_date: values.preferred_date || null,
-        message: values.message,
-        status: 'pending',
-      },
-    ]);
+  const handleFileAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    if (error) {
+    if (file.size > 10 * 1024 * 1024) {
       toast({
-        title: 'Error creating inquiry',
-        description: error.message,
+        title: 'File too large',
+        description: 'File size must be less than 10MB',
         variant: 'destructive',
       });
-    } else {
+      return;
+    }
+
+    setUploadedDocs(prev => [...prev, { file, reason: '' }]);
+    event.target.value = '';
+  };
+
+  const handleReasonChange = (index: number, reason: string) => {
+    setUploadedDocs(prev => 
+      prev.map((doc, i) => i === index ? { ...doc, reason } : doc)
+    );
+  };
+
+  const handleRemoveDoc = (index: number) => {
+    setUploadedDocs(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadDocuments = async (inquiryId: string) => {
+    const uploadPromises = uploadedDocs.map(async (doc) => {
+      const fileExt = doc.file.name.split('.').pop();
+      const fileName = `${user?.id}/${inquiryId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('medical-documents')
+        .upload(fileName, doc.file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('medical-documents')
+        .getPublicUrl(fileName);
+
+      await supabase
+        .from('documents')
+        .insert({
+          user_id: user?.id,
+          file_name: doc.file.name,
+          file_type: doc.file.type,
+          file_size: doc.file.size,
+          file_url: urlData.publicUrl,
+          document_type: 'inquiry_document',
+          category: 'inquiry_document',
+          description: doc.reason,
+          verification_status: 'pending',
+        });
+    });
+
+    await Promise.all(uploadPromises);
+  };
+
+  const onSubmit = async (values: z.infer<typeof inquirySchema>) => {
+    setIsSubmitting(true);
+
+    try {
+      const { data: inquiry, error } = await supabase.from('inquiries').insert([
+        {
+          user_id: user?.id,
+          hospital_id: values.hospital_id,
+          treatment_type: values.treatment_type,
+          preferred_date: values.preferred_date || null,
+          message: values.message,
+          status: 'pending',
+        },
+      ]).select().single();
+
+      if (error) throw error;
+
+      // Upload documents if any
+      if (uploadedDocs.length > 0 && inquiry) {
+        await uploadDocuments(inquiry.id);
+      }
+
       toast({
         title: 'Inquiry created',
         description: 'Your inquiry has been sent successfully',
       });
       form.reset();
+      setUploadedDocs([]);
       setIsOpen(false);
       loadInquiries();
+    } catch (error: any) {
+      toast({
+        title: 'Error creating inquiry',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -297,8 +380,66 @@ const Inquiries = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full">
-                    Submit Inquiry
+
+                  {/* Document Upload Section */}
+                  <div className="space-y-3">
+                    <FormLabel>Supporting Documents (Optional)</FormLabel>
+                    <p className="text-xs text-muted-foreground">
+                      Upload medical reports, prescriptions, or other relevant documents
+                    </p>
+                    
+                    {/* Uploaded Documents List */}
+                    {uploadedDocs.length > 0 && (
+                      <div className="space-y-2">
+                        {uploadedDocs.map((doc, index) => (
+                          <div key={index} className="border rounded-lg p-3 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <File className="h-4 w-4 text-primary shrink-0" />
+                                <span className="text-sm truncate">{doc.file.name}</span>
+                                <span className="text-xs text-muted-foreground shrink-0">
+                                  ({(doc.file.size / 1024).toFixed(1)} KB)
+                                </span>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemoveDoc(index)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <Input
+                              placeholder="Reason for uploading this document..."
+                              value={doc.reason}
+                              onChange={(e) => handleReasonChange(index, e.target.value)}
+                              className="text-sm"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Upload Button */}
+                    <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex flex-col items-center">
+                        <Upload className="h-5 w-5 text-muted-foreground mb-1" />
+                        <span className="text-xs text-muted-foreground">
+                          Click to upload (Max 10MB per file)
+                        </span>
+                      </div>
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileAdd}
+                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                      />
+                    </label>
+                  </div>
+
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                   </Button>
                 </form>
               </Form>
