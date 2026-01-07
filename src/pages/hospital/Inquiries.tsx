@@ -5,12 +5,24 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { MessageSquare, Clock, CheckCircle, XCircle, Mail, Eye, Loader2 } from 'lucide-react';
+import { MessageSquare, Clock, CheckCircle, XCircle, Mail, Eye, Loader2, FileText, Download, Paperclip } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QuoteDialog } from '@/components/hospital/QuoteDialog';
 import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
+interface Document {
+  id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+  file_size: number;
+  description: string | null;
+  category: string;
+  created_at: string;
+}
 
 const HospitalInquiries = () => {
   const { user } = useAuth();
@@ -18,6 +30,12 @@ const HospitalInquiries = () => {
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [hospital, setHospital] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [documentsDialog, setDocumentsDialog] = useState<{ open: boolean; patientName: string; documents: Document[] }>({
+    open: false,
+    patientName: '',
+    documents: []
+  });
+  const [patientDocuments, setPatientDocuments] = useState<Map<string, Document[]>>(new Map());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,18 +93,40 @@ const HospitalInquiries = () => {
 
         // Fetch patient profiles separately
         const userIds = [...new Set(inquiriesData.map(i => i.user_id))];
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select('user_id, full_name, email, phone')
-          .in('user_id', userIds);
+        const [profilesResult, documentsResult] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('user_id, full_name, email, phone')
+            .in('user_id', userIds),
+          supabase
+            .from('documents')
+            .select('id, file_name, file_url, file_type, file_size, description, category, created_at, user_id')
+            .in('user_id', userIds)
+            .eq('category', 'inquiry_document')
+            .order('created_at', { ascending: false })
+        ]);
+
+        const { data: profilesData, error: profilesError } = profilesResult;
+        const { data: documentsData } = documentsResult;
 
         console.log('Profiles query result:', { profilesData, profilesError });
+        console.log('Documents query result:', documentsData);
 
         const profilesMap = new Map(profilesData?.map(p => [p.user_id, p]) || []);
         
+        // Group documents by user_id
+        const docsMap = new Map<string, Document[]>();
+        documentsData?.forEach(doc => {
+          const existing = docsMap.get(doc.user_id) || [];
+          existing.push(doc);
+          docsMap.set(doc.user_id, existing);
+        });
+        setPatientDocuments(docsMap);
+        
         const inquiriesWithProfiles = inquiriesData.map(inquiry => ({
           ...inquiry,
-          profiles: profilesMap.get(inquiry.user_id) || null
+          profiles: profilesMap.get(inquiry.user_id) || null,
+          documentCount: docsMap.get(inquiry.user_id)?.length || 0
         }));
         
         setInquiries(inquiriesWithProfiles);
@@ -159,6 +199,19 @@ const HospitalInquiries = () => {
       prev.map(inq => inq.id === inquiryId ? { ...inq, status: newStatus } : inq)
     );
     toast.success(`Inquiry marked as ${newStatus}`);
+  };
+
+  const handleViewDocuments = (inquiry: any) => {
+    const docs = patientDocuments.get(inquiry.user_id) || [];
+    setDocumentsDialog({
+      open: true,
+      patientName: inquiry.profiles?.full_name || 'Unknown Patient',
+      documents: docs
+    });
+  };
+
+  const handleDownloadDocument = (doc: Document) => {
+    window.open(doc.file_url, '_blank');
   };
 
   const getStatusIcon = (status: string) => {
@@ -252,6 +305,16 @@ const HospitalInquiries = () => {
                 Received: {new Date(inquiry.created_at).toLocaleString()}
               </div>
               
+              {/* Documents Badge */}
+              {inquiry.documentCount > 0 && (
+                <div className="flex items-center gap-2 pt-2">
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <Paperclip className="h-3 w-3" />
+                    {inquiry.documentCount} Document{inquiry.documentCount > 1 ? 's' : ''} attached
+                  </Badge>
+                </div>
+              )}
+              
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-2 pt-2 border-t">
                 <Button 
@@ -264,6 +327,17 @@ const HospitalInquiries = () => {
                 </Button>
                 
                 <QuoteDialog inquiry={inquiry} hospitalId={inquiry.hospital_id} />
+                
+                {inquiry.documentCount > 0 && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleViewDocuments(inquiry)}
+                  >
+                    <FileText className="h-4 w-4 mr-1" />
+                    View Documents
+                  </Button>
+                )}
                 
                 <Button 
                   variant="outline" 
@@ -415,6 +489,55 @@ const HospitalInquiries = () => {
             </TabsContent>
           </Tabs>
         </div>
+
+        {/* Documents Dialog */}
+        <Dialog open={documentsDialog.open} onOpenChange={(open) => setDocumentsDialog(prev => ({ ...prev, open }))}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Documents from {documentsDialog.patientName}</DialogTitle>
+              <DialogDescription>
+                Medical documents uploaded by the patient with their inquiry
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3">
+              {documentsDialog.documents.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">No documents found</p>
+              ) : (
+                documentsDialog.documents.map((doc) => (
+                  <div 
+                    key={doc.id} 
+                    className="flex items-start justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <FileText className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{doc.file_name}</p>
+                        {doc.description && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            <span className="font-medium">Reason:</span> {doc.description}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                          <span>{(doc.file_size / 1024).toFixed(1)} KB</span>
+                          <span>•</span>
+                          <span>{new Date(doc.created_at).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadDocument(doc)}
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Download
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
       <Footer />
     </div>
