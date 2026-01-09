@@ -25,6 +25,14 @@ interface ChatInterfaceProps {
   onVideoCall?: () => void;
 }
 
+interface ConversationInfo {
+  patient_id: string;
+  hospital_id: string;
+  patient_name?: string;
+  hospital_name?: string;
+  patient_patient_id?: string;
+}
+
 export default function ChatInterface({ conversationId, onVideoCall }: ChatInterfaceProps) {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -32,12 +40,45 @@ export default function ChatInterface({ conversationId, onVideoCall }: ChatInter
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [conversationInfo, setConversationInfo] = useState<ConversationInfo | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    fetchConversationInfo();
     fetchMessages();
-    subscribeToMessages();
+    const unsubscribe = subscribeToMessages();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [conversationId]);
+
+  const fetchConversationInfo = async () => {
+    try {
+      const { data: conv, error } = await supabase
+        .from('conversations')
+        .select('patient_id, hospital_id')
+        .eq('id', conversationId)
+        .single();
+
+      if (error) throw error;
+
+      // Fetch patient and hospital info in parallel
+      const [patientResult, hospitalResult] = await Promise.all([
+        supabase.from('profiles').select('full_name, patient_id').eq('user_id', conv.patient_id).single(),
+        supabase.from('hospitals').select('name').eq('id', conv.hospital_id).single()
+      ]);
+
+      setConversationInfo({
+        patient_id: conv.patient_id,
+        hospital_id: conv.hospital_id,
+        patient_name: patientResult.data?.full_name,
+        hospital_name: hospitalResult.data?.name,
+        patient_patient_id: patientResult.data?.patient_id || undefined,
+      });
+    } catch (error) {
+      console.error('Error fetching conversation info:', error);
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -134,10 +175,23 @@ export default function ChatInterface({ conversationId, onVideoCall }: ChatInter
     );
   }
 
+  // Determine if current user is patient or hospital
+  const isPatient = user?.id === conversationInfo?.patient_id;
+  const otherPartyName = isPatient 
+    ? conversationInfo?.hospital_name 
+    : conversationInfo?.patient_name;
+
   return (
     <div className="flex flex-col h-[600px] border rounded-lg">
       <div className="flex items-center justify-between p-4 border-b bg-muted/30">
-        <h3 className="font-semibold">Conversation</h3>
+        <div>
+          <h3 className="font-semibold">{otherPartyName || 'Conversation'}</h3>
+          {!isPatient && conversationInfo?.patient_patient_id && (
+            <p className="text-xs text-muted-foreground font-mono">
+              {conversationInfo.patient_patient_id}
+            </p>
+          )}
+        </div>
         {onVideoCall && (
           <Button size="sm" variant="outline" onClick={onVideoCall}>
             <Video className="h-4 w-4 mr-2" />
@@ -150,14 +204,19 @@ export default function ChatInterface({ conversationId, onVideoCall }: ChatInter
         <div className="space-y-4">
           {messages.map((message) => {
             const isOwn = message.sender_id === user?.id;
+            const senderName = isOwn 
+              ? 'You' 
+              : (message.sender_id === conversationInfo?.patient_id 
+                  ? conversationInfo?.patient_name?.split(' ')[0] || 'Patient'
+                  : conversationInfo?.hospital_name?.split(' ')[0] || 'Hospital');
             return (
               <div
                 key={message.id}
                 className={`flex gap-2 ${isOwn ? 'flex-row-reverse' : ''}`}
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>
-                    {isOwn ? 'You' : 'Them'}
+                  <AvatarFallback className={isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted'}>
+                    {senderName.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className={`flex flex-col ${isOwn ? 'items-end' : ''}`}>

@@ -47,7 +47,8 @@ const Navbar = () => {
       { label: 'Hospital Dashboard', href: "/hospital/dashboard" },
       { label: 'Profile', href: "/hospital/profile" },
       { label: 'Packages', href: "/hospital/packages" },
-      { label: 'Inquiries', href: "/hospital/inquiries" }
+      { label: 'Inquiries', href: "/hospital/inquiries" },
+      { label: 'Messages', href: "/hospital/chat" }
     );
   } else if (user && role === 'patient') {
     navLinks.push(
