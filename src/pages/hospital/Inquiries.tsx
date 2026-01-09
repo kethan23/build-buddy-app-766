@@ -96,7 +96,7 @@ const HospitalInquiries = () => {
         const [profilesResult, documentsResult] = await Promise.all([
           supabase
             .from('profiles')
-            .select('user_id, full_name, email, phone')
+            .select('user_id, full_name, email, phone, patient_id')
             .in('user_id', userIds),
           supabase
             .from('documents')
@@ -267,9 +267,16 @@ const HospitalInquiries = () => {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <CardTitle className="text-lg">
-                    {inquiry.profiles?.full_name || 'Unknown Patient'}
-                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg">
+                      {inquiry.profiles?.full_name || 'Unknown Patient'}
+                    </CardTitle>
+                    {inquiry.profiles?.patient_id && (
+                      <Badge variant="secondary" className="font-mono text-xs">
+                        {inquiry.profiles.patient_id}
+                      </Badge>
+                    )}
+                  </div>
                   <CardDescription className="space-y-1">
                     <span className="block">{inquiry.treatment_type}</span>
                     {inquiry.profiles?.email && (

@@ -165,6 +165,35 @@ const Profile = () => {
           <p className="text-muted-foreground">Manage your personal information and medical history</p>
         </div>
 
+        {/* Patient ID Card */}
+        {profile.patient_id && (
+          <Card className="mb-6 border-primary/20 bg-primary/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground">Your Patient ID</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-mono font-bold text-primary tracking-wider">
+                  {profile.patient_id}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(profile.patient_id);
+                    toast({ title: 'Copied!', description: 'Patient ID copied to clipboard' });
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Share this ID with hospitals for quick identification
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>Profile Completion</CardTitle>
