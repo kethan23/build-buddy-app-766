@@ -817,6 +817,7 @@ export type Database = {
           id: string
           medical_notes: string | null
           nationality: string | null
+          patient_id: string | null
           phone: string | null
           profile_image_url: string | null
           updated_at: string | null
@@ -840,6 +841,7 @@ export type Database = {
           id?: string
           medical_notes?: string | null
           nationality?: string | null
+          patient_id?: string | null
           phone?: string | null
           profile_image_url?: string | null
           updated_at?: string | null
@@ -863,6 +865,7 @@ export type Database = {
           id?: string
           medical_notes?: string | null
           nationality?: string | null
+          patient_id?: string | null
           phone?: string | null
           profile_image_url?: string | null
           updated_at?: string | null
@@ -1247,6 +1250,7 @@ export type Database = {
         Returns: string
       }
       generate_appointment_id: { Args: never; Returns: string }
+      generate_patient_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
