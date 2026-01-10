@@ -1059,69 +1059,108 @@ export type Database = {
       }
       visa_applications: {
         Row: {
+          accommodation_needed: boolean | null
           admin_notes: string | null
+          airport_pickup_needed: boolean | null
           application_status: string | null
           booking_id: string | null
           country_of_origin: string
           created_at: string | null
           destination_country: string | null
+          embassy_appointment_date: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          estimated_arrival_date: string | null
+          estimated_departure_date: string | null
+          expected_decision_date: string | null
           hospital_letter_verified: boolean | null
+          hospital_name: string | null
           id: string
+          number_of_attendants: number | null
           passport_expiry: string | null
           passport_number: string | null
           patient_documents_verified: boolean | null
+          photo_url: string | null
           rejection_reason: string | null
           stage_updated_at: string | null
           travel_purpose: string | null
+          treatment_details: string | null
           updated_at: string | null
           user_id: string
           verified_at: string | null
           verified_by: string | null
           visa_support_document_url: string | null
+          visa_type: string | null
           workflow_stage: string | null
         }
         Insert: {
+          accommodation_needed?: boolean | null
           admin_notes?: string | null
+          airport_pickup_needed?: boolean | null
           application_status?: string | null
           booking_id?: string | null
           country_of_origin: string
           created_at?: string | null
           destination_country?: string | null
+          embassy_appointment_date?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          estimated_arrival_date?: string | null
+          estimated_departure_date?: string | null
+          expected_decision_date?: string | null
           hospital_letter_verified?: boolean | null
+          hospital_name?: string | null
           id?: string
+          number_of_attendants?: number | null
           passport_expiry?: string | null
           passport_number?: string | null
           patient_documents_verified?: boolean | null
+          photo_url?: string | null
           rejection_reason?: string | null
           stage_updated_at?: string | null
           travel_purpose?: string | null
+          treatment_details?: string | null
           updated_at?: string | null
           user_id: string
           verified_at?: string | null
           verified_by?: string | null
           visa_support_document_url?: string | null
+          visa_type?: string | null
           workflow_stage?: string | null
         }
         Update: {
+          accommodation_needed?: boolean | null
           admin_notes?: string | null
+          airport_pickup_needed?: boolean | null
           application_status?: string | null
           booking_id?: string | null
           country_of_origin?: string
           created_at?: string | null
           destination_country?: string | null
+          embassy_appointment_date?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          estimated_arrival_date?: string | null
+          estimated_departure_date?: string | null
+          expected_decision_date?: string | null
           hospital_letter_verified?: boolean | null
+          hospital_name?: string | null
           id?: string
+          number_of_attendants?: number | null
           passport_expiry?: string | null
           passport_number?: string | null
           patient_documents_verified?: boolean | null
+          photo_url?: string | null
           rejection_reason?: string | null
           stage_updated_at?: string | null
           travel_purpose?: string | null
+          treatment_details?: string | null
           updated_at?: string | null
           user_id?: string
           verified_at?: string | null
           verified_by?: string | null
           visa_support_document_url?: string | null
+          visa_type?: string | null
           workflow_stage?: string | null
         }
         Relationships: [
@@ -1133,6 +1172,107 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      visa_attendants: {
+        Row: {
+          created_at: string
+          date_of_birth: string | null
+          full_name: string
+          id: string
+          nationality: string | null
+          passport_expiry: string | null
+          passport_number: string | null
+          photo_url: string | null
+          relationship: string
+          updated_at: string
+          visa_application_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth?: string | null
+          full_name: string
+          id?: string
+          nationality?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
+          photo_url?: string | null
+          relationship: string
+          updated_at?: string
+          visa_application_id: string
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string | null
+          full_name?: string
+          id?: string
+          nationality?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
+          photo_url?: string | null
+          relationship?: string
+          updated_at?: string
+          visa_application_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visa_attendants_visa_application_id_fkey"
+            columns: ["visa_application_id"]
+            isOneToOne: false
+            referencedRelation: "visa_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visa_country_requirements: {
+        Row: {
+          country_code: string
+          country_name: string
+          created_at: string
+          embassy_info: Json | null
+          extension_available: boolean | null
+          fees_usd: number | null
+          id: string
+          is_active: boolean | null
+          processing_time_days: number | null
+          required_documents: Json | null
+          special_notes: string | null
+          updated_at: string
+          validity_days: number | null
+          visa_type: string
+        }
+        Insert: {
+          country_code: string
+          country_name: string
+          created_at?: string
+          embassy_info?: Json | null
+          extension_available?: boolean | null
+          fees_usd?: number | null
+          id?: string
+          is_active?: boolean | null
+          processing_time_days?: number | null
+          required_documents?: Json | null
+          special_notes?: string | null
+          updated_at?: string
+          validity_days?: number | null
+          visa_type?: string
+        }
+        Update: {
+          country_code?: string
+          country_name?: string
+          created_at?: string
+          embassy_info?: Json | null
+          extension_available?: boolean | null
+          fees_usd?: number | null
+          id?: string
+          is_active?: boolean | null
+          processing_time_days?: number | null
+          required_documents?: Json | null
+          special_notes?: string | null
+          updated_at?: string
+          validity_days?: number | null
+          visa_type?: string
+        }
+        Relationships: []
       }
       visa_document_checklist: {
         Row: {
