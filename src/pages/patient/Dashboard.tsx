@@ -11,8 +11,9 @@ import { OnboardingForm } from '@/components/patient/OnboardingForm';
 import { DocumentUpload } from '@/components/patient/DocumentUpload';
 import { StatusTracking } from '@/components/patient/StatusTracking';
 import { VisaProgressTracker } from '@/components/patient/VisaProgressTracker';
+import { VisaStatusCard } from '@/components/patient/VisaStatusCard';
 import { useNavigate } from 'react-router-dom';
-import { Search, FileText, Calendar, Bell, TrendingUp } from 'lucide-react';
+import { Search, FileText, Calendar, Bell, Plane } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -98,7 +99,7 @@ const Dashboard = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               <Card className="premium-card cursor-pointer hover-lift" onClick={() => navigate('/patient/search')}>
                 <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                   <Search className="h-5 w-5 text-primary mr-2" />
@@ -138,6 +139,9 @@ const Dashboard = () => {
                   <p className="text-xs text-muted-foreground">Stay updated on your journey</p>
                 </CardContent>
               </Card>
+
+              {/* Visa Status Card */}
+              <VisaStatusCard />
             </div>
 
             {/* Recent Activity */}

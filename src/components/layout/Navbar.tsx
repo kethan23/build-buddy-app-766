@@ -50,6 +50,7 @@ const Navbar = () => {
       { label: 'Profile', href: "/hospital/profile" },
       { label: 'Packages', href: "/hospital/packages" },
       { label: 'Inquiries', href: "/hospital/inquiries" },
+      { label: 'Visa Support', href: "/hospital/visa-support" },
       { label: 'Messages', href: "/hospital/chat" }
     );
   } else if (user && role === 'patient') {
