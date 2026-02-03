@@ -22,6 +22,9 @@ import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import ResetPassword from "./pages/ResetPassword";
 import Terms from "./pages/Terms";
+import VisaInfo from "./pages/VisaInfo";
+import VisaApplication from "./pages/patient/VisaApplication";
+import AdminVisaRequirements from "./pages/admin/VisaRequirements";
 import Dashboard from "./pages/patient/Dashboard";
 import Profile from "./pages/patient/Profile";
 import Search from "./pages/patient/Search";
@@ -78,10 +81,12 @@ const App = () => {
                   <Route path="/about" element={<About />} />
                   <Route path="/how-it-works" element={<HowItWorks />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/visa-info" element={<VisaInfo />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/patient/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                  <Route path="/patient/visa-application" element={<ProtectedRoute><VisaApplication /></ProtectedRoute>} />
                   <Route path="/patient/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/patient/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
                   <Route path="/patient/inquiries" element={<ProtectedRoute><Inquiries /></ProtectedRoute>} />
@@ -100,6 +105,7 @@ const App = () => {
                   <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
                   <Route path="/admin/analytics" element={<ProtectedAdminRoute><AdminAnalytics /></ProtectedAdminRoute>} />
                   <Route path="/admin/visa" element={<ProtectedAdminRoute><AdminVisa /></ProtectedAdminRoute>} />
+                  <Route path="/admin/visa-requirements" element={<ProtectedAdminRoute><AdminVisaRequirements /></ProtectedAdminRoute>} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

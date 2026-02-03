@@ -104,7 +104,9 @@ export default function VisaInfoPage() {
         extension_available: c.extension_available ?? true,
         fees_usd: Number(c.fees_usd) || 0,
         special_notes: c.special_notes,
-        required_documents: Array.isArray(c.required_documents) ? c.required_documents : []
+        required_documents: Array.isArray(c.required_documents) 
+          ? (c.required_documents as string[]) 
+          : []
       })));
     }
     setLoading(false);

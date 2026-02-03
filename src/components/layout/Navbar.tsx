@@ -29,6 +29,7 @@ const Navbar = () => {
     { label: t('nav.home'), href: "/" },
     { label: t('nav.hospitals'), href: "/hospitals" },
     { label: t('nav.treatments'), href: "/treatments" },
+    { label: 'Visa Assistance', href: "/visa-info" },
     { label: t('nav.howItWorks'), href: "/how-it-works" },
     { label: t('nav.about'), href: "/about" },
     { label: t('nav.support'), href: "/support" },
@@ -40,6 +41,7 @@ const Navbar = () => {
       { label: 'Admin Dashboard', href: "/admin/dashboard" },
       { label: 'Manage Hospitals', href: "/admin/hospitals" },
       { label: 'Manage Users', href: "/admin/users" },
+      { label: 'Visa Management', href: "/admin/visa" },
       { label: 'Analytics', href: "/admin/analytics" }
     );
   } else if (user && role === 'hospital') {
@@ -54,6 +56,7 @@ const Navbar = () => {
     navLinks.push(
       { label: 'My Dashboard', href: "/patient/dashboard" },
       { label: 'Search', href: "/patient/search" },
+      { label: 'Visa Application', href: "/patient/visa-application" },
       { label: 'Messages', href: "/patient/chat" },
       { label: 'Bookings', href: "/patient/bookings" }
     );
