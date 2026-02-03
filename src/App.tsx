@@ -39,6 +39,7 @@ import HospitalInquiries from "./pages/hospital/Inquiries";
 import HospitalAppointments from "./pages/hospital/Appointments";
 import HospitalAnalytics from "./pages/hospital/Analytics";
 import HospitalChat from "./pages/hospital/Chat";
+import HospitalVisaSupport from "./pages/hospital/VisaSupport";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminHospitals from "./pages/admin/Hospitals";
 import AdminUsers from "./pages/admin/Users";
@@ -100,6 +101,7 @@ const App = () => {
                   <Route path="/hospital/appointments" element={<ProtectedHospitalRoute><HospitalAppointments /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/analytics" element={<ProtectedHospitalRoute><HospitalAnalytics /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/chat" element={<ProtectedHospitalRoute><HospitalChat /></ProtectedHospitalRoute>} />
+                  <Route path="/hospital/visa-support" element={<ProtectedHospitalRoute><HospitalVisaSupport /></ProtectedHospitalRoute>} />
                   <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
                   <Route path="/admin/hospitals" element={<ProtectedAdminRoute><AdminHospitals /></ProtectedAdminRoute>} />
                   <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
