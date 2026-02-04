@@ -39,27 +39,24 @@ const Navbar = () => {
   if (user && role === 'admin') {
     navLinks.push(
       { label: 'Admin Dashboard', href: "/admin/dashboard" },
+      { label: 'Communications', href: "/admin/communications" },
       { label: 'Manage Hospitals', href: "/admin/hospitals" },
       { label: 'Manage Users', href: "/admin/users" },
-      { label: 'Visa Management', href: "/admin/visa" },
-      { label: 'Analytics', href: "/admin/analytics" }
+      { label: 'Visa Management', href: "/admin/visa" }
     );
   } else if (user && role === 'hospital') {
     navLinks.push(
       { label: 'Hospital Dashboard', href: "/hospital/dashboard" },
-      { label: 'Profile', href: "/hospital/profile" },
-      { label: 'Packages', href: "/hospital/packages" },
       { label: 'Inquiries', href: "/hospital/inquiries" },
-      { label: 'Visa Support', href: "/hospital/visa-support" },
-      { label: 'Messages', href: "/hospital/chat" }
+      { label: 'Messages', href: "/hospital/chat" },
+      { label: 'Contact Support', href: "/hospital/support" }
     );
   } else if (user && role === 'patient') {
     navLinks.push(
       { label: 'My Dashboard', href: "/patient/dashboard" },
-      { label: 'Search', href: "/patient/search" },
-      { label: 'Visa Application', href: "/patient/visa-application" },
       { label: 'Messages', href: "/patient/chat" },
-      { label: 'Bookings', href: "/patient/bookings" }
+      { label: 'Bookings', href: "/patient/bookings" },
+      { label: 'Contact Support', href: "/patient/support" }
     );
   }
 
