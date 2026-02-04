@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Paperclip, Video, FileText, Image, Download, X, Loader2 } from 'lucide-react';
+import { Send, Paperclip, Video, FileText, Image, Download, X, Loader2, Shield } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 
 interface Message {
   id: string;
   sender_id: string;
+  sender_role?: string;
   content: string;
   message_type: string;
   file_url?: string;
@@ -309,23 +311,39 @@ export default function ChatInterface({ conversationId, onVideoCall }: ChatInter
         <div className="space-y-4">
           {messages.map((message) => {
             const isOwn = message.sender_id === user?.id;
+            const isAdmin = message.sender_role === 'admin';
             const senderName = isOwn 
               ? 'You' 
-              : (message.sender_id === conversationInfo?.patient_id 
-                  ? conversationInfo?.patient_name?.split(' ')[0] || 'Patient'
-                  : conversationInfo?.hospital_name?.split(' ')[0] || 'Hospital');
+              : isAdmin
+                ? 'MediConnect Executive'
+                : (message.sender_id === conversationInfo?.patient_id 
+                    ? conversationInfo?.patient_name?.split(' ')[0] || 'Patient'
+                    : conversationInfo?.hospital_name?.split(' ')[0] || 'Hospital');
             
             return (
               <div
                 key={message.id}
-                className={`flex gap-2 ${isOwn ? 'flex-row-reverse' : ''}`}
+                className={`flex gap-2 ${isOwn ? 'flex-row-reverse' : ''} ${isAdmin && !isOwn ? 'bg-purple-50/50 dark:bg-purple-950/20 -mx-4 px-4 py-2 rounded-lg' : ''}`}
               >
                 <Avatar className="h-8 w-8 shrink-0">
-                  <AvatarFallback className={isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted'}>
-                    {senderName.substring(0, 2).toUpperCase()}
+                  <AvatarFallback className={
+                    isAdmin 
+                      ? 'bg-purple-100 text-purple-700' 
+                      : isOwn 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'bg-muted'
+                  }>
+                    {isAdmin ? <Shield className="h-4 w-4" /> : senderName.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className={`flex flex-col ${isOwn ? 'items-end' : ''} max-w-[70%]`}>
+                  {/* Sender name and badge */}
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-medium">{senderName}</span>
+                    {isAdmin && !isOwn && (
+                      <Badge className="bg-purple-500 text-xs px-1.5 py-0">Executive</Badge>
+                    )}
+                  </div>
                   {/* File/Image attachment */}
                   {message.file_url && (
                     <div className={`mb-1 ${isOwn ? 'ml-auto' : ''}`}>
@@ -367,7 +385,9 @@ export default function ChatInterface({ conversationId, onVideoCall }: ChatInter
                       className={`rounded-lg px-4 py-2 ${
                         isOwn
                           ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted'
+                          : isAdmin
+                            ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-100'
+                            : 'bg-muted'
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>

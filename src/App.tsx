@@ -25,6 +25,7 @@ import Terms from "./pages/Terms";
 import VisaInfo from "./pages/VisaInfo";
 import VisaApplication from "./pages/patient/VisaApplication";
 import AdminVisaRequirements from "./pages/admin/VisaRequirements";
+import AdminCommunications from "./pages/admin/Communications";
 import Dashboard from "./pages/patient/Dashboard";
 import Profile from "./pages/patient/Profile";
 import Search from "./pages/patient/Search";
@@ -32,6 +33,7 @@ import Inquiries from "./pages/patient/Inquiries";
 import Bookings from "./pages/patient/Bookings";
 import Payments from "./pages/patient/Payments";
 import Chat from "./pages/patient/Chat";
+import PatientSupport from "./pages/patient/Support";
 import HospitalDashboard from "./pages/hospital/Dashboard";
 import HospitalProfile from "./pages/hospital/Profile";
 import HospitalPackages from "./pages/hospital/Packages";
@@ -94,6 +96,7 @@ const App = () => {
                   <Route path="/patient/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
                   <Route path="/patient/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
                   <Route path="/patient/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                  <Route path="/patient/support" element={<ProtectedRoute><PatientSupport /></ProtectedRoute>} />
                   <Route path="/hospital/dashboard" element={<ProtectedHospitalRoute><HospitalDashboard /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/profile" element={<ProtectedHospitalRoute><HospitalProfile /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/packages" element={<ProtectedHospitalRoute><HospitalPackages /></ProtectedHospitalRoute>} />
@@ -102,12 +105,14 @@ const App = () => {
                   <Route path="/hospital/analytics" element={<ProtectedHospitalRoute><HospitalAnalytics /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/chat" element={<ProtectedHospitalRoute><HospitalChat /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/visa-support" element={<ProtectedHospitalRoute><HospitalVisaSupport /></ProtectedHospitalRoute>} />
+                  <Route path="/hospital/support" element={<ProtectedHospitalRoute><PatientSupport /></ProtectedHospitalRoute>} />
                   <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
                   <Route path="/admin/hospitals" element={<ProtectedAdminRoute><AdminHospitals /></ProtectedAdminRoute>} />
                   <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
                   <Route path="/admin/analytics" element={<ProtectedAdminRoute><AdminAnalytics /></ProtectedAdminRoute>} />
                   <Route path="/admin/visa" element={<ProtectedAdminRoute><AdminVisa /></ProtectedAdminRoute>} />
                   <Route path="/admin/visa-requirements" element={<ProtectedAdminRoute><AdminVisaRequirements /></ProtectedAdminRoute>} />
+                  <Route path="/admin/communications" element={<ProtectedAdminRoute><AdminCommunications /></ProtectedAdminRoute>} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
