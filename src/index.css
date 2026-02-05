@@ -210,6 +210,57 @@ All colors MUST be HSL.
       0 12px 32px -4px hsl(var(--shadow-medium) / 0.16),
       0 0 0 1px hsl(var(--border));
   }
+   
+   /* Premium section header badge */
+   .section-badge {
+     @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium;
+     background: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--primary) / 0.05) 100%);
+     color: hsl(var(--primary));
+     border: 1px solid hsl(var(--primary) / 0.2);
+   }
+   
+   /* Shimmer animation for premium elements */
+   @keyframes shimmer {
+     0% {
+       background-position: -200% 0;
+     }
+     100% {
+       background-position: 200% 0;
+     }
+   }
+   
+   .shimmer {
+     background: linear-gradient(
+       90deg,
+       hsl(var(--primary) / 0) 0%,
+       hsl(var(--primary) / 0.1) 50%,
+       hsl(var(--primary) / 0) 100%
+     );
+     background-size: 200% 100%;
+     animation: shimmer 3s linear infinite;
+   }
+   
+   /* Elegant card with subtle gradient border */
+   .elegant-card {
+     position: relative;
+     background: hsl(var(--card));
+     border-radius: var(--radius);
+     overflow: hidden;
+   }
+   
+   .elegant-card::before {
+     content: '';
+     position: absolute;
+     inset: 0;
+     border-radius: var(--radius);
+     padding: 1px;
+     background: linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--accent) / 0.2));
+     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+     -webkit-mask-composite: xor;
+     mask-composite: exclude;
+     pointer-events: none;
+   }
 
   /* Gradient button */
   .btn-gradient {
