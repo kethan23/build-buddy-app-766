@@ -54,7 +54,7 @@ const Navbar = () => {
   } else if (user && role === 'patient') {
     navLinks.push(
       { label: 'My Dashboard', href: "/patient/dashboard" },
-      { label: 'Messages', href: "/patient/chat" },
+       { label: 'Inbox', href: "/patient/inbox" },
       { label: 'Bookings', href: "/patient/bookings" },
       { label: 'Contact Support', href: "/patient/support" }
     );

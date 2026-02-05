@@ -26,6 +26,7 @@ import VisaInfo from "./pages/VisaInfo";
 import VisaApplication from "./pages/patient/VisaApplication";
 import AdminVisaRequirements from "./pages/admin/VisaRequirements";
 import AdminCommunications from "./pages/admin/Communications";
+ import PatientInbox from "./pages/patient/Inbox";
 import Dashboard from "./pages/patient/Dashboard";
 import Profile from "./pages/patient/Profile";
 import Search from "./pages/patient/Search";
@@ -96,6 +97,7 @@ const App = () => {
                   <Route path="/patient/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
                   <Route path="/patient/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
                   <Route path="/patient/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                   <Route path="/patient/inbox" element={<ProtectedRoute><PatientInbox /></ProtectedRoute>} />
                   <Route path="/patient/support" element={<ProtectedRoute><PatientSupport /></ProtectedRoute>} />
                   <Route path="/hospital/dashboard" element={<ProtectedHospitalRoute><HospitalDashboard /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/profile" element={<ProtectedHospitalRoute><HospitalProfile /></ProtectedHospitalRoute>} />
