@@ -37,11 +37,12 @@ const Navbar = () => {
     { label: t('nav.home'), href: "/" },
     { label: t('nav.hospitals'), href: "/hospitals" },
     { label: t('nav.treatments'), href: "/treatments" },
+    { label: 'Visa', href: "/visa-info" },
+    ...(user ? [{ label: 'Dashboard', href: dashboardHref }] : []),
   ];
 
   // Secondary links go into "More" dropdown
   const secondaryLinks = [
-    { label: 'Visa Assistance', href: "/visa-info" },
     { label: t('nav.howItWorks'), href: "/how-it-works" },
     { label: t('nav.about'), href: "/about" },
     { label: t('nav.support'), href: "/support" },
