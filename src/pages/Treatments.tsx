@@ -42,54 +42,18 @@ const Treatments = () => {
   };
 
   const staticTreatments = [
-    {
-      name: "Cardiac Bypass Surgery",
-      avgCost: "$6,000 - $10,000",
-      duration: "7-10 days",
-      savings: "Save up to 70%",
-      color: "from-red-500/10 to-red-500/5",
-      iconBg: "bg-red-500/10 text-red-600",
-    },
-    {
-      name: "Hip Replacement",
-      avgCost: "$7,000 - $12,000",
-      duration: "10-14 days",
-      savings: "Save up to 75%",
-      color: "from-blue-500/10 to-blue-500/5",
-      iconBg: "bg-blue-500/10 text-blue-600",
-    },
-    {
-      name: "Dental Implants",
-      avgCost: "$800 - $1,500",
-      duration: "5-7 days",
-      savings: "Save up to 65%",
-      color: "from-emerald-500/10 to-emerald-500/5",
-      iconBg: "bg-emerald-500/10 text-emerald-600",
-    },
-    {
-      name: "Knee Replacement",
-      avgCost: "$5,500 - $9,000",
-      duration: "10-14 days",
-      savings: "Save up to 80%",
-      color: "from-violet-500/10 to-violet-500/5",
-      iconBg: "bg-violet-500/10 text-violet-600",
-    },
-    {
-      name: "LASIK Eye Surgery",
-      avgCost: "$500 - $1,200",
-      duration: "2-3 days",
-      savings: "Save up to 60%",
-      color: "from-amber-500/10 to-amber-500/5",
-      iconBg: "bg-amber-500/10 text-amber-600",
-    },
-    {
-      name: "IVF Treatment",
-      avgCost: "$3,000 - $5,000",
-      duration: "14-21 days",
-      savings: "Save up to 70%",
-      color: "from-pink-500/10 to-pink-500/5",
-      iconBg: "bg-pink-500/10 text-pink-600",
-    },
+    { name: "Knee Replacement", avgCost: "Starting $4,000", duration: "10-14 days", savings: "Save up to 80%", iconBg: "bg-blue-500/10 text-blue-600" },
+    { name: "Hip Replacement", avgCost: "Starting $5,500", duration: "10-14 days", savings: "Save up to 75%", iconBg: "bg-violet-500/10 text-violet-600" },
+    { name: "Brain Tumor Surgery", avgCost: "Starting $5,000", duration: "7-14 days", savings: "Save up to 70%", iconBg: "bg-purple-500/10 text-purple-600" },
+    { name: "Heart Bypass Surgery", avgCost: "Starting $4,500", duration: "7-10 days", savings: "Save up to 70%", iconBg: "bg-red-500/10 text-red-600" },
+    { name: "Valve Replacement", avgCost: "Starting $9,500", duration: "7-10 days", savings: "Save up to 65%", iconBg: "bg-rose-500/10 text-rose-600" },
+    { name: "Breast Cancer Treatment", avgCost: "Starting $5,000", duration: "14-21 days", savings: "Save up to 70%", iconBg: "bg-pink-500/10 text-pink-600" },
+    { name: "Lung Cancer Treatment", avgCost: "Starting $5,500", duration: "14-21 days", savings: "Save up to 65%", iconBg: "bg-orange-500/10 text-orange-600" },
+    { name: "Rhinoplasty", avgCost: "Starting $1,800", duration: "3-5 days", savings: "Save up to 75%", iconBg: "bg-amber-500/10 text-amber-600" },
+    { name: "Breast Implants", avgCost: "Starting $2,750", duration: "3-5 days", savings: "Save up to 70%", iconBg: "bg-fuchsia-500/10 text-fuchsia-600" },
+    { name: "Hair Transplant", avgCost: "Starting $1,400", duration: "2-3 days", savings: "Save up to 80%", iconBg: "bg-emerald-500/10 text-emerald-600" },
+    { name: "Cervical Cancer Treatment", avgCost: "Starting $4,500", duration: "14-21 days", savings: "Save up to 65%", iconBg: "bg-teal-500/10 text-teal-600" },
+    { name: "Hysterectomy", avgCost: "Starting $3,000", duration: "5-7 days", savings: "Save up to 70%", iconBg: "bg-cyan-500/10 text-cyan-600" },
   ];
 
   return (
@@ -142,7 +106,7 @@ const Treatments = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {staticTreatments.map((treatment, index) => (
                 <Card 
                   key={treatment.name} 
