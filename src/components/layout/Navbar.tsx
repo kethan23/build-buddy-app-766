@@ -44,11 +44,11 @@ const Navbar = () => {
     { label: t('nav.hospitals'), href: "/hospitals" },
     { label: t('nav.treatments'), href: "/treatments" },
     { label: 'Visa', href: "/visa-info" },
-    ...(user ? [{ label: 'Dashboard', href: dashboardHref }] : []),
+    ...(user ? [
+      { label: 'Dashboard', href: dashboardHref },
+      { label: 'Messages', href: role === 'admin' ? '/admin/communications' : role === 'hospital' ? '/hospital/chat' : '/patient/inbox' },
+    ] : []),
   ];
-
-  // Secondary links go into "More" dropdown
-  const secondaryLinks = [
     { label: t('nav.howItWorks'), href: "/how-it-works" },
     { label: t('nav.about'), href: "/about" },
     { label: t('nav.support'), href: "/support" },
