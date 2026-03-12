@@ -32,6 +32,12 @@ const Navbar = () => {
   const { role } = useUserRole();
   const { t, i18n } = useTranslation();
 
+  // Role-specific dashboard link
+  const dashboardHref =
+    role === 'admin' ? '/admin/dashboard' :
+    role === 'hospital' ? '/hospital/dashboard' :
+    '/patient/dashboard';
+
   // Primary links always visible
   const primaryLinks = [
     { label: t('nav.home'), href: "/" },
@@ -47,12 +53,6 @@ const Navbar = () => {
     { label: t('nav.about'), href: "/about" },
     { label: t('nav.support'), href: "/support" },
   ];
-
-  // Role-specific dashboard link (single entry, no duplication)
-  const dashboardHref =
-    role === 'admin' ? '/admin/dashboard' :
-    role === 'hospital' ? '/hospital/dashboard' :
-    '/patient/dashboard';
 
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value);
