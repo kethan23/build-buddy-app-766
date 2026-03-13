@@ -1,1 +1,7 @@
 project_id = "slgzisdvfsruqlhtafvg"
+
+[functions.analyze-report]
+verify_jwt = false
+
+[functions.medical-chat]
+verify_jwt = false

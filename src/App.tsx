@@ -34,6 +34,7 @@ import Inquiries from "./pages/patient/Inquiries";
 import Bookings from "./pages/patient/Bookings";
 import Payments from "./pages/patient/Payments";
 import Chat from "./pages/patient/Chat";
+import AIAnalysis from "./pages/patient/AIAnalysis";
 import PatientSupport from "./pages/patient/Support";
 import HospitalDashboard from "./pages/hospital/Dashboard";
 import HospitalProfile from "./pages/hospital/Profile";
@@ -97,6 +98,7 @@ const App = () => {
                   <Route path="/patient/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
                   <Route path="/patient/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
                   <Route path="/patient/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                  <Route path="/patient/ai-analysis" element={<ProtectedRoute><AIAnalysis /></ProtectedRoute>} />
                    <Route path="/patient/inbox" element={<ProtectedRoute><PatientInbox /></ProtectedRoute>} />
                   <Route path="/patient/support" element={<ProtectedRoute><PatientSupport /></ProtectedRoute>} />
                   <Route path="/hospital/dashboard" element={<ProtectedHospitalRoute><HospitalDashboard /></ProtectedHospitalRoute>} />
