@@ -34,6 +34,7 @@ import Inquiries from "./pages/patient/Inquiries";
 import Bookings from "./pages/patient/Bookings";
 import Payments from "./pages/patient/Payments";
 import Chat from "./pages/patient/Chat";
+import AIAnalysis from "./pages/patient/AIAnalysis";
 import PatientSupport from "./pages/patient/Support";
 import HospitalDashboard from "./pages/hospital/Dashboard";
 import HospitalProfile from "./pages/hospital/Profile";
