@@ -32,6 +32,8 @@ export const useUserRole = () => {
             setRole('admin');
           } else if (roles.includes('hospital')) {
             setRole('hospital');
+          } else if (roles.includes('agent')) {
+            setRole('agent');
           } else {
             setRole('patient');
           }

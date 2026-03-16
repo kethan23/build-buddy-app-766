@@ -24,7 +24,7 @@ const signUpSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
-  role: z.enum(["patient", "hospital"]),
+  role: z.enum(["patient", "hospital", "agent"]),
   // Hospital-specific fields
   hospitalName: z.string().optional(),
   city: z.string().optional(),
