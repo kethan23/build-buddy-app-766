@@ -50,6 +50,14 @@ import AdminHospitals from "./pages/admin/Hospitals";
 import AdminUsers from "./pages/admin/Users";
 import AdminAnalytics from "./pages/admin/Analytics";
 import AdminVisa from "./pages/admin/Visa";
+import AdminAgents from "./pages/admin/Agents";
+import AgentDashboard from "./pages/agent/Dashboard";
+import AgentPatients from "./pages/agent/Patients";
+import AddPatient from "./pages/agent/AddPatient";
+import AgentCommissions from "./pages/agent/Commissions";
+import AgentQuotes from "./pages/agent/Quotes";
+import AgentNegotiations from "./pages/agent/Negotiations";
+import AgentProfile from "./pages/agent/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
