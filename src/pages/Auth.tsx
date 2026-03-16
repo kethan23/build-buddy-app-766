@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, User, Building2 } from "lucide-react";
+import { Mail, Lock, User, Building2, Briefcase } from "lucide-react";
 
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
