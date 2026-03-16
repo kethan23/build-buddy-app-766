@@ -275,7 +275,7 @@ const Auth = () => {
                           <RadioGroup
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            className="flex space-x-4"
+                            className="flex flex-wrap gap-4"
                           >
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="patient" id="patient" />
@@ -289,6 +289,13 @@ const Auth = () => {
                               <Label htmlFor="hospital" className="flex items-center cursor-pointer">
                                 <Building2 className="mr-2 h-4 w-4" />
                                 Hospital
+                              </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="agent" id="agent" />
+                              <Label htmlFor="agent" className="flex items-center cursor-pointer">
+                                <Briefcase className="mr-2 h-4 w-4" />
+                                Agent
                               </Label>
                             </div>
                           </RadioGroup>
