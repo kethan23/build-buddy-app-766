@@ -15,7 +15,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string, role: 'patient' | 'hospital' | 'agent', hospitalData?: HospitalData) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithMagicLink: (email: string) => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<{ error: any }>;
