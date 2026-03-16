@@ -74,6 +74,8 @@ const Auth = () => {
           navigate('/admin/dashboard');
         } else if (role === 'hospital') {
           navigate('/hospital/dashboard');
+        } else if (role === 'agent') {
+          navigate('/agent/dashboard');
         } else {
           navigate('/patient/dashboard');
         }
