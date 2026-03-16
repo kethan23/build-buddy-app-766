@@ -126,6 +126,14 @@ const App = () => {
                   <Route path="/admin/visa" element={<ProtectedAdminRoute><AdminVisa /></ProtectedAdminRoute>} />
                   <Route path="/admin/visa-requirements" element={<ProtectedAdminRoute><AdminVisaRequirements /></ProtectedAdminRoute>} />
                   <Route path="/admin/communications" element={<ProtectedAdminRoute><AdminCommunications /></ProtectedAdminRoute>} />
+                  <Route path="/admin/agents" element={<ProtectedAdminRoute><AdminAgents /></ProtectedAdminRoute>} />
+                  <Route path="/agent/dashboard" element={<ProtectedAgentRoute><AgentDashboard /></ProtectedAgentRoute>} />
+                  <Route path="/agent/patients" element={<ProtectedAgentRoute><AgentPatients /></ProtectedAgentRoute>} />
+                  <Route path="/agent/patients/new" element={<ProtectedAgentRoute><AddPatient /></ProtectedAgentRoute>} />
+                  <Route path="/agent/commissions" element={<ProtectedAgentRoute><AgentCommissions /></ProtectedAgentRoute>} />
+                  <Route path="/agent/quotes" element={<ProtectedAgentRoute><AgentQuotes /></ProtectedAgentRoute>} />
+                  <Route path="/agent/negotiations" element={<ProtectedAgentRoute><AgentNegotiations /></ProtectedAgentRoute>} />
+                  <Route path="/agent/profile" element={<ProtectedAgentRoute><AgentProfile /></ProtectedAgentRoute>} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
