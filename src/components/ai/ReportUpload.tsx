@@ -2,7 +2,10 @@ import { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload, FileText, ArrowLeft, Brain, X } from 'lucide-react';
+import { Upload, FileText, ArrowLeft, Brain, X, ScanText, Loader2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import type { PatientInfo } from '@/pages/patient/AIAnalysis';
 
 interface Props {
@@ -11,10 +14,24 @@ interface Props {
   patientInfo: PatientInfo;
 }
 
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.split(',')[1]); // strip data:...;base64,
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
 export default function ReportUpload({ onAnalyze, onBack, patientInfo }: Props) {
+  const { toast } = useToast();
   const [files, setFiles] = useState<File[]>([]);
   const [manualText, setManualText] = useState('');
   const [extracting, setExtracting] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState(0);
+  const [ocrStatus, setOcrStatus] = useState('');
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -37,18 +54,81 @@ export default function ReportUpload({ onAnalyze, onBack, patientInfo }: Props) 
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const extractTextFromImages = async (imageFiles: File[]): Promise<string> => {
+    if (imageFiles.length === 0) return '';
+
+    setOcrStatus(`Extracting text from ${imageFiles.length} image(s)...`);
+    setOcrProgress(10);
+
+    const images = await Promise.all(
+      imageFiles.map(async (file) => ({
+        base64: await fileToBase64(file),
+        mimeType: file.type,
+        fileName: file.name,
+      }))
+    );
+
+    setOcrProgress(40);
+    setOcrStatus('Running AI-powered OCR...');
+
+    const { data, error } = await supabase.functions.invoke('extract-text', {
+      body: { images },
+    });
+
+    setOcrProgress(90);
+
+    if (error) throw new Error(`OCR failed: ${error.message}`);
+    if (data?.error) throw new Error(data.error);
+
+    setOcrProgress(100);
+    setOcrStatus('Text extraction complete!');
+    return data.extractedText || '';
+  };
+
   const handleAnalyze = async () => {
     setExtracting(true);
-    let extractedText = manualText;
+    setOcrProgress(0);
 
-    // For uploaded files, we extract text client-side for images using canvas
-    // For PDFs, we pass a note to the AI that reports were uploaded
-    if (files.length > 0) {
-      const fileDescriptions = files.map(f => `[Uploaded file: ${f.name}, Type: ${f.type}, Size: ${(f.size / 1024).toFixed(1)}KB]`).join('\n');
-      extractedText = `${fileDescriptions}\n\n${manualText}`;
+    try {
+      let extractedText = '';
+
+      // Separate image files from PDFs
+      const imageFiles = files.filter(f => f.type.startsWith('image/'));
+      const pdfFiles = files.filter(f => f.type === 'application/pdf');
+
+      // Extract text from images via OCR
+      if (imageFiles.length > 0) {
+        extractedText = await extractTextFromImages(imageFiles);
+      }
+
+      // For PDFs, add a note (no client-side OCR for PDFs)
+      if (pdfFiles.length > 0) {
+        const pdfNotes = pdfFiles
+          .map(f => `[Uploaded PDF: ${f.name}, Size: ${(f.size / 1024).toFixed(1)}KB — PDF text extraction not available, analyze based on other info]`)
+          .join('\n');
+        extractedText = extractedText ? `${extractedText}\n\n${pdfNotes}` : pdfNotes;
+      }
+
+      // Append manual text
+      if (manualText.trim()) {
+        extractedText = extractedText
+          ? `${extractedText}\n\n--- Additional Notes ---\n${manualText}`
+          : manualText;
+      }
+
+      onAnalyze(extractedText);
+    } catch (err: any) {
+      console.error('OCR/Analysis error:', err);
+      toast({
+        title: 'Text Extraction Failed',
+        description: err.message || 'Failed to extract text from reports.',
+        variant: 'destructive',
+      });
+    } finally {
+      setExtracting(false);
+      setOcrProgress(0);
+      setOcrStatus('');
     }
-
-    onAnalyze(extractedText);
   };
 
   const canAnalyze = files.length > 0 || manualText.trim().length > 0;
@@ -87,6 +167,10 @@ export default function ReportUpload({ onAnalyze, onBack, patientInfo }: Props) 
             <Upload className="h-10 w-10 text-primary/60 mx-auto mb-3" />
             <p className="font-medium">Drop your medical reports here</p>
             <p className="text-sm text-muted-foreground mt-1">PDF, JPG, PNG — up to 5 files</p>
+            <div className="flex items-center justify-center gap-1 mt-2 text-xs text-accent">
+              <ScanText className="h-3 w-3" />
+              <span>AI-powered OCR extracts text from images automatically</span>
+            </div>
             <input
               id="file-input"
               type="file"
@@ -106,12 +190,26 @@ export default function ReportUpload({ onAnalyze, onBack, patientInfo }: Props) 
                     <FileText className="h-4 w-4 text-primary" />
                     <span className="text-sm font-medium">{file.name}</span>
                     <span className="text-xs text-muted-foreground">({(file.size / 1024).toFixed(1)} KB)</span>
+                    {file.type.startsWith('image/') && (
+                      <span className="text-xs bg-accent/15 text-accent px-2 py-0.5 rounded-full">OCR</span>
+                    )}
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => removeFile(i)}>
+                  <Button variant="ghost" size="icon" onClick={() => removeFile(i)} disabled={extracting}>
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* OCR Progress */}
+          {extracting && ocrStatus && (
+            <div className="space-y-2 p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {ocrStatus}
+              </div>
+              <Progress value={ocrProgress} className="h-2" />
             </div>
           )}
 
@@ -127,7 +225,7 @@ export default function ReportUpload({ onAnalyze, onBack, patientInfo }: Props) 
           </div>
 
           <div className="flex gap-3">
-            <Button variant="outline" onClick={onBack}>
+            <Button variant="outline" onClick={onBack} disabled={extracting}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Back
             </Button>
             <Button
@@ -136,8 +234,11 @@ export default function ReportUpload({ onAnalyze, onBack, patientInfo }: Props) 
               onClick={handleAnalyze}
               disabled={!canAnalyze || extracting}
             >
-              <Brain className="mr-2 h-5 w-5" />
-              Analyze with AI
+              {extracting ? (
+                <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Extracting & Analyzing...</>
+              ) : (
+                <><Brain className="mr-2 h-5 w-5" /> Analyze with AI</>
+              )}
             </Button>
           </div>
         </CardContent>
