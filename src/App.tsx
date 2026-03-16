@@ -10,6 +10,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/patient/ProtectedRoute";
 import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute";
 import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
+import ProtectedAgentRoute from "@/components/agent/ProtectedAgentRoute";
 import Index from "./pages/Index";
 import Hospitals from "./pages/Hospitals";
 import PublicHospitalProfile from "./pages/PublicHospitalProfile";
