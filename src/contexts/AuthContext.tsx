@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => {
+  const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital' | 'agent', hospitalData?: HospitalData) => {
     // Always use current origin for redirects
     const redirectUrl = `${window.location.origin}/auth/callback`;
     
