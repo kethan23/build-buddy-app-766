@@ -15,7 +15,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string, role: 'patient' | 'hospital' | 'agent', hospitalData?: HospitalData) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithMagicLink: (email: string) => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<{ error: any }>;
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital', hospitalData?: HospitalData) => {
+  const signUp = async (email: string, password: string, fullName: string, role: 'patient' | 'hospital' | 'agent', hospitalData?: HospitalData) => {
     // Always use current origin for redirects
     const redirectUrl = `${window.location.origin}/auth/callback`;
     

@@ -53,6 +53,8 @@ const AuthCallback = () => {
                 navigate('/admin/dashboard', { replace: true });
               } else if (role === 'hospital') {
                 navigate('/hospital/dashboard', { replace: true });
+              } else if (role === 'agent') {
+                navigate('/agent/dashboard', { replace: true });
               } else {
                 navigate('/patient/dashboard', { replace: true });
               }
@@ -90,6 +92,8 @@ const AuthCallback = () => {
             navigate('/admin/dashboard', { replace: true });
           } else if (role === 'hospital') {
             navigate('/hospital/dashboard', { replace: true });
+          } else if (role === 'agent') {
+            navigate('/agent/dashboard', { replace: true });
           } else {
             navigate('/patient/dashboard', { replace: true });
           }

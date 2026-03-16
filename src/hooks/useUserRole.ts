@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'patient' | 'hospital' | 'admin' | null;
+export type UserRole = 'patient' | 'hospital' | 'admin' | 'agent' | null;
 
 export const useUserRole = () => {
   const { user } = useAuth();
@@ -32,6 +32,8 @@ export const useUserRole = () => {
             setRole('admin');
           } else if (roles.includes('hospital')) {
             setRole('hospital');
+          } else if (roles.includes('agent')) {
+            setRole('agent');
           } else {
             setRole('patient');
           }

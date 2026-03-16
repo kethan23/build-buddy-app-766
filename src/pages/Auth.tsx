@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, User, Building2 } from "lucide-react";
+import { Mail, Lock, User, Building2, Briefcase } from "lucide-react";
 
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -24,7 +24,7 @@ const signUpSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
-  role: z.enum(["patient", "hospital"]),
+  role: z.enum(["patient", "hospital", "agent"]),
   // Hospital-specific fields
   hospitalName: z.string().optional(),
   city: z.string().optional(),
@@ -74,6 +74,8 @@ const Auth = () => {
           navigate('/admin/dashboard');
         } else if (role === 'hospital') {
           navigate('/hospital/dashboard');
+        } else if (role === 'agent') {
+          navigate('/agent/dashboard');
         } else {
           navigate('/patient/dashboard');
         }
@@ -273,7 +275,7 @@ const Auth = () => {
                           <RadioGroup
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            className="flex space-x-4"
+                            className="flex flex-wrap gap-4"
                           >
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="patient" id="patient" />
@@ -287,6 +289,13 @@ const Auth = () => {
                               <Label htmlFor="hospital" className="flex items-center cursor-pointer">
                                 <Building2 className="mr-2 h-4 w-4" />
                                 Hospital
+                              </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="agent" id="agent" />
+                              <Label htmlFor="agent" className="flex items-center cursor-pointer">
+                                <Briefcase className="mr-2 h-4 w-4" />
+                                Agent
                               </Label>
                             </div>
                           </RadioGroup>

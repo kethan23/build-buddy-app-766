@@ -44,6 +44,325 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_commissions: {
+        Row: {
+          admin_notes: string | null
+          agent_id: string
+          agent_patient_id: string | null
+          booking_id: string | null
+          commission_amount: number
+          commission_rate: number
+          created_at: string | null
+          id: string
+          payment_date: string | null
+          payment_reference: string | null
+          status: string | null
+          treatment_amount: number
+          updated_at: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          agent_id: string
+          agent_patient_id?: string | null
+          booking_id?: string | null
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string | null
+          id?: string
+          payment_date?: string | null
+          payment_reference?: string | null
+          status?: string | null
+          treatment_amount?: number
+          updated_at?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          agent_id?: string
+          agent_patient_id?: string | null
+          booking_id?: string | null
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string | null
+          id?: string
+          payment_date?: string | null
+          payment_reference?: string | null
+          status?: string | null
+          treatment_amount?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_commissions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agent_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_commissions_agent_patient_id_fkey"
+            columns: ["agent_patient_id"]
+            isOneToOne: false
+            referencedRelation: "agent_patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_commissions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_negotiation_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          negotiation_id: string
+          sender_id: string
+          sender_role: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          negotiation_id: string
+          sender_id: string
+          sender_role: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          negotiation_id?: string
+          sender_id?: string
+          sender_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_negotiation_messages_negotiation_id_fkey"
+            columns: ["negotiation_id"]
+            isOneToOne: false
+            referencedRelation: "agent_negotiations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_negotiations: {
+        Row: {
+          admin_response: string | null
+          agent_id: string
+          approved_rate: number | null
+          created_at: string | null
+          id: string
+          requested_rate: number | null
+          status: string | null
+          subject: string
+          updated_at: string | null
+        }
+        Insert: {
+          admin_response?: string | null
+          agent_id: string
+          approved_rate?: number | null
+          created_at?: string | null
+          id?: string
+          requested_rate?: number | null
+          status?: string | null
+          subject: string
+          updated_at?: string | null
+        }
+        Update: {
+          admin_response?: string | null
+          agent_id?: string
+          approved_rate?: number | null
+          created_at?: string | null
+          id?: string
+          requested_rate?: number | null
+          status?: string | null
+          subject?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_negotiations_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_patients: {
+        Row: {
+          agent_id: string
+          agent_patient_id: string | null
+          budget_max: number | null
+          budget_min: number | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          email: string
+          full_name: string
+          gender: string | null
+          id: string
+          login_email: string | null
+          login_password_set: boolean | null
+          medical_condition: string | null
+          medical_notes: string | null
+          nationality: string | null
+          passport_number: string | null
+          patient_user_id: string | null
+          phone: string | null
+          preferred_city: string | null
+          preferred_treatment: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          agent_patient_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email: string
+          full_name: string
+          gender?: string | null
+          id?: string
+          login_email?: string | null
+          login_password_set?: boolean | null
+          medical_condition?: string | null
+          medical_notes?: string | null
+          nationality?: string | null
+          passport_number?: string | null
+          patient_user_id?: string | null
+          phone?: string | null
+          preferred_city?: string | null
+          preferred_treatment?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          agent_patient_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string
+          full_name?: string
+          gender?: string | null
+          id?: string
+          login_email?: string | null
+          login_password_set?: boolean | null
+          medical_condition?: string | null
+          medical_notes?: string | null
+          nationality?: string | null
+          passport_number?: string | null
+          patient_user_id?: string | null
+          phone?: string | null
+          preferred_city?: string | null
+          preferred_treatment?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_patients_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_profiles: {
+        Row: {
+          address: string | null
+          admin_notes: string | null
+          agency_name: string | null
+          city: string | null
+          contact_person: string
+          country: string | null
+          created_at: string | null
+          default_commission_rate: number | null
+          description: string | null
+          email: string
+          id: string
+          is_active: boolean | null
+          license_number: string | null
+          logo_url: string | null
+          negotiated_commission_rate: number | null
+          phone: string | null
+          total_commission_earned: number | null
+          total_patients_referred: number | null
+          updated_at: string | null
+          user_id: string
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          admin_notes?: string | null
+          agency_name?: string | null
+          city?: string | null
+          contact_person: string
+          country?: string | null
+          created_at?: string | null
+          default_commission_rate?: number | null
+          description?: string | null
+          email: string
+          id?: string
+          is_active?: boolean | null
+          license_number?: string | null
+          logo_url?: string | null
+          negotiated_commission_rate?: number | null
+          phone?: string | null
+          total_commission_earned?: number | null
+          total_patients_referred?: number | null
+          updated_at?: string | null
+          user_id: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          admin_notes?: string | null
+          agency_name?: string | null
+          city?: string | null
+          contact_person?: string
+          country?: string | null
+          created_at?: string | null
+          default_commission_rate?: number | null
+          description?: string | null
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          license_number?: string | null
+          logo_url?: string | null
+          negotiated_commission_rate?: number | null
+          phone?: string | null
+          total_commission_earned?: number | null
+          total_patients_referred?: number | null
+          updated_at?: string | null
+          user_id?: string
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       ai_chat_sessions: {
         Row: {
           created_at: string | null
@@ -1475,6 +1794,7 @@ export type Database = {
         }
         Returns: string
       }
+      generate_agent_patient_id: { Args: never; Returns: string }
       generate_appointment_id: { Args: never; Returns: string }
       generate_patient_id: { Args: never; Returns: string }
       has_role: {
@@ -1486,7 +1806,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "patient" | "hospital" | "admin"
+      app_role: "patient" | "hospital" | "admin" | "agent"
       booking_status:
         | "pending"
         | "confirmed"
@@ -1622,7 +1942,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["patient", "hospital", "admin"],
+      app_role: ["patient", "hospital", "admin", "agent"],
       booking_status: [
         "pending",
         "confirmed",

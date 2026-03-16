@@ -10,6 +10,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/patient/ProtectedRoute";
 import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute";
 import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
+import ProtectedAgentRoute from "@/components/agent/ProtectedAgentRoute";
 import Index from "./pages/Index";
 import Hospitals from "./pages/Hospitals";
 import PublicHospitalProfile from "./pages/PublicHospitalProfile";
@@ -49,6 +50,14 @@ import AdminHospitals from "./pages/admin/Hospitals";
 import AdminUsers from "./pages/admin/Users";
 import AdminAnalytics from "./pages/admin/Analytics";
 import AdminVisa from "./pages/admin/Visa";
+import AdminAgents from "./pages/admin/Agents";
+import AgentDashboard from "./pages/agent/Dashboard";
+import AgentPatients from "./pages/agent/Patients";
+import AddPatient from "./pages/agent/AddPatient";
+import AgentCommissions from "./pages/agent/Commissions";
+import AgentQuotes from "./pages/agent/Quotes";
+import AgentNegotiations from "./pages/agent/Negotiations";
+import AgentProfile from "./pages/agent/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -117,6 +126,14 @@ const App = () => {
                   <Route path="/admin/visa" element={<ProtectedAdminRoute><AdminVisa /></ProtectedAdminRoute>} />
                   <Route path="/admin/visa-requirements" element={<ProtectedAdminRoute><AdminVisaRequirements /></ProtectedAdminRoute>} />
                   <Route path="/admin/communications" element={<ProtectedAdminRoute><AdminCommunications /></ProtectedAdminRoute>} />
+                  <Route path="/admin/agents" element={<ProtectedAdminRoute><AdminAgents /></ProtectedAdminRoute>} />
+                  <Route path="/agent/dashboard" element={<ProtectedAgentRoute><AgentDashboard /></ProtectedAgentRoute>} />
+                  <Route path="/agent/patients" element={<ProtectedAgentRoute><AgentPatients /></ProtectedAgentRoute>} />
+                  <Route path="/agent/patients/new" element={<ProtectedAgentRoute><AddPatient /></ProtectedAgentRoute>} />
+                  <Route path="/agent/commissions" element={<ProtectedAgentRoute><AgentCommissions /></ProtectedAgentRoute>} />
+                  <Route path="/agent/quotes" element={<ProtectedAgentRoute><AgentQuotes /></ProtectedAgentRoute>} />
+                  <Route path="/agent/negotiations" element={<ProtectedAgentRoute><AgentNegotiations /></ProtectedAgentRoute>} />
+                  <Route path="/agent/profile" element={<ProtectedAgentRoute><AgentProfile /></ProtectedAgentRoute>} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
