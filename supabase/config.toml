@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.extract-text]
 verify_jwt = false
+
+[functions.send-tracking-otp]
+verify_jwt = false
+
+[functions.verify-tracking-otp]
+verify_jwt = false

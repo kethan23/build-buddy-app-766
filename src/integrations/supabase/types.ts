@@ -193,6 +193,63 @@ export type Database = {
           },
         ]
       }
+      agent_patient_documents: {
+        Row: {
+          agent_id: string
+          agent_patient_id: string
+          category: string | null
+          created_at: string | null
+          description: string | null
+          document_type: string
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+        }
+        Insert: {
+          agent_id: string
+          agent_patient_id: string
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          document_type: string
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+        }
+        Update: {
+          agent_id?: string
+          agent_patient_id?: string
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          document_type?: string
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_patient_documents_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agent_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_patient_documents_agent_patient_id_fkey"
+            columns: ["agent_patient_id"]
+            isOneToOne: false
+            referencedRelation: "agent_patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_patients: {
         Row: {
           agent_id: string
@@ -1072,6 +1129,89 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      patient_journey_tracking: {
+        Row: {
+          agent_patient_id: string | null
+          created_at: string | null
+          current_stage: string
+          hospital_notes: string | null
+          hospital_status: string | null
+          id: string
+          inquiry_notes: string | null
+          inquiry_status: string | null
+          otp_code: string | null
+          otp_expires_at: string | null
+          otp_verified: boolean | null
+          patient_id: string
+          recovery_notes: string | null
+          recovery_status: string | null
+          travel_notes: string | null
+          travel_status: string | null
+          treatment_notes: string | null
+          treatment_status: string | null
+          updated_at: string | null
+          updated_by: string | null
+          visa_notes: string | null
+          visa_status: string | null
+        }
+        Insert: {
+          agent_patient_id?: string | null
+          created_at?: string | null
+          current_stage?: string
+          hospital_notes?: string | null
+          hospital_status?: string | null
+          id?: string
+          inquiry_notes?: string | null
+          inquiry_status?: string | null
+          otp_code?: string | null
+          otp_expires_at?: string | null
+          otp_verified?: boolean | null
+          patient_id: string
+          recovery_notes?: string | null
+          recovery_status?: string | null
+          travel_notes?: string | null
+          travel_status?: string | null
+          treatment_notes?: string | null
+          treatment_status?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          visa_notes?: string | null
+          visa_status?: string | null
+        }
+        Update: {
+          agent_patient_id?: string | null
+          created_at?: string | null
+          current_stage?: string
+          hospital_notes?: string | null
+          hospital_status?: string | null
+          id?: string
+          inquiry_notes?: string | null
+          inquiry_status?: string | null
+          otp_code?: string | null
+          otp_expires_at?: string | null
+          otp_verified?: boolean | null
+          patient_id?: string
+          recovery_notes?: string | null
+          recovery_status?: string | null
+          travel_notes?: string | null
+          travel_status?: string | null
+          treatment_notes?: string | null
+          treatment_status?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          visa_notes?: string | null
+          visa_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_journey_tracking_agent_patient_id_fkey"
+            columns: ["agent_patient_id"]
+            isOneToOne: false
+            referencedRelation: "agent_patients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payments: {
         Row: {

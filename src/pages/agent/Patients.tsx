@@ -136,10 +136,22 @@ const AgentPatients = () => {
                         </p>
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-col items-end">
                       <Badge variant={patient.login_password_set ? 'default' : 'outline'} className="text-xs">
                         {patient.login_password_set ? 'Login Active' : 'No Login'}
                       </Badge>
+                      <div className="flex gap-1">
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/agent/patients/${patient.id}/documents`}>
+                            <Eye className="h-3 w-3 mr-1" /> Docs
+                          </Link>
+                        </Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/agent/patients/${patient.id}/tracking`}>
+                            Tracking
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

@@ -8,6 +8,7 @@ import { OnboardingForm } from '@/components/patient/OnboardingForm';
 import { DocumentUpload } from '@/components/patient/DocumentUpload';
 import { StatusTracking } from '@/components/patient/StatusTracking';
 import { VisaProgressTracker } from '@/components/patient/VisaProgressTracker';
+import { JourneyTracker } from '@/components/patient/JourneyTracker';
 import { ScrollReveal } from '@/hooks/useScrollAnimation';
 import { useNavigate } from 'react-router-dom';
 import { DashboardHeader } from '@/components/patient/dashboard/DashboardHeader';
@@ -75,14 +76,14 @@ const Dashboard = () => {
 
           <Tabs defaultValue="overview" className="space-y-6">
             <ScrollReveal delay={100}>
-              <TabsList className="glass-card border-0 p-1.5 w-full max-w-3xl grid grid-cols-5 gap-1">
-                {['overview', 'onboarding', 'documents', 'status', 'visa'].map((tab) => (
+              <TabsList className="glass-card border-0 p-1.5 w-full max-w-4xl grid grid-cols-6 gap-1">
+                {['overview', 'journey', 'onboarding', 'documents', 'status', 'visa'].map((tab) => (
                   <TabsTrigger
                     key={tab}
                     value={tab}
                     className="rounded-lg text-xs sm:text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
                   >
-                    {tab === 'onboarding' ? 'Profile' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {tab === 'onboarding' ? 'Profile' : tab === 'journey' ? 'Journey' : tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -98,6 +99,10 @@ const Dashboard = () => {
                   <UpcomingAppointments bookings={bookings} navigate={navigate} />
                 </ScrollReveal>
               </div>
+            </TabsContent>
+
+            <TabsContent value="journey">
+              <JourneyTracker />
             </TabsContent>
 
             <TabsContent value="onboarding">
