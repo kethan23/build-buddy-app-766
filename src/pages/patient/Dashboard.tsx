@@ -83,7 +83,7 @@ const Dashboard = () => {
                     value={tab}
                     className="rounded-lg text-xs sm:text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
                   >
-                    {tab === 'onboarding' ? 'Profile' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {tab === 'onboarding' ? 'Profile' : tab === 'journey' ? 'Journey' : tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </TabsTrigger>
                 ))}
               </TabsList>
