@@ -45,7 +45,10 @@ const Navbar = () => {
     { label: t('nav.treatments'), href: "/treatments" },
     { label: 'Visa', href: "/visa-info" },
     ...(user ? [
-      { label: 'Dashboard', href: dashboardHref },
+      { label: 'Dashboard', href: '/patient/dashboard' },
+      ...(role === 'admin' ? [{ label: 'Admin Dashboard', href: '/admin/dashboard' }] : []),
+      ...(role === 'hospital' ? [{ label: 'Hospital Dashboard', href: '/hospital/dashboard' }] : []),
+      ...(role === 'agent' ? [{ label: 'Agent Dashboard', href: '/agent/dashboard' }] : []),
       { label: 'Messages', href: role === 'admin' ? '/admin/communications' : role === 'hospital' ? '/hospital/chat' : '/patient/inbox' },
     ] : []),
   ];
