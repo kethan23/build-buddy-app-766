@@ -58,6 +58,8 @@ import AgentCommissions from "./pages/agent/Commissions";
 import AgentQuotes from "./pages/agent/Quotes";
 import AgentNegotiations from "./pages/agent/Negotiations";
 import AgentProfile from "./pages/agent/Profile";
+import AgentPatientDocuments from "./pages/agent/PatientDocuments";
+import AgentPatientTracking from "./pages/agent/PatientTracking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
