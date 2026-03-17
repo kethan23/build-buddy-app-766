@@ -77,7 +77,7 @@ const Dashboard = () => {
           <Tabs defaultValue="overview" className="space-y-6">
             <ScrollReveal delay={100}>
               <TabsList className="glass-card border-0 p-1.5 w-full max-w-3xl grid grid-cols-5 gap-1">
-                {['overview', 'onboarding', 'documents', 'status', 'visa'].map((tab) => (
+                {['overview', 'journey', 'onboarding', 'documents', 'status', 'visa'].map((tab) => (
                   <TabsTrigger
                     key={tab}
                     value={tab}
