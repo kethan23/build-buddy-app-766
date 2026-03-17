@@ -8,6 +8,7 @@ import { OnboardingForm } from '@/components/patient/OnboardingForm';
 import { DocumentUpload } from '@/components/patient/DocumentUpload';
 import { StatusTracking } from '@/components/patient/StatusTracking';
 import { VisaProgressTracker } from '@/components/patient/VisaProgressTracker';
+import { JourneyTracker } from '@/components/patient/JourneyTracker';
 import { ScrollReveal } from '@/hooks/useScrollAnimation';
 import { useNavigate } from 'react-router-dom';
 import { DashboardHeader } from '@/components/patient/dashboard/DashboardHeader';
