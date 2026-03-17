@@ -136,6 +136,8 @@ const App = () => {
                   <Route path="/agent/quotes" element={<ProtectedAgentRoute><AgentQuotes /></ProtectedAgentRoute>} />
                   <Route path="/agent/negotiations" element={<ProtectedAgentRoute><AgentNegotiations /></ProtectedAgentRoute>} />
                   <Route path="/agent/profile" element={<ProtectedAgentRoute><AgentProfile /></ProtectedAgentRoute>} />
+                  <Route path="/agent/patients/:patientId/documents" element={<ProtectedAgentRoute><AgentPatientDocuments /></ProtectedAgentRoute>} />
+                  <Route path="/agent/patients/:patientId/tracking" element={<ProtectedAgentRoute><AgentPatientTracking /></ProtectedAgentRoute>} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

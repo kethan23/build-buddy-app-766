@@ -101,6 +101,10 @@ const Dashboard = () => {
               </div>
             </TabsContent>
 
+            <TabsContent value="journey">
+              <JourneyTracker />
+            </TabsContent>
+
             <TabsContent value="onboarding">
               <OnboardingForm onComplete={() => loadProfile()} />
             </TabsContent>
