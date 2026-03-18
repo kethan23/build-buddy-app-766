@@ -4,11 +4,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Calendar, DollarSign, FileText, Sparkles, Package } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, FileText, Sparkles, Package, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { AppointmentExport } from '@/components/dashboard/AppointmentExport';
 import { ScrollReveal } from '@/hooks/useScrollAnimation';
+import { ReviewForm } from '@/components/patient/ReviewForm';
 
 const Bookings = () => {
   const navigate = useNavigate();
