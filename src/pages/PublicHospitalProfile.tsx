@@ -243,6 +243,10 @@ const PublicHospitalProfile = () => {
                       <ImageIcon className="h-4 w-4 mr-2" />
                       Gallery ({gallery.length})
                     </TabsTrigger>
+                    <TabsTrigger value="reviews" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Reviews
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="about">
