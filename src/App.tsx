@@ -28,6 +28,7 @@ import VisaApplication from "./pages/patient/VisaApplication";
 import AdminVisaRequirements from "./pages/admin/VisaRequirements";
 import AdminCommunications from "./pages/admin/Communications";
  import PatientInbox from "./pages/patient/Inbox";
+import SeedHospitalData from "./pages/admin/SeedHospitalData";
 import Dashboard from "./pages/patient/Dashboard";
 import Profile from "./pages/patient/Profile";
 import Search from "./pages/patient/Search";
