@@ -245,6 +245,16 @@ const Bookings = () => {
           </div>
         )}
       </div>
+
+      {reviewTarget && (
+        <ReviewForm
+          open={!!reviewTarget}
+          onOpenChange={(open) => !open && setReviewTarget(null)}
+          hospitalId={reviewTarget.hospitalId}
+          hospitalName={reviewTarget.hospitalName}
+          bookingId={reviewTarget.bookingId}
+        />
+      )}
     </div>
   );
 };
