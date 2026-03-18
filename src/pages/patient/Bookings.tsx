@@ -17,6 +17,7 @@ const Bookings = () => {
   const { toast } = useToast();
   const [bookings, setBookings] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
+  const [reviewTarget, setReviewTarget] = useState<{ hospitalId: string; hospitalName: string; bookingId: string } | null>(null);
 
   useEffect(() => {
     if (user) {
