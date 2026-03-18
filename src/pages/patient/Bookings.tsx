@@ -206,7 +206,7 @@ const Bookings = () => {
                         )}
                       </div>
 
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <Button variant="outline" size="sm" className="gap-2">
                           <FileText className="h-4 w-4" />
                           View Details
@@ -219,6 +219,21 @@ const Bookings = () => {
                         {booking.status === 'pending' && (
                           <Button variant="outline" size="sm">
                             Modify Booking
+                          </Button>
+                        )}
+                        {(booking.status === 'completed' || booking.status === 'confirmed') && booking.hospital_id && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-2 border-warning/30 text-warning hover:bg-warning/10"
+                            onClick={() => setReviewTarget({
+                              hospitalId: booking.hospital_id,
+                              hospitalName: booking.hospitals?.name || 'Hospital',
+                              bookingId: booking.id,
+                            })}
+                          >
+                            <Star className="h-4 w-4" />
+                            Leave Review
                           </Button>
                         )}
                       </div>
