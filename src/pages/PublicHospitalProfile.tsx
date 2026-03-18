@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Building2, Users, Package, Image as ImageIcon, Upload, X, File } from 'lucide-react';
+import { Building2, Users, Package, Image as ImageIcon, Upload, X, File, MessageSquare } from 'lucide-react';
 
 import HospitalHeroSection from '@/components/hospital/profile/HospitalHeroSection';
 import AboutTab from '@/components/hospital/profile/AboutTab';
@@ -20,6 +20,7 @@ import DoctorsTab from '@/components/hospital/profile/DoctorsTab';
 import PackagesTab from '@/components/hospital/profile/PackagesTab';
 import GalleryTab from '@/components/hospital/profile/GalleryTab';
 import ContactSidebar from '@/components/hospital/profile/ContactSidebar';
+import ReviewsTab from '@/components/hospital/profile/ReviewsTab';
 
 interface UploadedDocument {
   file: File;
