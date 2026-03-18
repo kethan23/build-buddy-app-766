@@ -1335,6 +1335,69 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          booking_id: string | null
+          comment: string | null
+          created_at: string | null
+          hospital_id: string
+          id: string
+          is_verified: boolean | null
+          is_visible: boolean | null
+          photo_urls: Json | null
+          rating: number
+          title: string | null
+          updated_at: string | null
+          user_id: string
+          video_url: string | null
+        }
+        Insert: {
+          booking_id?: string | null
+          comment?: string | null
+          created_at?: string | null
+          hospital_id: string
+          id?: string
+          is_verified?: boolean | null
+          is_visible?: boolean | null
+          photo_urls?: Json | null
+          rating: number
+          title?: string | null
+          updated_at?: string | null
+          user_id: string
+          video_url?: string | null
+        }
+        Update: {
+          booking_id?: string | null
+          comment?: string | null
+          created_at?: string | null
+          hospital_id?: string
+          id?: string
+          is_verified?: boolean | null
+          is_visible?: boolean | null
+          photo_urls?: Json | null
+          rating?: number
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saved_searches: {
         Row: {
           created_at: string | null
