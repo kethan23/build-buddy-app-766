@@ -261,6 +261,9 @@ const PublicHospitalProfile = () => {
                   <TabsContent value="gallery">
                     <GalleryTab gallery={gallery} />
                   </TabsContent>
+                  <TabsContent value="reviews">
+                    <ReviewsTab hospitalId={hospital.id} hospitalName={hospital.name} />
+                  </TabsContent>
                 </Tabs>
               </div>
 
