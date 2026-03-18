@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Building2, Users, Package, Image as ImageIcon, Upload, X, File } from 'lucide-react';
+import { Building2, Users, Package, Image as ImageIcon, Upload, X, File, MessageSquare } from 'lucide-react';
 
 import HospitalHeroSection from '@/components/hospital/profile/HospitalHeroSection';
 import AboutTab from '@/components/hospital/profile/AboutTab';
@@ -20,6 +20,7 @@ import DoctorsTab from '@/components/hospital/profile/DoctorsTab';
 import PackagesTab from '@/components/hospital/profile/PackagesTab';
 import GalleryTab from '@/components/hospital/profile/GalleryTab';
 import ContactSidebar from '@/components/hospital/profile/ContactSidebar';
+import ReviewsTab from '@/components/hospital/profile/ReviewsTab';
 
 interface UploadedDocument {
   file: File;
@@ -242,6 +243,10 @@ const PublicHospitalProfile = () => {
                       <ImageIcon className="h-4 w-4 mr-2" />
                       Gallery ({gallery.length})
                     </TabsTrigger>
+                    <TabsTrigger value="reviews" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Reviews
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="about">
@@ -255,6 +260,9 @@ const PublicHospitalProfile = () => {
                   </TabsContent>
                   <TabsContent value="gallery">
                     <GalleryTab gallery={gallery} />
+                  </TabsContent>
+                  <TabsContent value="reviews">
+                    <ReviewsTab hospitalId={hospital.id} hospitalName={hospital.name} />
                   </TabsContent>
                 </Tabs>
               </div>

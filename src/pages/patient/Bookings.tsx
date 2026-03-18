@@ -4,11 +4,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Calendar, DollarSign, FileText, Sparkles, Package } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, FileText, Sparkles, Package, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { AppointmentExport } from '@/components/dashboard/AppointmentExport';
 import { ScrollReveal } from '@/hooks/useScrollAnimation';
+import { ReviewForm } from '@/components/patient/ReviewForm';
 
 const Bookings = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Bookings = () => {
   const { toast } = useToast();
   const [bookings, setBookings] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
+  const [reviewTarget, setReviewTarget] = useState<{ hospitalId: string; hospitalName: string; bookingId: string } | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -204,7 +206,7 @@ const Bookings = () => {
                         )}
                       </div>
 
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <Button variant="outline" size="sm" className="gap-2">
                           <FileText className="h-4 w-4" />
                           View Details
@@ -219,6 +221,21 @@ const Bookings = () => {
                             Modify Booking
                           </Button>
                         )}
+                        {(booking.status === 'completed' || booking.status === 'confirmed') && booking.hospital_id && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-2 border-warning/30 text-warning hover:bg-warning/10"
+                            onClick={() => setReviewTarget({
+                              hospitalId: booking.hospital_id,
+                              hospitalName: booking.hospitals?.name || 'Hospital',
+                              bookingId: booking.id,
+                            })}
+                          >
+                            <Star className="h-4 w-4" />
+                            Leave Review
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </CardContent>
@@ -228,6 +245,16 @@ const Bookings = () => {
           </div>
         )}
       </div>
+
+      {reviewTarget && (
+        <ReviewForm
+          open={!!reviewTarget}
+          onOpenChange={(open) => !open && setReviewTarget(null)}
+          hospitalId={reviewTarget.hospitalId}
+          hospitalName={reviewTarget.hospitalName}
+          bookingId={reviewTarget.bookingId}
+        />
+      )}
     </div>
   );
 };
