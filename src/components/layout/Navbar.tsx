@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Globe, Phone, MoreHorizontal } from "lucide-react";
+import { Menu, X, Globe, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -32,13 +32,11 @@ const Navbar = () => {
   const { role } = useUserRole();
   const { t, i18n } = useTranslation();
 
-  // Role-specific dashboard link
   const dashboardHref =
     role === 'admin' ? '/admin/dashboard' :
     role === 'hospital' ? '/hospital/dashboard' :
     '/patient/dashboard';
 
-  // Primary links always visible
   const primaryLinks = [
     { label: t('nav.home'), href: "/" },
     { label: t('nav.hospitals'), href: "/hospitals" },
@@ -52,7 +50,7 @@ const Navbar = () => {
       { label: 'Messages', href: role === 'admin' ? '/admin/communications' : role === 'hospital' ? '/hospital/chat' : '/patient/inbox' },
     ] : []),
   ];
-  // Secondary links go into "More" dropdown
+
   const secondaryLinks = [
     { label: t('nav.howItWorks'), href: "/how-it-works" },
     { label: t('nav.about'), href: "/about" },
@@ -63,10 +61,8 @@ const Navbar = () => {
     i18n.changeLanguage(value);
   };
 
-  // All links for mobile menu
   const allLinks = [...primaryLinks, ...secondaryLinks];
 
-  // Role-specific links for mobile
   const roleLinks: { label: string; href: string }[] = [];
   if (user && role === 'admin') {
     roleLinks.push(
@@ -92,18 +88,18 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="flex h-14 sm:h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">M</span>
+          <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-base sm:text-lg">M</span>
             </div>
-            <span className="font-heading font-bold text-xl text-primary">MediConnect</span>
+            <span className="font-heading font-bold text-lg sm:text-xl text-primary">MediConnect</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center space-x-6">
             {primaryLinks.map((link) => (
               <Link
                 key={link.href}
@@ -114,7 +110,6 @@ const Navbar = () => {
               </Link>
             ))}
 
-            {/* More dropdown for secondary links */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-sm font-medium text-foreground/80 hover:text-primary gap-1">
@@ -146,12 +141,12 @@ const Navbar = () => {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-3">
-            {/* Language Selector */}
+          <div className="flex items-center space-x-1.5 sm:space-x-3">
+            {/* Language Selector - compact on mobile */}
             <Select value={i18n.language} onValueChange={handleLanguageChange}>
-              <SelectTrigger className="w-24 h-9">
-                <Globe className="h-4 w-4 mr-2" />
-                <SelectValue />
+              <SelectTrigger className="w-10 sm:w-24 h-8 sm:h-9 px-2 sm:px-3">
+                <Globe className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline ml-1"><SelectValue /></span>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
@@ -173,54 +168,59 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
-              <Button size="sm" className="hidden lg:flex" asChild>
+              <Button size="sm" className="hidden sm:flex text-xs sm:text-sm h-8 sm:h-9 px-3 sm:px-4" asChild>
                 <Link to="/auth">{t('nav.signIn')}</Link>
               </Button>
             )}
 
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
+              <SheetTrigger asChild className="lg:hidden">
+                <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9">
                   {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px]">
-                <div className="flex flex-col space-y-4 mt-8">
+              <SheetContent side="right" className="w-[280px] sm:w-[300px] px-5 pt-6">
+                <div className="flex flex-col space-y-1 mt-6">
                   {allLinks.map((link) => (
                     <Link
                       key={link.href}
                       to={link.href}
                       onClick={() => setIsOpen(false)}
-                      className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                      className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg"
                     >
                       {link.label}
                     </Link>
                   ))}
                   {roleLinks.length > 0 && (
                     <>
-                      <div className="h-px bg-border my-2" />
+                      <div className="h-px bg-border my-3" />
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-1">
+                        {role} Portal
+                      </p>
                       {roleLinks.map((link) => (
                         <Link
                           key={link.href}
                           to={link.href}
                           onClick={() => setIsOpen(false)}
-                          className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                          className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg"
                         >
                           {link.label}
                         </Link>
                       ))}
                     </>
                   )}
-                  {user ? (
-                    <Button className="w-full mt-4" onClick={() => { signOut(); setIsOpen(false); }}>
-                      {t('nav.signOut')}
-                    </Button>
-                  ) : (
-                    <Button className="w-full mt-4" asChild>
-                      <Link to="/auth" onClick={() => setIsOpen(false)}>{t('nav.signIn')}</Link>
-                    </Button>
-                  )}
+                  <div className="pt-4">
+                    {user ? (
+                      <Button className="w-full" onClick={() => { signOut(); setIsOpen(false); }}>
+                        {t('nav.signOut')}
+                      </Button>
+                    ) : (
+                      <Button className="w-full" asChild>
+                        <Link to="/auth" onClick={() => setIsOpen(false)}>{t('nav.signIn')}</Link>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

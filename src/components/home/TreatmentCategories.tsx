@@ -28,43 +28,41 @@ const TreatmentCategories = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="py-20 relative overflow-hidden">
+    <section className="py-12 sm:py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/3 to-transparent pointer-events-none" />
-      <div className="absolute top-1/4 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-0 w-72 h-72 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-4 relative">
         <ScrollReveal>
-          <div className="text-center mb-14">
-            <div className="section-badge mx-auto w-fit">
-              <Sparkles className="h-4 w-4" />
+          <div className="text-center mb-8 sm:mb-14">
+            <div className="section-badge mx-auto w-fit text-xs sm:text-sm">
+              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Multi-Specialty Focus
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4 mt-4">
+            <h2 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 mt-3 sm:mt-4">
               {t('categories.title')}
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto px-2">
               We cover all medical needs, from hair transplants to heart transplants
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-5">
           {categories.map((category, index) => {
             const Icon = category.icon;
             return (
               <ScrollReveal key={category.name} delay={index * 60} animation="scale-in">
                 <Link to={`/treatments/${category.name.toLowerCase()}`}>
                   <Card className="group overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:shadow-medium transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full">
-                    <CardContent className="p-5 text-center relative">
+                    <CardContent className="p-2.5 sm:p-5 text-center relative">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className={`relative inline-flex items-center justify-center w-14 h-14 rounded-2xl ${category.bg} mb-3 transition-transform duration-300 group-hover:scale-110`}>
-                        <Icon className={`h-6 w-6 ${category.color}`} />
+                      <div className={`relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl ${category.bg} mb-1.5 sm:mb-3 transition-transform duration-300 group-hover:scale-110`}>
+                        <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${category.color}`} />
                       </div>
-                      <h3 className="relative font-heading font-semibold text-sm mb-1 group-hover:text-primary transition-colors">
+                      <h3 className="relative font-heading font-semibold text-[10px] sm:text-sm mb-0.5 sm:mb-1 group-hover:text-primary transition-colors leading-tight">
                         {category.name}
                       </h3>
-                      <p className="relative text-xs text-muted-foreground line-clamp-2">{category.desc}</p>
+                      <p className="relative text-[9px] sm:text-xs text-muted-foreground line-clamp-2 hidden sm:block">{category.desc}</p>
                     </CardContent>
                   </Card>
                 </Link>
@@ -74,10 +72,10 @@ const TreatmentCategories = () => {
         </div>
 
         <ScrollReveal delay={300}>
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 sm:mt-12">
             <Link
               to="/treatments"
-              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors group"
+              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors group text-sm sm:text-base"
             >
               View All Specialties
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
