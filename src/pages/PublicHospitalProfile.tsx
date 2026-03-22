@@ -225,26 +225,26 @@ const PublicHospitalProfile = () => {
             <div className="grid lg:grid-cols-3 gap-8 relative">
               {/* Main Content Area */}
               <div className="lg:col-span-2 space-y-6">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="w-full justify-start glass-card border-0 p-1">
-                    <TabsTrigger value="about" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      <Building2 className="h-4 w-4 mr-2" />
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="w-full justify-start glass-card border-0 p-1 overflow-x-auto flex-nowrap">
+                    <TabsTrigger value="about" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm shrink-0 px-2.5 sm:px-4">
+                      <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                       About
                     </TabsTrigger>
-                    <TabsTrigger value="doctors" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      <Users className="h-4 w-4 mr-2" />
-                      Doctors ({doctors.length})
+                    <TabsTrigger value="doctors" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm shrink-0 px-2.5 sm:px-4">
+                      <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Doctors</span><span className="sm:hidden">Docs</span> ({doctors.length})
                     </TabsTrigger>
-                    <TabsTrigger value="packages" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      <Package className="h-4 w-4 mr-2" />
-                      Packages ({packages.length})
+                    <TabsTrigger value="packages" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm shrink-0 px-2.5 sm:px-4">
+                      <Package className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Packages</span><span className="sm:hidden">Pkgs</span> ({packages.length})
                     </TabsTrigger>
-                    <TabsTrigger value="gallery" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      <ImageIcon className="h-4 w-4 mr-2" />
-                      Gallery ({gallery.length})
+                    <TabsTrigger value="gallery" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm shrink-0 px-2.5 sm:px-4">
+                      <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                      Gallery
                     </TabsTrigger>
-                    <TabsTrigger value="reviews" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      <MessageSquare className="h-4 w-4 mr-2" />
+                    <TabsTrigger value="reviews" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm shrink-0 px-2.5 sm:px-4">
+                      <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                       Reviews
                     </TabsTrigger>
                   </TabsList>
