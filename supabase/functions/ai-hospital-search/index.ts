@@ -12,7 +12,7 @@ serve(async (req) => {
   try {
     const { query } = await req.json();
     if (!query || typeof query !== "string" || query.trim().length < 3) {
-      return new Response(JSON.stringify({ results: [] }), {
+      return new Response(JSON.stringify({ results: { hospitals: [], treatments: [], doctors: [], summary: "" } }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -24,35 +24,34 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch verified hospitals with their packages
-    const { data: hospitals } = await supabase
-      .from("hospitals")
-      .select("id, name, city, country, rating, total_reviews, logo_url, cover_image_url, description")
-      .eq("verification_status", "verified")
-      .eq("is_active", true);
+    // Fetch all verified hospitals, packages, doctors, specialties
+    const [hospitalsRes, packagesRes, doctorsRes, specialtiesRes] = await Promise.all([
+      supabase.from("hospitals").select("id, name, city, country, rating, total_reviews, logo_url, cover_image_url, description").eq("verification_status", "verified").eq("is_active", true),
+      supabase.from("treatment_packages").select("id, name, category, price, currency, duration_days, hospital_id, description, recovery_days, inclusions").eq("is_active", true),
+      supabase.from("doctors").select("id, name, specialty, qualification, experience_years, photo_url, hospital_id, bio, consultation_fee, is_available").eq("is_available", true),
+      supabase.from("hospital_specialties").select("hospital_id, specialty_name"),
+    ]);
 
-    const { data: packages } = await supabase
-      .from("treatment_packages")
-      .select("id, name, category, price, currency, duration_days, hospital_id, description")
-      .eq("is_active", true);
+    const hospitals = hospitalsRes.data || [];
+    const packages = packagesRes.data || [];
+    const doctors = doctorsRes.data || [];
+    const specialties = specialtiesRes.data || [];
 
-    const { data: specialties } = await supabase
-      .from("hospital_specialties")
-      .select("hospital_id, specialty_name");
-
-    if (!hospitals?.length) {
-      return new Response(JSON.stringify({ results: [] }), {
+    if (!hospitals.length) {
+      return new Response(JSON.stringify({ results: { hospitals: [], treatments: [], doctors: [], summary: "No hospitals available at the moment." } }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Build context for AI
-    const hospitalContext = hospitals.map((h) => {
-      const hPackages = packages?.filter((p) => p.hospital_id === h.id) || [];
-      const hSpecs = specialties?.filter((s) => s.hospital_id === h.id).map((s) => s.specialty_name) || [];
-      return `Hospital: ${h.name} (ID: ${h.id}, City: ${h.city}, Rating: ${h.rating}/5, Reviews: ${h.total_reviews})
+    // Build context
+    const context = hospitals.map((h) => {
+      const hPkgs = packages.filter((p) => p.hospital_id === h.id);
+      const hDocs = doctors.filter((d) => d.hospital_id === h.id);
+      const hSpecs = specialties.filter((s) => s.hospital_id === h.id).map((s) => s.specialty_name);
+      return `Hospital: ${h.name} (ID: ${h.id}, City: ${h.city}, Rating: ${h.rating}/5)
 Specialties: ${hSpecs.join(", ") || "General"}
-Packages: ${hPackages.map((p) => `${p.name} - ${p.category} - $${p.price} ${p.currency || "USD"} (${p.duration_days} days)`).join("; ") || "None listed"}`;
+Doctors: ${hDocs.map((d) => `${d.name} [ID:${d.id}] - ${d.specialty}, ${d.experience_years}yr exp, ${d.qualification}`).join("; ") || "None"}
+Packages: ${hPkgs.map((p) => `${p.name} [ID:${p.id}] - ${p.category} - $${p.price} (${p.duration_days} days)`).join("; ") || "None"}`;
     }).join("\n\n");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -66,56 +65,67 @@ Packages: ${hPackages.map((p) => `${p.name} - ${p.category} - $${p.price} ${p.cu
         messages: [
           {
             role: "system",
-            content: `You are a medical tourism search assistant. Given a patient query and a list of available hospitals with their packages, return the most relevant matches. Only suggest hospitals from the provided list. Return results using the tool provided.`,
+            content: `You are a medical tourism analysis assistant for India. Analyze the patient's condition and recommend ONLY from the provided hospital data. Return a brief medical summary, matching hospitals, relevant treatment packages, and recommended doctors. Use EXACT IDs from the data.`,
           },
           {
             role: "user",
-            content: `Patient query: "${query}"\n\nAvailable hospitals:\n${hospitalContext}\n\nReturn the top matching hospitals and relevant treatment packages.`,
+            content: `Patient says: "${query}"\n\nAvailable data:\n${context}\n\nAnalyze and return the best matches.`,
           },
         ],
         tools: [
           {
             type: "function",
             function: {
-              name: "search_results",
-              description: "Return matched hospitals and treatments",
+              name: "analysis_results",
+              description: "Return AI analysis with matched hospitals, treatments, and doctors",
               parameters: {
                 type: "object",
                 properties: {
-                  results: {
+                  summary: { type: "string", description: "Brief analysis of the patient's condition and what they need" },
+                  hospitals: {
                     type: "array",
                     items: {
                       type: "object",
                       properties: {
                         hospital_id: { type: "string" },
-                        hospital_name: { type: "string" },
-                        city: { type: "string" },
-                        match_reason: { type: "string", description: "Brief reason why this hospital matches" },
-                        relevant_treatments: {
-                          type: "array",
-                          items: {
-                            type: "object",
-                            properties: {
-                              name: { type: "string" },
-                              estimated_cost: { type: "string" },
-                            },
-                            required: ["name", "estimated_cost"],
-                            additionalProperties: false,
-                          },
-                        },
+                        match_reason: { type: "string" },
                       },
-                      required: ["hospital_id", "hospital_name", "city", "match_reason", "relevant_treatments"],
+                      required: ["hospital_id", "match_reason"],
+                      additionalProperties: false,
+                    },
+                  },
+                  treatments: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        package_id: { type: "string" },
+                        why_recommended: { type: "string" },
+                      },
+                      required: ["package_id", "why_recommended"],
+                      additionalProperties: false,
+                    },
+                  },
+                  doctors: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        doctor_id: { type: "string" },
+                        why_recommended: { type: "string" },
+                      },
+                      required: ["doctor_id", "why_recommended"],
                       additionalProperties: false,
                     },
                   },
                 },
-                required: ["results"],
+                required: ["summary", "hospitals", "treatments", "doctors"],
                 additionalProperties: false,
               },
             },
           },
         ],
-        tool_choice: { type: "function", function: { name: "search_results" } },
+        tool_choice: { type: "function", function: { name: "analysis_results" } },
       }),
     });
 
@@ -137,25 +147,40 @@ Packages: ${hPackages.map((p) => `${p.name} - ${p.category} - $${p.price} ${p.cu
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
     if (toolCall?.function?.arguments) {
       const parsed = JSON.parse(toolCall.function.arguments);
-      // Enrich with hospital data (images, ratings)
-      const enriched = parsed.results.map((r: any) => {
+
+      // Enrich with real data
+      const enrichedHospitals = parsed.hospitals.map((r: any) => {
         const h = hospitals.find((h) => h.id === r.hospital_id);
-        return {
-          ...r,
-          rating: h?.rating,
-          total_reviews: h?.total_reviews,
-          logo_url: h?.logo_url,
-          cover_image_url: h?.cover_image_url,
-        };
-      });
-      return new Response(JSON.stringify({ results: enriched }), {
+        return h ? { ...h, match_reason: r.match_reason } : null;
+      }).filter(Boolean);
+
+      const enrichedTreatments = parsed.treatments.map((r: any) => {
+        const p = packages.find((p) => p.id === r.package_id);
+        if (!p) return null;
+        const h = hospitals.find((h) => h.id === p.hospital_id);
+        return { ...p, hospital_name: h?.name, why_recommended: r.why_recommended };
+      }).filter(Boolean);
+
+      const enrichedDoctors = parsed.doctors.map((r: any) => {
+        const d = doctors.find((d) => d.id === r.doctor_id);
+        if (!d) return null;
+        const h = hospitals.find((h) => h.id === d.hospital_id);
+        return { ...d, hospital_name: h?.name, why_recommended: r.why_recommended };
+      }).filter(Boolean);
+
+      return new Response(JSON.stringify({
+        results: {
+          summary: parsed.summary,
+          hospitals: enrichedHospitals,
+          treatments: enrichedTreatments,
+          doctors: enrichedDoctors,
+        },
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify({ results: [] }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    throw new Error("No structured response");
   } catch (e) {
     console.error("ai-hospital-search error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
