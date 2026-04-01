@@ -1,4 +1,5 @@
 import { Search, MapPin, Shield, Award, CheckCircle } from "lucide-react";
+import AIHospitalSearch from "./AIHospitalSearch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "react-i18next";
@@ -95,6 +96,9 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
+
+          {/* AI Search Bar */}
+          <AIHospitalSearch />
 
           {/* Trust Badges */}
           <div 
