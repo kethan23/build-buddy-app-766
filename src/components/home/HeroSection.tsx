@@ -97,8 +97,8 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* AI Search Bar */}
-          <AIHospitalSearch />
+          {/* AI Medical Analysis */}
+          <AIAnalysisSearch />
 
           {/* Trust Badges */}
           <div 
