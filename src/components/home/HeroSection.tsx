@@ -97,6 +97,9 @@ const HeroSection = () => {
             </div>
           </div>
 
+          {/* AI Search Bar */}
+          <AIHospitalSearch />
+
           {/* Trust Badges */}
           <div 
             className="flex flex-wrap justify-center items-center gap-2 sm:gap-6 mt-6 sm:mt-10 animate-fade-in"
