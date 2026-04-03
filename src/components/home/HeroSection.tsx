@@ -111,12 +111,13 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* ── AI ANALYSIS BANNER ── Top of page, full-width premium gradient */}
-      <div className="relative bg-gradient-to-r from-primary via-primary/90 to-accent overflow-hidden">
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(210 40% 12%) 0%, hsl(200 35% 18%) 40%, hsl(195 30% 22%) 70%, hsl(210 35% 15%) 100%)' }}>
         {/* Decorative elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-white/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-accent/20 rounded-full blur-[100px]" />
-          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-[150px]" style={{ background: 'hsl(193 100% 43% / 0.08)' }} />
+          <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full blur-[120px]" style={{ background: 'hsl(42 69% 59% / 0.06)' }} />
+          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
         </div>
 
         <div className="container mx-auto px-4 py-8 sm:py-10 md:py-14 relative z-10">
