@@ -172,7 +172,7 @@ const HeroSection = () => {
                 <Button
                   onClick={handleAnalyze}
                   disabled={isAnalyzing || (query.trim().length < 3 && !uploadedFile)}
-                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-sm sm:text-base shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 font-semibold text-sm sm:text-base shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAnalyzing ? (
                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Analyzing...</>
