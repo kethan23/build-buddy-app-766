@@ -158,7 +158,7 @@ const HeroSection = () => {
                 <input ref={fileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={handleFileChange} className="hidden" />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center justify-center gap-2 flex-1 h-11 sm:h-12 rounded-xl border-2 border-dashed border-white/25 hover:border-white/50 hover:bg-white/5 transition-all text-white/80 hover:text-white text-xs sm:text-sm"
+                  className="flex items-center justify-center gap-2 flex-1 h-11 sm:h-12 rounded-xl border border-white/[0.1] hover:border-white/20 hover:bg-white/[0.04] transition-all text-white/60 hover:text-white/90 text-xs sm:text-sm"
                 >
                   <Upload className="h-4 w-4" />
                   {uploadedFile ? (
