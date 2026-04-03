@@ -39,6 +39,8 @@ const HeroSection = () => {
   const [results, setResults] = useState<AnalysisResults | null>(null);
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const [selectedTreatment, setSelectedTreatment] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
 
   const extractTextFromFile = useCallback(async (file: File): Promise<string> => {
     return new Promise((resolve) => {
