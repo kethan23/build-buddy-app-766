@@ -8,20 +8,20 @@ import { useTranslation } from "react-i18next";
 import { ScrollReveal } from "@/hooks/useScrollAnimation";
 
 const categories = [
-  { icon: Activity, name: "Oncology", count: "100+ Hospitals", color: "text-orange-500", bg: "bg-orange-500/10", desc: "Advanced cancer treatments with proven results" },
-  { icon: Brain, name: "Neurosurgery", count: "80+ Hospitals", color: "text-purple-500", bg: "bg-purple-500/10", desc: "Adult and pediatric neurosurgical care" },
-  { icon: Bone, name: "Spine Surgery", count: "90+ Hospitals", color: "text-blue-500", bg: "bg-blue-500/10", desc: "Precision spine surgeries for better mobility" },
-  { icon: Heart, name: "Cardiology", count: "150+ Hospitals", color: "text-red-500", bg: "bg-red-500/10", desc: "World-class heart care for adults and children" },
-  { icon: Bone, name: "Orthopedics", count: "120+ Hospitals", color: "text-cyan-500", bg: "bg-cyan-500/10", desc: "Expert joint replacements and bone solutions" },
-  { icon: Baby, name: "IVF & Fertility", count: "85+ Hospitals", color: "text-pink-500", bg: "bg-pink-500/10", desc: "Leading fertility treatments with high success" },
-  { icon: Stethoscope, name: "Gynecology", count: "110+ Hospitals", color: "text-rose-500", bg: "bg-rose-500/10", desc: "Specialized women's health services" },
-  { icon: Scissors, name: "Cosmetic Surgery", count: "95+ Hospitals", color: "text-violet-500", bg: "bg-violet-500/10", desc: "Aesthetic procedures for a new you" },
-  { icon: Scale, name: "Weight Loss", count: "70+ Hospitals", color: "text-amber-500", bg: "bg-amber-500/10", desc: "Effective bariatric surgery options" },
-  { icon: Pill, name: "Liver Transplant", count: "50+ Hospitals", color: "text-emerald-500", bg: "bg-emerald-500/10", desc: "Liver transplant procedures of varying complexity" },
-  { icon: Syringe, name: "Kidney Transplant", count: "55+ Hospitals", color: "text-teal-500", bg: "bg-teal-500/10", desc: "Expert renal care and transplants" },
-  { icon: Eye, name: "Ophthalmology", count: "90+ Hospitals", color: "text-green-500", bg: "bg-green-500/10", desc: "Advanced eye care and laser surgeries" },
-  { icon: Smile, name: "Dental Care", count: "110+ Hospitals", color: "text-sky-500", bg: "bg-sky-500/10", desc: "Complete dental treatments and implants" },
-  { icon: Activity, name: "Bone Marrow", count: "40+ Hospitals", color: "text-indigo-500", bg: "bg-indigo-500/10", desc: "Bone marrow transplant for matched & unmatched donors" },
+  { icon: Activity, name: "Oncology", color: "text-orange-500", bg: "bg-orange-500/10", desc: "Advanced cancer treatments with proven results" },
+  { icon: Brain, name: "Neurosurgery", color: "text-purple-500", bg: "bg-purple-500/10", desc: "Adult and pediatric neurosurgical care" },
+  { icon: Bone, name: "Spine Surgery", color: "text-blue-500", bg: "bg-blue-500/10", desc: "Precision spine surgeries for better mobility" },
+  { icon: Heart, name: "Cardiology", color: "text-red-500", bg: "bg-red-500/10", desc: "World-class heart care for adults and children" },
+  { icon: Bone, name: "Orthopedics", color: "text-cyan-500", bg: "bg-cyan-500/10", desc: "Expert joint replacements and bone solutions" },
+  { icon: Baby, name: "IVF & Fertility", color: "text-pink-500", bg: "bg-pink-500/10", desc: "Leading fertility treatments with high success" },
+  { icon: Stethoscope, name: "Gynecology", color: "text-rose-500", bg: "bg-rose-500/10", desc: "Specialized women's health services" },
+  { icon: Scissors, name: "Cosmetic Surgery", color: "text-violet-500", bg: "bg-violet-500/10", desc: "Aesthetic procedures for a new you" },
+  { icon: Scale, name: "Weight Loss", color: "text-amber-500", bg: "bg-amber-500/10", desc: "Effective bariatric surgery options" },
+  { icon: Pill, name: "Liver Transplant", color: "text-emerald-500", bg: "bg-emerald-500/10", desc: "Liver transplant procedures of varying complexity" },
+  { icon: Syringe, name: "Kidney Transplant", color: "text-teal-500", bg: "bg-teal-500/10", desc: "Expert renal care and transplants" },
+  { icon: Eye, name: "Ophthalmology", color: "text-green-500", bg: "bg-green-500/10", desc: "Advanced eye care and laser surgeries" },
+  { icon: Smile, name: "Dental Care", color: "text-sky-500", bg: "bg-sky-500/10", desc: "Complete dental treatments and implants" },
+  { icon: Activity, name: "Bone Marrow", color: "text-indigo-500", bg: "bg-indigo-500/10", desc: "Bone marrow transplant for matched & unmatched donors" },
 ];
 
 const TreatmentCategories = () => {
