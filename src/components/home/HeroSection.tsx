@@ -141,7 +141,7 @@ const HeroSection = () => {
             </div>
 
             {/* Search Input */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 sm:p-4 shadow-2xl">
+            <div className="bg-white/[0.06] backdrop-blur-md border border-white/[0.08] rounded-2xl p-3 sm:p-4 shadow-2xl shadow-black/20">
               <div className="relative mb-3">
                 <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-white/60" />
                 <input
