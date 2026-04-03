@@ -39,6 +39,8 @@ const HeroSection = () => {
   const [results, setResults] = useState<AnalysisResults | null>(null);
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const [selectedTreatment, setSelectedTreatment] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
 
   const extractTextFromFile = useCallback(async (file: File): Promise<string> => {
     return new Promise((resolve) => {
@@ -366,7 +368,7 @@ const HeroSection = () => {
             >
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <Select>
+                  <Select value={selectedTreatment} onValueChange={setSelectedTreatment}>
                     <SelectTrigger className="w-full bg-background/50 border-border/50 h-10 sm:h-11 text-sm">
                       <SelectValue placeholder="Select Treatment" />
                     </SelectTrigger>
@@ -374,19 +376,38 @@ const HeroSection = () => {
                       <SelectItem value="cardiology">Cardiology</SelectItem>
                       <SelectItem value="orthopedics">Orthopedics</SelectItem>
                       <SelectItem value="oncology">Oncology</SelectItem>
-                      <SelectItem value="neurology">Neurology</SelectItem>
+                      <SelectItem value="neurosurgery">Neurosurgery</SelectItem>
                       <SelectItem value="dental">Dental Care</SelectItem>
+                      <SelectItem value="ivf">IVF & Fertility</SelectItem>
+                      <SelectItem value="cosmetic">Cosmetic Surgery</SelectItem>
+                      <SelectItem value="ophthalmology">Ophthalmology</SelectItem>
+                      <SelectItem value="spine">Spine Surgery</SelectItem>
+                      <SelectItem value="weight-loss">Weight Loss</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="City or Location" className="pl-10 bg-background/50 border-border/50 h-10 sm:h-11 text-sm" />
+                    <Input
+                      placeholder="City or Location"
+                      value={locationQuery}
+                      onChange={(e) => setLocationQuery(e.target.value)}
+                      className="pl-10 bg-background/50 border-border/50 h-10 sm:h-11 text-sm"
+                    />
                   </div>
                 </div>
                 <div>
-                  <Button className="w-full btn-gradient text-white h-10 sm:h-11 text-sm" size="lg">
+                  <Button
+                    className="w-full btn-gradient text-white h-10 sm:h-11 text-sm"
+                    size="lg"
+                    onClick={() => {
+                      const params = new URLSearchParams();
+                      if (selectedTreatment) params.set('treatment', selectedTreatment);
+                      if (locationQuery.trim()) params.set('city', locationQuery.trim());
+                      navigate(`/hospitals${params.toString() ? '?' + params.toString() : ''}`);
+                    }}
+                  >
                     <Search className="h-4 w-4 mr-2" />
                     {t('hero.searchButton')}
                   </Button>
