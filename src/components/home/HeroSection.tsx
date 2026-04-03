@@ -124,13 +124,13 @@ const HeroSection = () => {
           <div className="max-w-3xl mx-auto">
             {/* Header */}
             <div className="text-center mb-5 sm:mb-6">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-3 sm:mb-4">
+              <div className="inline-flex items-center gap-2 bg-white/[0.06] backdrop-blur-sm border border-white/[0.08] rounded-full px-4 py-1.5 mb-3 sm:mb-4">
                 <div className="relative">
-                  <Brain className="h-4 w-4 text-white" />
-                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <Brain className="h-4 w-4 text-primary" />
+                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-white/90">AI-Powered Medical Analysis</span>
-                <span className="bg-white/20 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full tracking-wider">BETA</span>
+                <span className="text-xs sm:text-sm font-medium text-white/80 tracking-wide">AI-Powered Medical Analysis</span>
+                <span className="bg-primary/30 text-primary-foreground text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full tracking-wider">BETA</span>
               </div>
               <h2 className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white mb-2 leading-tight">
                 Find Your Best Treatment in Seconds
