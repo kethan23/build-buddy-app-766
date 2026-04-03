@@ -111,25 +111,26 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* ── AI ANALYSIS BANNER ── Top of page, full-width premium gradient */}
-      <div className="relative bg-gradient-to-r from-primary via-primary/90 to-accent overflow-hidden">
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(210 40% 12%) 0%, hsl(200 35% 18%) 40%, hsl(195 30% 22%) 70%, hsl(210 35% 15%) 100%)' }}>
         {/* Decorative elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-white/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-accent/20 rounded-full blur-[100px]" />
-          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-[150px]" style={{ background: 'hsl(193 100% 43% / 0.08)' }} />
+          <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full blur-[120px]" style={{ background: 'hsl(42 69% 59% / 0.06)' }} />
+          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
         </div>
 
         <div className="container mx-auto px-4 py-8 sm:py-10 md:py-14 relative z-10">
           <div className="max-w-3xl mx-auto">
             {/* Header */}
             <div className="text-center mb-5 sm:mb-6">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-3 sm:mb-4">
+              <div className="inline-flex items-center gap-2 bg-white/[0.06] backdrop-blur-sm border border-white/[0.08] rounded-full px-4 py-1.5 mb-3 sm:mb-4">
                 <div className="relative">
-                  <Brain className="h-4 w-4 text-white" />
-                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <Brain className="h-4 w-4 text-primary" />
+                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-white/90">AI-Powered Medical Analysis</span>
-                <span className="bg-white/20 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full tracking-wider">BETA</span>
+                <span className="text-xs sm:text-sm font-medium text-white/80 tracking-wide">AI-Powered Medical Analysis</span>
+                <span className="bg-primary/30 text-primary-foreground text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full tracking-wider">BETA</span>
               </div>
               <h2 className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white mb-2 leading-tight">
                 Find Your Best Treatment in Seconds
@@ -140,7 +141,7 @@ const HeroSection = () => {
             </div>
 
             {/* Search Input */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 sm:p-4 shadow-2xl">
+            <div className="bg-white/[0.06] backdrop-blur-md border border-white/[0.08] rounded-2xl p-3 sm:p-4 shadow-2xl shadow-black/20">
               <div className="relative mb-3">
                 <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-white/60" />
                 <input
@@ -157,7 +158,7 @@ const HeroSection = () => {
                 <input ref={fileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={handleFileChange} className="hidden" />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center justify-center gap-2 flex-1 h-11 sm:h-12 rounded-xl border-2 border-dashed border-white/25 hover:border-white/50 hover:bg-white/5 transition-all text-white/80 hover:text-white text-xs sm:text-sm"
+                  className="flex items-center justify-center gap-2 flex-1 h-11 sm:h-12 rounded-xl border border-white/[0.1] hover:border-white/20 hover:bg-white/[0.04] transition-all text-white/60 hover:text-white/90 text-xs sm:text-sm"
                 >
                   <Upload className="h-4 w-4" />
                   {uploadedFile ? (
@@ -171,7 +172,7 @@ const HeroSection = () => {
                 <Button
                   onClick={handleAnalyze}
                   disabled={isAnalyzing || (query.trim().length < 3 && !uploadedFile)}
-                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-sm sm:text-base shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 font-semibold text-sm sm:text-base shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAnalyzing ? (
                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Analyzing...</>
