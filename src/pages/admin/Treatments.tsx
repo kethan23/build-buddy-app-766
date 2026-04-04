@@ -136,8 +136,8 @@ export default function AdminTreatments() {
     fetchAll();
   };
 
-  const toggleActive = async (table: string, id: string, current: boolean) => {
-    await (supabase.from(table) as any).update({ is_active: !current }).eq('id', id);
+  const toggleActive = async (table: 'treatment_categories' | 'treatment_listings', id: string, current: boolean) => {
+    await (supabase as any).from(table).update({ is_active: !current }).eq('id', id);
     fetchAll();
   };
 
