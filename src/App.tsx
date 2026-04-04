@@ -52,6 +52,7 @@ import AdminUsers from "./pages/admin/Users";
 import AdminAnalytics from "./pages/admin/Analytics";
 import AdminVisa from "./pages/admin/Visa";
 import AdminAgents from "./pages/admin/Agents";
+import AdminTreatments from "./pages/admin/Treatments";
 import AgentDashboard from "./pages/agent/Dashboard";
 import AgentPatients from "./pages/agent/Patients";
 import AddPatient from "./pages/agent/AddPatient";
@@ -130,6 +131,7 @@ const App = () => {
                   <Route path="/admin/visa-requirements" element={<ProtectedAdminRoute><AdminVisaRequirements /></ProtectedAdminRoute>} />
                   <Route path="/admin/communications" element={<ProtectedAdminRoute><AdminCommunications /></ProtectedAdminRoute>} />
                   <Route path="/admin/agents" element={<ProtectedAdminRoute><AdminAgents /></ProtectedAdminRoute>} />
+                  <Route path="/admin/treatments" element={<ProtectedAdminRoute><AdminTreatments /></ProtectedAdminRoute>} />
                   <Route path="/admin/seed-hospitals" element={<SeedHospitalData />} />
                   <Route path="/agent/dashboard" element={<ProtectedAgentRoute><AgentDashboard /></ProtectedAgentRoute>} />
                   <Route path="/agent/patients" element={<ProtectedAgentRoute><AgentPatients /></ProtectedAgentRoute>} />

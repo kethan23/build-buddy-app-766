@@ -1535,6 +1535,98 @@ export type Database = {
         }
         Relationships: []
       }
+      treatment_categories: {
+        Row: {
+          bg_class: string
+          color_class: string
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          icon_name: string
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          bg_class?: string
+          color_class?: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon_name?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          bg_class?: string
+          color_class?: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon_name?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      treatment_listings: {
+        Row: {
+          avg_cost: string | null
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          duration: string | null
+          icon_bg: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          savings: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avg_cost?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          duration?: string | null
+          icon_bg?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          savings?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avg_cost?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          duration?: string | null
+          icon_bg?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          savings?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treatment_listings_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "treatment_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       treatment_packages: {
         Row: {
           category: string
