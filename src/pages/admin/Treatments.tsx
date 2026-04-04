@@ -137,7 +137,7 @@ export default function AdminTreatments() {
   };
 
   const toggleActive = async (table: string, id: string, current: boolean) => {
-    await supabase.from(table).update({ is_active: !current }).eq('id', id);
+    await (supabase.from(table) as any).update({ is_active: !current }).eq('id', id);
     fetchAll();
   };
 
