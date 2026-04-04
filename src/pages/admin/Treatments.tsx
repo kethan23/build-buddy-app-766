@@ -131,7 +131,7 @@ export default function AdminTreatments() {
 
   const deleteListing = async (id: string) => {
     if (!confirm('Delete this listing?')) return;
-    await supabase.from('treatment_listings').delete().eq('id', id);
+    await (supabase.from('treatment_listings') as any).delete().eq('id', id);
     toast({ title: 'Listing deleted' });
     fetchAll();
   };
