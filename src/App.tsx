@@ -52,6 +52,7 @@ import AdminUsers from "./pages/admin/Users";
 import AdminAnalytics from "./pages/admin/Analytics";
 import AdminVisa from "./pages/admin/Visa";
 import AdminAgents from "./pages/admin/Agents";
+import AdminTreatments from "./pages/admin/Treatments";
 import AgentDashboard from "./pages/agent/Dashboard";
 import AgentPatients from "./pages/agent/Patients";
 import AddPatient from "./pages/agent/AddPatient";
