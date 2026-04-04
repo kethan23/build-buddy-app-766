@@ -1,31 +1,73 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Heart, Bone, Brain, Eye, Activity, Stethoscope, Baby, Smile, Sparkles, ArrowRight,
   Scissors, Scale, Pill, Syringe
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "react-i18next";
 import { ScrollReveal } from "@/hooks/useScrollAnimation";
+import { supabase } from "@/integrations/supabase/client";
 
-const categories = [
-  { icon: Activity, name: "Oncology", color: "text-orange-500", bg: "bg-orange-500/10", desc: "Advanced cancer treatments with proven results" },
-  { icon: Brain, name: "Neurosurgery", color: "text-purple-500", bg: "bg-purple-500/10", desc: "Adult and pediatric neurosurgical care" },
-  { icon: Bone, name: "Spine Surgery", color: "text-blue-500", bg: "bg-blue-500/10", desc: "Precision spine surgeries for better mobility" },
-  { icon: Heart, name: "Cardiology", color: "text-red-500", bg: "bg-red-500/10", desc: "World-class heart care for adults and children" },
-  { icon: Bone, name: "Orthopedics", color: "text-cyan-500", bg: "bg-cyan-500/10", desc: "Expert joint replacements and bone solutions" },
-  { icon: Baby, name: "IVF & Fertility", color: "text-pink-500", bg: "bg-pink-500/10", desc: "Leading fertility treatments with high success" },
-  { icon: Stethoscope, name: "Gynecology", color: "text-rose-500", bg: "bg-rose-500/10", desc: "Specialized women's health services" },
-  { icon: Scissors, name: "Cosmetic Surgery", color: "text-violet-500", bg: "bg-violet-500/10", desc: "Aesthetic procedures for a new you" },
-  { icon: Scale, name: "Weight Loss", color: "text-amber-500", bg: "bg-amber-500/10", desc: "Effective bariatric surgery options" },
-  { icon: Pill, name: "Liver Transplant", color: "text-emerald-500", bg: "bg-emerald-500/10", desc: "Liver transplant procedures of varying complexity" },
-  { icon: Syringe, name: "Kidney Transplant", color: "text-teal-500", bg: "bg-teal-500/10", desc: "Expert renal care and transplants" },
-  { icon: Eye, name: "Ophthalmology", color: "text-green-500", bg: "bg-green-500/10", desc: "Advanced eye care and laser surgeries" },
-  { icon: Smile, name: "Dental Care", color: "text-sky-500", bg: "bg-sky-500/10", desc: "Complete dental treatments and implants" },
-  { icon: Activity, name: "Bone Marrow", color: "text-indigo-500", bg: "bg-indigo-500/10", desc: "Bone marrow transplant for matched & unmatched donors" },
-];
+const iconMap: Record<string, any> = {
+  Activity, Brain, Bone, Heart, Eye, Baby, Stethoscope, Smile, Scissors, Scale, Pill, Syringe,
+};
 
 const TreatmentCategories = () => {
   const { t } = useTranslation();
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("treatment_categories")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order");
+
+      if (error) throw error;
+      setCategories(data || []);
+    } catch (err) {
+      console.error("Error fetching treatment categories:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-12 sm:py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <Skeleton className="h-8 w-48 mx-auto mb-4" />
+            <Skeleton className="h-5 w-72 mx-auto" />
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton key={i} className="h-28 sm:h-36 rounded-xl" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (categories.length === 0) {
+    return (
+      <section className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">Treatment categories will appear here once added by the admin.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 sm:py-20 relative overflow-hidden">
@@ -49,20 +91,20 @@ const TreatmentCategories = () => {
 
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-5">
           {categories.map((category, index) => {
-            const Icon = category.icon;
+            const Icon = iconMap[category.icon_name] || Activity;
             return (
-              <ScrollReveal key={category.name} delay={index * 60} animation="scale-in">
+              <ScrollReveal key={category.id} delay={index * 60} animation="scale-in">
                 <Link to={`/treatments/${category.name.toLowerCase()}`}>
                   <Card className="group overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:shadow-medium transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full">
                     <CardContent className="p-2.5 sm:p-5 text-center relative">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className={`relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl ${category.bg} mb-1.5 sm:mb-3 transition-transform duration-300 group-hover:scale-110`}>
-                        <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${category.color}`} />
+                      <div className={`relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl ${category.bg_class} mb-1.5 sm:mb-3 transition-transform duration-300 group-hover:scale-110`}>
+                        <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${category.color_class}`} />
                       </div>
                       <h3 className="relative font-heading font-semibold text-[10px] sm:text-sm mb-0.5 sm:mb-1 group-hover:text-primary transition-colors leading-tight">
                         {category.name}
                       </h3>
-                      <p className="relative text-[9px] sm:text-xs text-muted-foreground line-clamp-2 hidden sm:block">{category.desc}</p>
+                      <p className="relative text-[9px] sm:text-xs text-muted-foreground line-clamp-2 hidden sm:block">{category.description}</p>
                     </CardContent>
                   </Card>
                 </Link>
