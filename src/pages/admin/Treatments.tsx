@@ -101,7 +101,7 @@ export default function AdminTreatments() {
 
   const deleteCat = async (id: string) => {
     if (!confirm('Delete this category?')) return;
-    await supabase.from('treatment_categories').delete().eq('id', id);
+    await (supabase.from('treatment_categories') as any).delete().eq('id', id);
     toast({ title: 'Category deleted' });
     fetchAll();
   };
