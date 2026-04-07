@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X, Globe, MoreHorizontal } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, Globe, MoreHorizontal, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -31,6 +31,7 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { role } = useUserRole();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
   const dashboardHref =
     role === 'admin' ? '/admin/dashboard' :
@@ -90,13 +91,23 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex h-14 sm:h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-base sm:text-lg">M</span>
-            </div>
-            <span className="font-heading font-bold text-lg sm:text-xl text-primary">MediConnect</span>
-          </Link>
+          {/* Logo + AI Analysis */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2">
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-base sm:text-lg">M</span>
+              </div>
+              <span className="font-heading font-bold text-lg sm:text-xl text-primary">MediConnect</span>
+            </Link>
+            <button
+              onClick={() => navigate("/patient/ai-analysis")}
+              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors cursor-pointer"
+            >
+              <Brain className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[11px] font-semibold text-primary">AI Analysis</span>
+              <span className="text-[8px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full leading-none">BETA</span>
+            </button>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
