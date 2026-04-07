@@ -58,7 +58,7 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* ── MAIN HERO ── */}
-      <div className="relative min-h-[85vh] sm:min-h-0 flex flex-col justify-center" style={{ background: 'linear-gradient(160deg, hsl(0 0% 98%) 0%, hsl(210 20% 96%) 30%, hsl(210 15% 94%) 60%, hsl(220 14% 96%) 100%)' }}>
+      <div className="relative min-h-[85vh] sm:min-h-0 flex flex-col justify-center" style={{ background: 'linear-gradient(160deg, hsl(210 40% 97%) 0%, hsl(210 50% 95%) 30%, hsl(205 45% 93%) 60%, hsl(210 35% 96%) 100%)' }}>
         {/* Ambient glow effects */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-40 left-1/3 w-[700px] h-[700px] rounded-full blur-[200px] opacity-30" style={{ background: 'radial-gradient(circle, hsl(193 60% 70% / 0.2), transparent 70%)' }} />
