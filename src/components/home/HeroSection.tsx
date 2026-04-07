@@ -197,34 +197,30 @@ const HeroSection = () => {
       {/* ── AI ANALYSIS CTA ── */}
       <div
         onClick={() => navigate("/patient/ai-analysis")}
-        className="relative cursor-pointer group overflow-hidden"
+        className="relative cursor-pointer group overflow-hidden bg-white border-y border-gray-100"
       >
-        {/* Subtle animated gradient border */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.06] via-accent/[0.03] to-violet-500/[0.06]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.08] via-accent/[0.06] to-violet-500/[0.08] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-sky-500/[0.03] group-hover:from-primary/[0.06] group-hover:to-sky-500/[0.06] transition-all duration-500" />
 
         <div className="container mx-auto px-4 py-4 sm:py-5 relative z-10">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 max-w-4xl mx-auto">
             <div className="flex items-center gap-3">
               <div className="relative shrink-0">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-primary via-primary to-violet-500 flex items-center justify-center shadow-lg shadow-primary/25">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-primary to-sky-500 flex items-center justify-center shadow-md shadow-primary/15">
                   <Brain className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse border-2 border-background" />
+                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse border-2 border-white" />
               </div>
               <div className="text-center sm:text-left">
                 <div className="flex items-center gap-2">
-                  <span className="font-heading font-semibold text-sm text-foreground">AI Medical Analysis</span>
-                  <span className="bg-gradient-to-r from-primary/15 to-violet-500/15 text-primary text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wider border border-primary/10">BETA</span>
+                  <span className="font-heading font-semibold text-sm text-gray-800">AI Medical Analysis</span>
+                  <span className="bg-primary/10 text-primary text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wider border border-primary/15">BETA</span>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-[11px] text-gray-400">
                   Upload reports or describe your condition — get instant AI-powered matches
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-violet-500 text-primary-foreground font-semibold text-xs sm:text-sm shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/35 group-hover:brightness-110 transition-all duration-300">
+            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-sky-500 text-primary-foreground font-semibold text-xs sm:text-sm shadow-md shadow-primary/15 group-hover:shadow-lg group-hover:shadow-primary/25 group-hover:brightness-105 transition-all duration-300">
               <Zap className="h-3.5 w-3.5" />
               Try AI Analysis
               <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
