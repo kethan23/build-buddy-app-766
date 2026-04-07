@@ -58,50 +58,50 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* ── MAIN HERO ── */}
-      <div className="relative min-h-[85vh] sm:min-h-0 flex flex-col justify-center" style={{ background: 'linear-gradient(160deg, hsl(220 45% 6%) 0%, hsl(210 40% 10%) 30%, hsl(200 35% 14%) 60%, hsl(195 30% 12%) 100%)' }}>
+      <div className="relative min-h-[85vh] sm:min-h-0 flex flex-col justify-center" style={{ background: 'linear-gradient(160deg, hsl(0 0% 98%) 0%, hsl(210 20% 96%) 30%, hsl(210 15% 94%) 60%, hsl(220 14% 96%) 100%)' }}>
         {/* Ambient glow effects */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-40 left-1/3 w-[700px] h-[700px] rounded-full blur-[200px] opacity-40" style={{ background: 'radial-gradient(circle, hsl(193 100% 43% / 0.15), transparent 70%)' }} />
-          <div className="absolute -bottom-20 right-1/4 w-[500px] h-[500px] rounded-full blur-[160px] opacity-30" style={{ background: 'radial-gradient(circle, hsl(270 70% 50% / 0.1), transparent 70%)' }} />
-          <div className="absolute top-1/2 -left-20 w-[300px] h-[600px] rounded-full blur-[120px] opacity-20" style={{ background: 'radial-gradient(circle, hsl(160 80% 40% / 0.15), transparent 70%)' }} />
+          <div className="absolute -top-40 left-1/3 w-[700px] h-[700px] rounded-full blur-[200px] opacity-30" style={{ background: 'radial-gradient(circle, hsl(193 60% 70% / 0.2), transparent 70%)' }} />
+          <div className="absolute -bottom-20 right-1/4 w-[500px] h-[500px] rounded-full blur-[160px] opacity-20" style={{ background: 'radial-gradient(circle, hsl(220 30% 80% / 0.15), transparent 70%)' }} />
+          <div className="absolute top-1/2 -left-20 w-[300px] h-[600px] rounded-full blur-[120px] opacity-15" style={{ background: 'radial-gradient(circle, hsl(160 40% 75% / 0.15), transparent 70%)' }} />
           {/* Grid pattern */}
-          <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(hsl(220 10% 80% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(220 10% 80% / 0.3) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
           {/* Top gradient line */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300/40 to-transparent" />
         </div>
 
         <div className="container mx-auto px-4 py-10 sm:py-16 md:py-20 relative z-10">
           <div className="max-w-4xl mx-auto">
             {/* Badge */}
             <div className="text-center mb-5 sm:mb-6 animate-fade-in" style={{ animationDuration: '0.5s' }}>
-              <div className="inline-flex items-center gap-2 bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-full px-3 sm:px-4 py-1 sm:py-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[10px] sm:text-xs font-medium text-white/60 tracking-widest uppercase">Trusted by patients worldwide</span>
+              <div className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-md border border-gray-200/60 rounded-full px-3 sm:px-4 py-1 sm:py-1.5 shadow-sm">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] sm:text-xs font-medium text-gray-500 tracking-widest uppercase">Trusted by patients worldwide</span>
               </div>
             </div>
 
             {/* Headline */}
             <div className="text-center mb-7 sm:mb-10">
-              <h1 className="font-heading font-bold text-[26px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[3.5rem] text-white mb-3 sm:mb-5 animate-fade-in tracking-tight" style={{ animationDuration: '0.6s' }}>
+              <h1 className="font-heading font-bold text-[26px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[3.5rem] text-gray-800 mb-3 sm:mb-5 animate-fade-in tracking-tight" style={{ animationDuration: '0.6s' }}>
                 World-Class Healthcare
                 <br />
-                <span className="bg-gradient-to-r from-sky-300 via-primary to-emerald-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary via-sky-500 to-emerald-500 bg-clip-text text-transparent">
                   at Affordable Prices
                 </span>
               </h1>
-              <p className="text-xs sm:text-base md:text-lg text-white/45 max-w-xl sm:max-w-2xl mx-auto animate-fade-in leading-relaxed" style={{ animationDelay: '100ms', animationDuration: '0.6s', animationFillMode: 'backwards' }}>
-                Connect with India's top hospitals for quality treatments at up to <span className="text-white/70 font-semibold">70% lower costs</span>
+              <p className="text-xs sm:text-base md:text-lg text-gray-400 max-w-xl sm:max-w-2xl mx-auto animate-fade-in leading-relaxed" style={{ animationDelay: '100ms', animationDuration: '0.6s', animationFillMode: 'backwards' }}>
+                Connect with India's top hospitals for quality treatments at up to <span className="text-gray-600 font-semibold">70% lower costs</span>
               </p>
             </div>
 
             {/* Search Form Card */}
             <div className="relative animate-fade-in mb-7 sm:mb-10" style={{ animationDelay: '200ms', animationDuration: '0.7s', animationFillMode: 'backwards' }}>
               {/* Glow behind card */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-sky-400/10 to-emerald-400/20 rounded-[20px] blur-xl opacity-50" />
-              <div className="relative bg-white/[0.06] backdrop-blur-2xl border border-white/[0.08] rounded-2xl p-3.5 sm:p-5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-gray-300/20 to-emerald-400/10 rounded-[20px] blur-xl opacity-60" />
+              <div className="relative bg-white/80 backdrop-blur-2xl border border-gray-200/50 rounded-2xl p-3.5 sm:p-5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)]">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                   <Select value={selectedTreatment} onValueChange={setSelectedTreatment}>
-                    <SelectTrigger className="w-full bg-white border-0 h-11 sm:h-[52px] text-sm text-foreground shadow-md rounded-xl ring-0 focus:ring-2 focus:ring-primary/30">
+                    <SelectTrigger className="w-full bg-gray-50/80 border border-gray-200/60 h-11 sm:h-[52px] text-sm text-foreground shadow-sm rounded-xl ring-0 focus:ring-2 focus:ring-primary/20">
                       <SelectValue placeholder="Select Treatment" />
                     </SelectTrigger>
                     <SelectContent>
@@ -125,17 +125,17 @@ const HeroSection = () => {
                   </Select>
 
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                       placeholder="City or Location"
                       value={locationQuery}
                       onChange={(e) => setLocationQuery(e.target.value)}
-                      className="pl-10 bg-white border-0 h-11 sm:h-[52px] text-sm shadow-md rounded-xl ring-0 focus-visible:ring-2 focus-visible:ring-primary/30"
+                      className="pl-10 bg-gray-50/80 border border-gray-200/60 h-11 sm:h-[52px] text-sm shadow-sm rounded-xl ring-0 focus-visible:ring-2 focus-visible:ring-primary/20"
                     />
                   </div>
 
                   <Button
-                    className="w-full h-11 sm:h-[52px] rounded-xl font-semibold text-sm shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 bg-gradient-to-r from-primary via-primary to-sky-500 text-primary-foreground hover:brightness-110"
+                    className="w-full h-11 sm:h-[52px] rounded-xl font-semibold text-sm shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 bg-gradient-to-r from-primary to-sky-500 text-primary-foreground hover:brightness-105"
                     size="lg"
                     onClick={() => {
                       const params = new URLSearchParams();
@@ -156,20 +156,20 @@ const HeroSection = () => {
               {statItems.map((stat, i) => (
                 <div
                   key={stat.label}
-                  className={`relative group bg-gradient-to-br ${stat.gradient} backdrop-blur-sm border ${stat.borderColor} rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center hover:scale-[1.03] transition-all duration-300`}
+                  className="relative group bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center hover:scale-[1.03] hover:bg-white/80 hover:shadow-md transition-all duration-300"
                 >
-                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/[0.06] flex items-center justify-center mx-auto mb-1.5 sm:mb-2`}>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gray-100/80 flex items-center justify-center mx-auto mb-1.5 sm:mb-2">
                     <stat.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${stat.iconColor}`} />
                   </div>
-                  <div className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white tabular-nums">
+                  <div className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-gray-800 tabular-nums">
                     {stat.value > 0 ? (
                       <>
                         {stat.value.toLocaleString()}
-                        <span className="text-xs sm:text-sm font-medium text-white/30 ml-0.5">+</span>
+                        <span className="text-xs sm:text-sm font-medium text-gray-300 ml-0.5">+</span>
                       </>
                     ) : "—"}
                   </div>
-                  <div className="text-[9px] sm:text-[11px] text-white/40 font-medium tracking-wide uppercase mt-0.5">{stat.label}</div>
+                  <div className="text-[9px] sm:text-[11px] text-gray-400 font-medium tracking-wide uppercase mt-0.5">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -181,8 +181,8 @@ const HeroSection = () => {
                 { icon: Award, label: "ISO Certified" },
                 { icon: CheckCircle, label: "NABH Verified" },
               ].map((badge) => (
-                <div key={badge.label} className="flex items-center gap-1.5 text-white/30 text-[10px] sm:text-xs">
-                  <badge.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white/25" />
+                <div key={badge.label} className="flex items-center gap-1.5 text-gray-400 text-[10px] sm:text-xs">
+                  <badge.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-gray-300" />
                   <span>{badge.label}</span>
                 </div>
               ))}
