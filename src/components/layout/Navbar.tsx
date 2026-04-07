@@ -91,23 +91,30 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex h-14 sm:h-16 items-center justify-between">
-          {/* Logo + AI Analysis */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-base sm:text-lg">M</span>
-              </div>
-              <span className="font-heading font-bold text-lg sm:text-xl text-primary">MediConnect</span>
-            </Link>
-            <button
-              onClick={() => navigate("/patient/ai-analysis")}
-              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors cursor-pointer"
-            >
-              <Brain className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[11px] font-semibold text-primary">AI Analysis</span>
-              <span className="text-[8px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full leading-none">BETA</span>
-            </button>
-          </div>
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-base sm:text-lg">M</span>
+            </div>
+            <span className="font-heading font-bold text-lg sm:text-xl text-primary">MediConnect</span>
+          </Link>
+
+          {/* AI Analysis Search Bar */}
+          <button
+            onClick={() => navigate("/patient/ai-analysis")}
+            className="hidden sm:flex items-center gap-2 flex-1 max-w-xs lg:max-w-sm mx-3 lg:mx-4 px-3 py-1.5 rounded-full bg-muted/50 border border-border/60 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer group"
+          >
+            <Brain className="h-3.5 w-3.5 text-primary shrink-0" />
+            <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors truncate">AI Medical Analysis...</span>
+            <span className="text-[8px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full leading-none shrink-0">BETA</span>
+          </button>
+          {/* Mobile AI button */}
+          <button
+            onClick={() => navigate("/patient/ai-analysis")}
+            className="sm:hidden flex items-center justify-center h-8 w-8 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors ml-auto mr-1"
+          >
+            <Brain className="h-4 w-4 text-primary" />
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
