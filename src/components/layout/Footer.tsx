@@ -20,7 +20,8 @@ const Footer = () => {
       { label: "Blog", href: "/blog" },
       { label: "Support Center", href: "/support" },
       { label: "FAQs", href: "/support#faq" },
-      { label: "Travel Guide", href: "/travel-guide" },
+      { label: "Medical Disclaimer", href: "/medical-disclaimer" },
+      { label: "Refund Policy", href: "/refund" },
     ],
     "Company": [
       { label: "About Us", href: "/about" },

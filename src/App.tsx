@@ -23,6 +23,10 @@ import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import ResetPassword from "./pages/ResetPassword";
 import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Cookies from "./pages/Cookies";
+import Refund from "./pages/Refund";
+import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import VisaInfo from "./pages/VisaInfo";
 import VisaApplication from "./pages/patient/VisaApplication";
 import AdminVisaRequirements from "./pages/admin/VisaRequirements";
@@ -99,6 +103,10 @@ const App = () => {
                   <Route path="/about" element={<About />} />
                   <Route path="/how-it-works" element={<HowItWorks />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/cookies" element={<Cookies />} />
+                  <Route path="/refund" element={<Refund />} />
+                  <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
                   <Route path="/visa-info" element={<VisaInfo />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
