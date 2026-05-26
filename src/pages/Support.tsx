@@ -35,6 +35,7 @@ const Support = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Help & Support — MediConnect"} description={"Find answers to common questions about hospitals, treatments, payments and travel. Contact our patient support team."} path={"/support"} />
       <Navbar />
       <main className="flex-1">
         {/* Page Header */}

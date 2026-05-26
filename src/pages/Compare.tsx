@@ -43,7 +43,8 @@ const Compare = () => {
   if (selectedHospitals.length === 0) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <SEO title={"Compare Hospitals Side-by-Side — MediConnect"} description={"Compare up to three Indian hospitals on ratings, specialties and pricing to make an informed treatment decision."} path={"/compare"} />
+      <Navbar />
         <main className="flex-1 flex items-center justify-center">
           <Card className="max-w-md w-full mx-4">
             <CardContent className="p-8 text-center">

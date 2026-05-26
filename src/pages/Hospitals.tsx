@@ -98,6 +98,7 @@ const Hospitals = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Verified Hospitals in India for International Patients"} description={"Browse verified Indian hospitals — JCI/NABH accredited, with ratings, specialties and transparent pricing for medical tourists."} path={"/hospitals"} />
       <Navbar />
       <main className="flex-1">
         {/* Premium Page Header */}

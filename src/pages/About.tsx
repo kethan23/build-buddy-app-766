@@ -30,6 +30,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"About MediConnect — Medical Tourism Facilitator"} description={"MediConnect connects international patients with verified Indian hospitals. Learn about our mission, values and trusted network."} path={"/about"} />
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}

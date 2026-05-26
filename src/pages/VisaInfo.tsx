@@ -126,6 +126,7 @@ export default function VisaInfoPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Medical Visa Information for India"} description={"Medical visa requirements, documents, processing time and fees by country. Visa support and guidance from MediConnect."} path={"/visa-info"} />
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const Cookies = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Cookie Policy — MediConnect"} description={"How MediConnect uses cookies and similar technologies to operate and improve the platform."} path={"/cookies"} />
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto">

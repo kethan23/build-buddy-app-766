@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const Refund = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Refund Policy — MediConnect"} description={"Refund policy for facilitation fees, booking deposits and visa rejection scenarios."} path={"/refund"} />
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto">

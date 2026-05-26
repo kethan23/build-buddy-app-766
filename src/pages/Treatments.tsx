@@ -60,6 +60,7 @@ const Treatments = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Treatment Packages & Cost Comparison — India"} description={"Compare popular medical treatments and packages across verified Indian hospitals. Transparent pricing, recovery time and inclusions."} path={"/treatments"} />
       <Navbar />
       <main className="flex-1">
         {/* Premium Page Header */}
