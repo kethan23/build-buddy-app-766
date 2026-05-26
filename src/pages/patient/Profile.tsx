@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Save, Plus, Trash2, Upload } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import NotificationPreferencesPanel from '@/components/patient/NotificationPreferencesPanel';
+import ConsentManagementPanel from '@/components/patient/ConsentManagementPanel';
 
 const Profile = () => {
   const { user } = useAuth();
