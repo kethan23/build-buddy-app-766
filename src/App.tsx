@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ComparisonProvider } from "@/contexts/ComparisonContext";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/patient/ProtectedRoute";
 import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute";
@@ -93,7 +94,8 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
-              <ComparisonProvider>
+              <CurrencyProvider>
+                <ComparisonProvider>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/hospitals" element={<Hospitals />} />
@@ -156,7 +158,8 @@ const App = () => {
                 </Routes>
                 <CookieConsent />
 
-              </ComparisonProvider>
+                </ComparisonProvider>
+              </CurrencyProvider>
             </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>

@@ -162,7 +162,15 @@ const PublicHospitalProfile = () => {
       }).select().single();
 
       if (error) throw error;
-      if (uploadedDocs.length > 0 && inquiry) await uploadDocuments(inquiry.id);
+      if (uploadedDocs.length > 0 && inquiry) {
+        await uploadDocuments(inquiry.id);
+        // Record per-hospital consent for the shared medical documents
+        try {
+          await recordMedicalDataConsent({ patientId: user.id, hospitalId: hospital.id });
+        } catch (e) {
+          console.warn("consent log failed", e);
+        }
+      }
 
       toast.success(inquiryType === 'consultation' ? 'Consultation request sent!' : 'Inquiry sent!');
       setInquiryDialogOpen(false);

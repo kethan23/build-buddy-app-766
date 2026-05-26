@@ -6,6 +6,8 @@ import TreatmentCategories from "@/components/home/TreatmentCategories";
 import HowItWorks from "@/components/home/HowItWorks";
 import Testimonials from "@/components/home/Testimonials";
 import Newsletter from "@/components/home/Newsletter";
+import CostEstimator from "@/components/home/CostEstimator";
+import StickyMobileCTA from "@/components/home/StickyMobileCTA";
 import SEO from "@/components/SEO";
 
 const Index = () => {
@@ -31,12 +33,14 @@ const Index = () => {
       <main className="flex-1">
         <HeroSection />
         <TreatmentCategories />
+        <CostEstimator />
         <FeaturedHospitals />
         <HowItWorks />
         <Testimonials />
         <Newsletter />
       </main>
       <Footer />
+      <StickyMobileCTA />
     </div>
   );
 };
