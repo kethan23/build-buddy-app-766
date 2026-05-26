@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
+import CurrencySelector from "@/components/CurrencySelector";
 import { useTranslation } from "react-i18next";
 import {
   Sheet,
@@ -173,6 +174,8 @@ const Navbar = () => {
                 <SelectItem value="fr">Français</SelectItem>
               </SelectContent>
             </Select>
+
+            <CurrencySelector />
 
             {user && <NotificationCenter />}
 
