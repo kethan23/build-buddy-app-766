@@ -208,6 +208,25 @@ const PublicHospitalProfile = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title={`${hospital.name} — Treatments, Doctors & Reviews`}
+        description={`${hospital.name} in ${hospital.city || ''}${hospital.country ? ', ' + hospital.country : ''}. View specialties, doctors, treatment packages and patient reviews on MediConnect.`}
+        path={`/hospital/${hospital.id}`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Hospital",
+          name: hospital.name,
+          description: hospital.description || undefined,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: hospital.city || undefined,
+            addressCountry: hospital.country || undefined,
+          },
+          aggregateRating: hospital.rating
+            ? { "@type": "AggregateRating", ratingValue: hospital.rating, reviewCount: hospital.total_reviews || 1 }
+            : undefined,
+        }}
+      />
       <Navbar />
       <main className="flex-1">
         <HospitalHeroSection
