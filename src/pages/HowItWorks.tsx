@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import HowItWorksSection from "@/components/home/HowItWorks";
 
 const HowItWorks = () => {
