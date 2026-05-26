@@ -11,6 +11,7 @@ import ProtectedRoute from "@/components/patient/ProtectedRoute";
 import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute";
 import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
 import ProtectedAgentRoute from "@/components/agent/ProtectedAgentRoute";
+import CookieConsent from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Hospitals from "./pages/Hospitals";
 import PublicHospitalProfile from "./pages/PublicHospitalProfile";
@@ -153,6 +154,8 @@ const App = () => {
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
+                <CookieConsent />
+
               </ComparisonProvider>
             </AuthProvider>
           </BrowserRouter>
