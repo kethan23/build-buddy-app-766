@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SEO from '@/components/SEO';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -126,6 +127,7 @@ export default function VisaInfoPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Medical Visa Information for India"} description={"Medical visa requirements, documents, processing time and fees by country. Visa support and guidance from MediConnect."} path={"/visa-info"} />
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}

@@ -1,10 +1,12 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Privacy = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Privacy Policy — MediConnect"} description={"How MediConnect collects, uses and protects your personal and medical information."} path={"/privacy"} />
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto">

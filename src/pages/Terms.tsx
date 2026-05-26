@@ -1,10 +1,12 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Terms = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Terms & Conditions — MediConnect"} description={"Terms of use for the MediConnect medical tourism facilitation platform."} path={"/terms"} />
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto">

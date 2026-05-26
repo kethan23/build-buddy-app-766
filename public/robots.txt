@@ -12,3 +12,20 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /patient/
+Disallow: /hospital/dashboard
+Disallow: /hospital/profile
+Disallow: /hospital/packages
+Disallow: /hospital/inquiries
+Disallow: /hospital/appointments
+Disallow: /hospital/analytics
+Disallow: /hospital/chat
+Disallow: /hospital/visa-support
+Disallow: /hospital/support
+Disallow: /agent/
+Disallow: /auth
+Disallow: /auth/callback
+Disallow: /reset-password
+
+Sitemap: https://mediconnect-medical-tour.lovable.app/sitemap.xml

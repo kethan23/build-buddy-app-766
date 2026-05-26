@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -97,6 +98,7 @@ const Hospitals = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Verified Hospitals in India for International Patients"} description={"Browse verified Indian hospitals — JCI/NABH accredited, with ratings, specialties and transparent pricing for medical tourists."} path={"/hospitals"} />
       <Navbar />
       <main className="flex-1">
         {/* Premium Page Header */}

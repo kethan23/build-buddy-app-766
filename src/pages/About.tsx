@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, Globe, Award, Heart } from "lucide-react";
 
@@ -29,6 +30,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"About MediConnect — Medical Tourism Facilitator"} description={"MediConnect connects international patients with verified Indian hospitals. Learn about our mission, values and trusted network."} path={"/about"} />
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}

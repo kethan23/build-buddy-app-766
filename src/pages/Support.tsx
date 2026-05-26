@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +35,7 @@ const Support = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Help & Support — MediConnect"} description={"Find answers to common questions about hospitals, treatments, payments and travel. Contact our patient support team."} path={"/support"} />
       <Navbar />
       <main className="flex-1">
         {/* Page Header */}

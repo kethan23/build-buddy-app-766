@@ -1,10 +1,12 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEO from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const MedicalDisclaimer = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title={"Medical Disclaimer — MediConnect"} description={"MediConnect is a facilitator only and does not provide medical advice, diagnosis or treatment."} path={"/medical-disclaimer"} />
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto">
