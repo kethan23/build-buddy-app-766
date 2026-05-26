@@ -446,16 +446,9 @@ const Profile = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="settings">
-            <Card>
-              <CardHeader>
-                <CardTitle>Settings</CardTitle>
-                <CardDescription>Manage your preferences and privacy settings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Settings options will be available soon.</p>
-              </CardContent>
-            </Card>
+          <TabsContent value="settings" className="space-y-4">
+            <NotificationPreferencesPanel />
+            <ConsentManagementPanel />
           </TabsContent>
         </Tabs>
       </div>
