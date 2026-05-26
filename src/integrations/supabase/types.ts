@@ -819,6 +819,41 @@ export type Database = {
           },
         ]
       }
+      hospital_quick_replies: {
+        Row: {
+          body: string
+          created_at: string
+          hospital_id: string
+          id: string
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          hospital_id: string
+          id?: string
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          hospital_id?: string
+          id?: string
+          label?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_quick_replies_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hospital_specialties: {
         Row: {
           created_at: string | null
@@ -932,6 +967,7 @@ export type Database = {
       inquiries: {
         Row: {
           created_at: string | null
+          first_response_at: string | null
           hospital_id: string | null
           id: string
           message: string
@@ -943,6 +979,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          first_response_at?: string | null
           hospital_id?: string | null
           id?: string
           message: string
@@ -954,6 +991,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          first_response_at?: string | null
           hospital_id?: string | null
           id?: string
           message?: string
@@ -1004,6 +1042,41 @@ export type Database = {
             columns: ["inquiry_id"]
             isOneToOne: false
             referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medical_data_consents: {
+        Row: {
+          granted_at: string
+          hospital_id: string
+          id: string
+          patient_id: string
+          revoked_at: string | null
+          scope: string
+        }
+        Insert: {
+          granted_at?: string
+          hospital_id: string
+          id?: string
+          patient_id: string
+          revoked_at?: string | null
+          scope?: string
+        }
+        Update: {
+          granted_at?: string
+          hospital_id?: string
+          id?: string
+          patient_id?: string
+          revoked_at?: string | null
+          scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_data_consents_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
             referencedColumns: ["id"]
           },
         ]
@@ -1096,6 +1169,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notification_preferences: {
+        Row: {
+          booking_updates: boolean
+          email_enabled: boolean
+          marketing: boolean
+          message_alerts: boolean
+          push_enabled: boolean
+          updated_at: string
+          user_id: string
+          visa_updates: boolean
+        }
+        Insert: {
+          booking_updates?: boolean
+          email_enabled?: boolean
+          marketing?: boolean
+          message_alerts?: boolean
+          push_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          visa_updates?: boolean
+        }
+        Update: {
+          booking_updates?: boolean
+          email_enabled?: boolean
+          marketing?: boolean
+          message_alerts?: boolean
+          push_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          visa_updates?: boolean
+        }
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -1571,6 +1677,42 @@ export type Database = {
           is_active?: boolean | null
           name?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      treatment_cost_estimates: {
+        Row: {
+          created_at: string
+          id: string
+          india_avg_usd: number
+          treatment_key: string
+          treatment_name: string
+          uae_avg_usd: number | null
+          uk_avg_usd: number | null
+          updated_at: string
+          us_avg_usd: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          india_avg_usd: number
+          treatment_key: string
+          treatment_name: string
+          uae_avg_usd?: number | null
+          uk_avg_usd?: number | null
+          updated_at?: string
+          us_avg_usd: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          india_avg_usd?: number
+          treatment_key?: string
+          treatment_name?: string
+          uae_avg_usd?: number | null
+          uk_avg_usd?: number | null
+          updated_at?: string
+          us_avg_usd?: number
         }
         Relationships: []
       }
