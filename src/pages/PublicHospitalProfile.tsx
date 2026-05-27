@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Building2, Users, Package, Image as ImageIcon, Upload, X, File, MessageSquare } from 'lucide-react';
+import { recordMedicalDataConsent } from '@/lib/consent';
 
 import HospitalHeroSection from '@/components/hospital/profile/HospitalHeroSection';
 import AboutTab from '@/components/hospital/profile/AboutTab';
