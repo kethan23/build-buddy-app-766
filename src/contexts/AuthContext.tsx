@@ -110,8 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Create hospital record if hospital role using secure function
     if (role === 'hospital' && data.user && hospitalData) {
-      console.log('Creating hospital profile for user:', data.user.id);
-      console.log('Hospital data:', hospitalData);
+      
       
       const { data: hospitalId, error: hospitalError } = await supabase
         .rpc('create_hospital_profile', {
@@ -134,7 +133,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error: hospitalError };
       }
 
-      console.log('Hospital created successfully with ID:', hospitalId);
+      
       toast({
         title: "Hospital registration submitted!",
         description: "Your application is pending admin approval. You'll be notified once approved.",
