@@ -146,7 +146,7 @@ const App = () => {
                   <Route path="/admin/agents" element={<ProtectedAdminRoute><AdminAgents /></ProtectedAdminRoute>} />
                   <Route path="/admin/treatments" element={<ProtectedAdminRoute><AdminTreatments /></ProtectedAdminRoute>} />
                   <Route path="/admin/audit-log" element={<ProtectedAdminRoute><AuditLog /></ProtectedAdminRoute>} />
-                  <Route path="/admin/seed-hospitals" element={<SeedHospitalData />} />
+                  <Route path="/admin/seed-hospitals" element={<ProtectedAdminRoute><SeedHospitalData /></ProtectedAdminRoute>} />
                   <Route path="/agent/dashboard" element={<ProtectedAgentRoute><AgentDashboard /></ProtectedAgentRoute>} />
                   <Route path="/agent/patients" element={<ProtectedAgentRoute><AgentPatients /></ProtectedAgentRoute>} />
                   <Route path="/agent/patients/new" element={<ProtectedAgentRoute><AddPatient /></ProtectedAgentRoute>} />

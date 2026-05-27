@@ -53,16 +53,14 @@ Deno.serve(async (req) => {
       // In production, integrate SendGrid/Twilio
     });
 
-    console.log(`OTP for tracking ${tracking_id}: ${otp} (user: ${user.email})`);
+    // OTP is only logged server-side; never returned to the client.
+    console.log(`OTP issued for tracking ${tracking_id}`);
 
-    // In a production environment, send the OTP via email/SMS here
-    // For now, we'll also return it (remove in production)
+    // TODO: integrate SendGrid/Twilio to actually deliver the OTP.
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: 'OTP sent to your registered email/phone',
-        // Remove otp field in production - only for development testing
-        otp_dev: otp 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
