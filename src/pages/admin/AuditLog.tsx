@@ -35,7 +35,7 @@ export default function AuditLog() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SEO title="Audit Log — Admin | MediConnect" description="Medical document access audit trail." noIndex />
+      <SEO title="Audit Log — Admin | MediConnect" description="Medical document access audit trail." noindex />
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
