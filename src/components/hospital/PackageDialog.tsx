@@ -269,6 +269,81 @@ export function PackageDialog({ hospitalId, package_, onSuccess }: PackageDialog
 
             <FormField
               control={form.control}
+              name="included_facilities"
+              render={({ field }) => {
+                const selected = field.value || [];
+                const excluded = FACILITY_OPTIONS.filter((f) => !selected.includes(f));
+                const toggle = (f: string, checked: boolean) => {
+                  if (checked) field.onChange([...selected, f]);
+                  else field.onChange(selected.filter((x) => x !== f));
+                };
+                return (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-base">Facilities & Inclusions</FormLabel>
+                    <div className="text-sm text-muted-foreground">
+                      Tick the facilities included in this package. Unticked items will automatically appear under "Not Included".
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-lg border p-3">
+                      {FACILITY_OPTIONS.map((f) => {
+                        const checked = selected.includes(f);
+                        return (
+                          <label
+                            key={f}
+                            className="flex items-center gap-2 rounded-md p-2 hover:bg-muted cursor-pointer text-sm"
+                          >
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(v) => toggle(f, !!v)}
+                            />
+                            <span>{f}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    {excluded.length > 0 && (
+                      <div className="rounded-lg border border-dashed p-3 bg-muted/30">
+                        <div className="text-sm font-medium mb-2 flex items-center gap-1 text-muted-foreground">
+                          <X className="h-4 w-4" /> Not Included ({excluded.length})
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {excluded.map((f) => (
+                            <span
+                              key={f}
+                              className="text-xs px-2 py-1 rounded-md bg-background border text-muted-foreground"
+                            >
+                              {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {selected.length > 0 && (
+                      <div className="rounded-lg border border-dashed p-3 bg-primary/5">
+                        <div className="text-sm font-medium mb-2 flex items-center gap-1 text-primary">
+                          <Check className="h-4 w-4" /> Included ({selected.length})
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selected.map((f) => (
+                            <span
+                              key={f}
+                              className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20"
+                            >
+                              {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+
+
+
+            <FormField
+              control={form.control}
               name="is_active"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
