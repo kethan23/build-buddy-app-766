@@ -30,4 +30,13 @@ i18n
     },
   });
 
+// Sync <html dir> and lang with current language for RTL (Arabic) support.
+const applyDir = (lng: string) => {
+  if (typeof document === 'undefined') return;
+  document.documentElement.lang = lng;
+  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+};
+applyDir(i18n.language || 'en');
+i18n.on('languageChanged', applyDir);
+
 export default i18n;
