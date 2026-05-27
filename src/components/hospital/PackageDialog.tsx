@@ -61,45 +61,56 @@ export function PackageDialog({ hospitalId, package_, onSuccess }: PackageDialog
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const initialIncluded: string[] = Array.isArray(package_?.inclusions)
+    ? (package_!.inclusions as string[]).filter((i) => FACILITY_OPTIONS.includes(i))
+    : [];
+
   const form = useForm<PackageFormValues>({
     resolver: zodResolver(packageSchema),
-    defaultValues: package_ || {
-      name: '',
-      category: '',
-      description: '',
-      price: 0,
-      currency: 'USD',
-      duration_days: 1,
-      recovery_days: 0,
-      is_active: true,
-    },
+    defaultValues: package_
+      ? { ...package_, included_facilities: initialIncluded }
+      : {
+          name: '',
+          category: '',
+          description: '',
+          price: 0,
+          currency: 'USD',
+          duration_days: 1,
+          recovery_days: 0,
+          is_active: true,
+          included_facilities: [],
+        },
   });
 
   const onSubmit = async (values: PackageFormValues) => {
     setLoading(true);
     try {
+      const included = values.included_facilities || [];
+      const excluded = FACILITY_OPTIONS.filter((f) => !included.includes(f));
+      const payload = {
+        name: values.name,
+        category: values.category,
+        description: values.description,
+        price: values.price,
+        currency: values.currency,
+        duration_days: values.duration_days,
+        recovery_days: values.recovery_days,
+        is_active: values.is_active,
+        inclusions: included,
+        exclusions: excluded,
+      };
+
       if (package_) {
         const { error } = await supabase
           .from('treatment_packages')
-          .update(values)
+          .update(payload)
           .eq('id', package_.id);
         if (error) throw error;
         toast({ title: 'Success', description: 'Package updated successfully' });
       } else {
-        const insertData = {
-          hospital_id: hospitalId,
-          name: values.name,
-          category: values.category,
-          description: values.description,
-          price: values.price,
-          currency: values.currency,
-          duration_days: values.duration_days,
-          recovery_days: values.recovery_days,
-          is_active: values.is_active,
-        };
         const { error } = await supabase
           .from('treatment_packages')
-          .insert([insertData]);
+          .insert([{ hospital_id: hospitalId, ...payload }]);
         if (error) throw error;
         toast({ title: 'Success', description: 'Package created successfully' });
       }
@@ -112,6 +123,7 @@ export function PackageDialog({ hospitalId, package_, onSuccess }: PackageDialog
       setLoading(false);
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
