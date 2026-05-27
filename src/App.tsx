@@ -13,6 +13,8 @@ import ProtectedHospitalRoute from "@/components/hospital/ProtectedHospitalRoute
 import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
 import ProtectedAgentRoute from "@/components/agent/ProtectedAgentRoute";
 import CookieConsent from "@/components/CookieConsent";
+import OfflineBanner from "@/components/OfflineBanner";
+import AuditLog from "./pages/admin/AuditLog";
 import Index from "./pages/Index";
 import Hospitals from "./pages/Hospitals";
 import PublicHospitalProfile from "./pages/PublicHospitalProfile";
@@ -143,6 +145,7 @@ const App = () => {
                   <Route path="/admin/communications" element={<ProtectedAdminRoute><AdminCommunications /></ProtectedAdminRoute>} />
                   <Route path="/admin/agents" element={<ProtectedAdminRoute><AdminAgents /></ProtectedAdminRoute>} />
                   <Route path="/admin/treatments" element={<ProtectedAdminRoute><AdminTreatments /></ProtectedAdminRoute>} />
+                  <Route path="/admin/audit-log" element={<ProtectedAdminRoute><AuditLog /></ProtectedAdminRoute>} />
                   <Route path="/admin/seed-hospitals" element={<SeedHospitalData />} />
                   <Route path="/agent/dashboard" element={<ProtectedAgentRoute><AgentDashboard /></ProtectedAgentRoute>} />
                   <Route path="/agent/patients" element={<ProtectedAgentRoute><AgentPatients /></ProtectedAgentRoute>} />
@@ -157,6 +160,7 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <CookieConsent />
+                <OfflineBanner />
 
                 </ComparisonProvider>
               </CurrencyProvider>
