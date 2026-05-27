@@ -444,6 +444,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage_log: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           appointment_date: string
@@ -683,6 +704,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      document_access_log: {
+        Row: {
+          accessed_by: string
+          action: string
+          created_at: string
+          document_id: string | null
+          document_path: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          accessed_by: string
+          action?: string
+          created_at?: string
+          document_id?: string | null
+          document_path?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          accessed_by?: string
+          action?: string
+          created_at?: string
+          document_id?: string | null
+          document_path?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
       }
       documents: {
         Row: {
@@ -1437,6 +1488,36 @@ export type Database = {
           phone?: string | null
           profile_image_url?: string | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []
