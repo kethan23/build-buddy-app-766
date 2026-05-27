@@ -9,9 +9,31 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus } from 'lucide-react';
+import { Plus, Check, X } from 'lucide-react';
+
+const FACILITY_OPTIONS = [
+  'Hospital Stay (Private Room)',
+  'Surgeon Fees',
+  'Anesthesia',
+  'Operation Theatre Charges',
+  'Pre-Operative Tests',
+  'Post-Operative Care',
+  'Medications During Stay',
+  'Nursing Care',
+  'Meals for Patient',
+  'Meals for Attendant',
+  'Airport Pickup & Drop',
+  'Hotel Accommodation',
+  'Language Interpreter',
+  'Local SIM Card',
+  'Visa Assistance',
+  'Follow-up Consultation',
+  'Physiotherapy Sessions',
+  'Travel Insurance',
+];
 
 const packageSchema = z.object({
   name: z.string().min(3, 'Package name must be at least 3 characters'),
@@ -22,7 +44,9 @@ const packageSchema = z.object({
   duration_days: z.coerce.number().int().positive('Duration must be positive'),
   recovery_days: z.coerce.number().int().positive('Recovery days must be positive').optional(),
   is_active: z.boolean().default(true),
+  included_facilities: z.array(z.string()).default([]),
 });
+
 
 type PackageFormValues = z.infer<typeof packageSchema>;
 
@@ -37,45 +61,56 @@ export function PackageDialog({ hospitalId, package_, onSuccess }: PackageDialog
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const initialIncluded: string[] = Array.isArray(package_?.inclusions)
+    ? (package_!.inclusions as string[]).filter((i) => FACILITY_OPTIONS.includes(i))
+    : [];
+
   const form = useForm<PackageFormValues>({
     resolver: zodResolver(packageSchema),
-    defaultValues: package_ || {
-      name: '',
-      category: '',
-      description: '',
-      price: 0,
-      currency: 'USD',
-      duration_days: 1,
-      recovery_days: 0,
-      is_active: true,
-    },
+    defaultValues: package_
+      ? { ...package_, included_facilities: initialIncluded }
+      : {
+          name: '',
+          category: '',
+          description: '',
+          price: 0,
+          currency: 'USD',
+          duration_days: 1,
+          recovery_days: 0,
+          is_active: true,
+          included_facilities: [],
+        },
   });
 
   const onSubmit = async (values: PackageFormValues) => {
     setLoading(true);
     try {
+      const included = values.included_facilities || [];
+      const excluded = FACILITY_OPTIONS.filter((f) => !included.includes(f));
+      const payload = {
+        name: values.name,
+        category: values.category,
+        description: values.description,
+        price: values.price,
+        currency: values.currency,
+        duration_days: values.duration_days,
+        recovery_days: values.recovery_days,
+        is_active: values.is_active,
+        inclusions: included,
+        exclusions: excluded,
+      };
+
       if (package_) {
         const { error } = await supabase
           .from('treatment_packages')
-          .update(values)
+          .update(payload)
           .eq('id', package_.id);
         if (error) throw error;
         toast({ title: 'Success', description: 'Package updated successfully' });
       } else {
-        const insertData = {
-          hospital_id: hospitalId,
-          name: values.name,
-          category: values.category,
-          description: values.description,
-          price: values.price,
-          currency: values.currency,
-          duration_days: values.duration_days,
-          recovery_days: values.recovery_days,
-          is_active: values.is_active,
-        };
         const { error } = await supabase
           .from('treatment_packages')
-          .insert([insertData]);
+          .insert([{ hospital_id: hospitalId, ...payload }]);
         if (error) throw error;
         toast({ title: 'Success', description: 'Package created successfully' });
       }
@@ -88,6 +123,7 @@ export function PackageDialog({ hospitalId, package_, onSuccess }: PackageDialog
       setLoading(false);
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -230,6 +266,81 @@ export function PackageDialog({ hospitalId, package_, onSuccess }: PackageDialog
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="included_facilities"
+              render={({ field }) => {
+                const selected = field.value || [];
+                const excluded = FACILITY_OPTIONS.filter((f) => !selected.includes(f));
+                const toggle = (f: string, checked: boolean) => {
+                  if (checked) field.onChange([...selected, f]);
+                  else field.onChange(selected.filter((x) => x !== f));
+                };
+                return (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-base">Facilities & Inclusions</FormLabel>
+                    <div className="text-sm text-muted-foreground">
+                      Tick the facilities included in this package. Unticked items will automatically appear under "Not Included".
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-lg border p-3">
+                      {FACILITY_OPTIONS.map((f) => {
+                        const checked = selected.includes(f);
+                        return (
+                          <label
+                            key={f}
+                            className="flex items-center gap-2 rounded-md p-2 hover:bg-muted cursor-pointer text-sm"
+                          >
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(v) => toggle(f, !!v)}
+                            />
+                            <span>{f}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    {excluded.length > 0 && (
+                      <div className="rounded-lg border border-dashed p-3 bg-muted/30">
+                        <div className="text-sm font-medium mb-2 flex items-center gap-1 text-muted-foreground">
+                          <X className="h-4 w-4" /> Not Included ({excluded.length})
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {excluded.map((f) => (
+                            <span
+                              key={f}
+                              className="text-xs px-2 py-1 rounded-md bg-background border text-muted-foreground"
+                            >
+                              {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {selected.length > 0 && (
+                      <div className="rounded-lg border border-dashed p-3 bg-primary/5">
+                        <div className="text-sm font-medium mb-2 flex items-center gap-1 text-primary">
+                          <Check className="h-4 w-4" /> Included ({selected.length})
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selected.map((f) => (
+                            <span
+                              key={f}
+                              className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20"
+                            >
+                              {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+
+
 
             <FormField
               control={form.control}
