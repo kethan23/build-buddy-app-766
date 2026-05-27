@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { z } from 'zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +8,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { MessageSquare } from 'lucide-react';
+
+const quoteSchema = z.object({
+  message: z.string().trim().min(10, 'Message must be at least 10 characters').max(2000, 'Message too long'),
+  estimated_cost: z
+    .string()
+    .refine((v) => v !== '' && !isNaN(Number(v)) && Number(v) > 0, 'Cost must be a positive number')
+    .refine((v) => Number(v) <= 10_000_000, 'Cost must be reasonable (max 10,000,000)'),
+  currency: z.enum(['USD', 'EUR', 'GBP', 'INR']),
+  duration_days: z
+    .string()
+    .refine((v) => v === '' || (!isNaN(Number(v)) && Number(v) > 0 && Number(v) <= 365), 'Duration must be between 1 and 365 days'),
+});
 
 interface QuoteDialogProps {
   inquiry: any;
@@ -44,10 +57,12 @@ export function QuoteDialog({ inquiry, hospitalId }: QuoteDialogProps) {
   };
 
   const handleSubmit = async () => {
-    if (!quote.message || !quote.estimated_cost) {
-      toast({ title: 'Error', description: 'Message and cost estimate are required', variant: 'destructive' });
+    const parsed = quoteSchema.safeParse(quote);
+    if (!parsed.success) {
+      toast({ title: 'Validation Error', description: parsed.error.errors[0].message, variant: 'destructive' });
       return;
     }
+
 
     setLoading(true);
     try {
