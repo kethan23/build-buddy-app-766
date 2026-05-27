@@ -9,9 +9,31 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus } from 'lucide-react';
+import { Plus, Check, X } from 'lucide-react';
+
+const FACILITY_OPTIONS = [
+  'Hospital Stay (Private Room)',
+  'Surgeon Fees',
+  'Anesthesia',
+  'Operation Theatre Charges',
+  'Pre-Operative Tests',
+  'Post-Operative Care',
+  'Medications During Stay',
+  'Nursing Care',
+  'Meals for Patient',
+  'Meals for Attendant',
+  'Airport Pickup & Drop',
+  'Hotel Accommodation',
+  'Language Interpreter',
+  'Local SIM Card',
+  'Visa Assistance',
+  'Follow-up Consultation',
+  'Physiotherapy Sessions',
+  'Travel Insurance',
+];
 
 const packageSchema = z.object({
   name: z.string().min(3, 'Package name must be at least 3 characters'),
@@ -22,7 +44,9 @@ const packageSchema = z.object({
   duration_days: z.coerce.number().int().positive('Duration must be positive'),
   recovery_days: z.coerce.number().int().positive('Recovery days must be positive').optional(),
   is_active: z.boolean().default(true),
+  included_facilities: z.array(z.string()).default([]),
 });
+
 
 type PackageFormValues = z.infer<typeof packageSchema>;
 
