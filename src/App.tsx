@@ -32,6 +32,7 @@ import Cookies from "./pages/Cookies";
 import Refund from "./pages/Refund";
 import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import VisaInfo from "./pages/VisaInfo";
+import CostEstimatorPage from "./pages/CostEstimator";
 import VisaApplication from "./pages/patient/VisaApplication";
 import AdminVisaRequirements from "./pages/admin/VisaRequirements";
 import AdminCommunications from "./pages/admin/Communications";
@@ -113,6 +114,7 @@ const App = () => {
                   <Route path="/refund" element={<Refund />} />
                   <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
                   <Route path="/visa-info" element={<VisaInfo />} />
+                  <Route path="/cost-estimator" element={<CostEstimatorPage />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/reset-password" element={<ResetPassword />} />

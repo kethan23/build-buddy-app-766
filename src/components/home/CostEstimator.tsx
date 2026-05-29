@@ -8,7 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrendingDown, MapPin } from "lucide-react";
+import { TrendingDown, MapPin, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface Estimate {
   treatment_key: string;
@@ -135,6 +137,14 @@ export const CostEstimator = () => {
             <p className="text-[10px] text-muted-foreground mt-5 text-center">
               Estimates only — your final quote depends on hospital, complexity and recovery needs.
             </p>
+
+            <div className="mt-5 flex justify-center">
+              <Button asChild className="gap-2 bg-gradient-to-r from-sky-600 to-emerald-600 hover:opacity-90 text-white">
+                <Link to="/cost-estimator">
+                  Try the Smart Cost Estimator <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
