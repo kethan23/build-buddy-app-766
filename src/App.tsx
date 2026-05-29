@@ -114,6 +114,7 @@ const App = () => {
                   <Route path="/refund" element={<Refund />} />
                   <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
                   <Route path="/visa-info" element={<VisaInfo />} />
+                  <Route path="/cost-estimator" element={<CostEstimatorPage />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
