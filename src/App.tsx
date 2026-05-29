@@ -32,6 +32,7 @@ import Cookies from "./pages/Cookies";
 import Refund from "./pages/Refund";
 import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import VisaInfo from "./pages/VisaInfo";
+import CostEstimatorPage from "./pages/CostEstimator";
 import VisaApplication from "./pages/patient/VisaApplication";
 import AdminVisaRequirements from "./pages/admin/VisaRequirements";
 import AdminCommunications from "./pages/admin/Communications";
