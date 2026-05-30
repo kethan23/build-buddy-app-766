@@ -76,12 +76,46 @@ const SEVERITY_MULT: Record<string, number> = { Mild: 0.85, Moderate: 1.0, Sever
 /* ---------------- Page ---------------- */
 const CostEstimator = () => {
   const { format, currency } = useCurrency();
-  const [selected, setSelected] = useState<Treatment>(TREATMENTS[0]);
-  const [stage, setStage] = useState<1 | 2 | 3>(1);
+  const location = useLocation();
+  const incoming = (location.state || {}) as {
+    treatment?: string;
+    severity?: string;
+    condition?: string;
+    fromAI?: boolean;
+  };
+
+  const matchTreatment = (name?: string): Treatment => {
+    if (!name) return TREATMENTS[0];
+    const n = name.toLowerCase();
+    const kw: Array<[string[], TreatmentKey]> = [
+      [["heart", "cardiac", "cabg", "bypass", "valve"], "heart-surgery"],
+      [["knee", "hip", "joint", "ortho"], "knee-replacement"],
+      [["ivf", "fertility", "infertil"], "ivf"],
+      [["cancer", "tumor", "oncology", "chemo", "radiation"], "cancer"],
+      [["dental", "implant", "tooth"], "dental-implants"],
+      [["cosmetic", "plastic", "rhinoplasty", "liposuction"], "cosmetic"],
+    ];
+    for (const [keys, key] of kw) {
+      if (keys.some((k) => n.includes(k))) {
+        return TREATMENTS.find((t) => t.key === key) || TREATMENTS[0];
+      }
+    }
+    return TREATMENTS[0];
+  };
+
+  const normalizeSeverity = (s?: string): string => {
+    const v = (s || "").toLowerCase();
+    if (v.includes("mild")) return "Mild";
+    if (v.includes("sev") || v.includes("crit")) return "Severe";
+    return "Moderate";
+  };
+
+  const [selected, setSelected] = useState<Treatment>(() => matchTreatment(incoming.treatment));
+  const [stage, setStage] = useState<1 | 2 | 3>(incoming.fromAI ? 2 : 1);
 
   // Section 2 state
   const [step, setStep] = useState(0);
-  const [severity, setSeverity] = useState<string>("Moderate");
+  const [severity, setSeverity] = useState<string>(normalizeSeverity(incoming.severity));
   const [previous, setPrevious] = useState<string>("No");
   const [city, setCity] = useState<string>("Hyderabad");
   const [category, setCategory] = useState<string>("Standard");
@@ -89,6 +123,16 @@ const CostEstimator = () => {
   const [reportName, setReportName] = useState<string>("");
   const [computing, setComputing] = useState(false);
   const [personalized, setPersonalized] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    if (incoming.fromAI) {
+      // Scroll to stage 2 questionnaire shortly after mount
+      setTimeout(() => {
+        document.getElementById("stage-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Section 3
   const [finalLoading, setFinalLoading] = useState(false);
