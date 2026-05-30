@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart,
@@ -24,8 +24,9 @@ import {
   TrendingDown,
   Quote,
   Loader2,
+  Brain,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SEO from "@/components/SEO";
@@ -75,12 +76,46 @@ const SEVERITY_MULT: Record<string, number> = { Mild: 0.85, Moderate: 1.0, Sever
 /* ---------------- Page ---------------- */
 const CostEstimator = () => {
   const { format, currency } = useCurrency();
-  const [selected, setSelected] = useState<Treatment>(TREATMENTS[0]);
-  const [stage, setStage] = useState<1 | 2 | 3>(1);
+  const location = useLocation();
+  const incoming = (location.state || {}) as {
+    treatment?: string;
+    severity?: string;
+    condition?: string;
+    fromAI?: boolean;
+  };
+
+  const matchTreatment = (name?: string): Treatment => {
+    if (!name) return TREATMENTS[0];
+    const n = name.toLowerCase();
+    const kw: Array<[string[], TreatmentKey]> = [
+      [["heart", "cardiac", "cabg", "bypass", "valve"], "heart-surgery"],
+      [["knee", "hip", "joint", "ortho"], "knee-replacement"],
+      [["ivf", "fertility", "infertil"], "ivf"],
+      [["cancer", "tumor", "oncology", "chemo", "radiation"], "cancer"],
+      [["dental", "implant", "tooth"], "dental-implants"],
+      [["cosmetic", "plastic", "rhinoplasty", "liposuction"], "cosmetic"],
+    ];
+    for (const [keys, key] of kw) {
+      if (keys.some((k) => n.includes(k))) {
+        return TREATMENTS.find((t) => t.key === key) || TREATMENTS[0];
+      }
+    }
+    return TREATMENTS[0];
+  };
+
+  const normalizeSeverity = (s?: string): string => {
+    const v = (s || "").toLowerCase();
+    if (v.includes("mild")) return "Mild";
+    if (v.includes("sev") || v.includes("crit")) return "Severe";
+    return "Moderate";
+  };
+
+  const [selected, setSelected] = useState<Treatment>(() => matchTreatment(incoming.treatment));
+  const [stage, setStage] = useState<1 | 2 | 3>(incoming.fromAI ? 2 : 1);
 
   // Section 2 state
   const [step, setStep] = useState(0);
-  const [severity, setSeverity] = useState<string>("Moderate");
+  const [severity, setSeverity] = useState<string>(normalizeSeverity(incoming.severity));
   const [previous, setPrevious] = useState<string>("No");
   const [city, setCity] = useState<string>("Hyderabad");
   const [category, setCategory] = useState<string>("Standard");
@@ -88,6 +123,16 @@ const CostEstimator = () => {
   const [reportName, setReportName] = useState<string>("");
   const [computing, setComputing] = useState(false);
   const [personalized, setPersonalized] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    if (incoming.fromAI) {
+      // Scroll to stage 2 questionnaire shortly after mount
+      setTimeout(() => {
+        document.getElementById("stage-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Section 3
   const [finalLoading, setFinalLoading] = useState(false);
@@ -167,6 +212,47 @@ const CostEstimator = () => {
             {/* Stage progress */}
             <StageProgress stage={stage} />
           </div>
+        </section>
+
+        {/* AI link banner */}
+        <section className="container mx-auto px-4 pt-8">
+          {incoming.fromAI && incoming.condition ? (
+            <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-sky-50 p-4 sm:p-5 flex items-start gap-3">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-emerald-600 text-white flex items-center justify-center shrink-0">
+                <Brain className="h-4 w-4" />
+              </div>
+              <div className="flex-1">
+                <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                  Pre-filled from your AI medical analysis
+                </div>
+                <div className="text-sm text-foreground mt-1">
+                  Treatment <strong>{selected.name}</strong> · Severity{" "}
+                  <strong>{severity}</strong> · Condition <strong>{incoming.condition}</strong>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-emerald-50 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <Brain className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-foreground">
+                    Not sure which treatment you need?
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Upload your medical reports — our AI will detect your condition and pre-fill this estimator.
+                  </div>
+                </div>
+              </div>
+              <Button asChild className="bg-gradient-to-r from-sky-600 to-emerald-600 hover:opacity-90 gap-2 shrink-0">
+                <Link to="/patient/ai-analysis">
+                  <Brain className="h-4 w-4" /> Run AI Medical Analysis
+                </Link>
+              </Button>
+            </div>
+          )}
         </section>
 
         {/* ============= SECTION 1 ============= */}
@@ -266,7 +352,7 @@ const CostEstimator = () => {
         </section>
 
         {/* ============= SECTION 2 ============= */}
-        <section className="bg-white/60 border-y border-border/60">
+        <section id="stage-2" className="bg-white/60 border-y border-border/60">
           <div className="container mx-auto px-4 py-10 sm:py-14">
             <SectionHeading
               kicker="Stage 2"
