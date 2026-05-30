@@ -311,7 +311,7 @@ const CostEstimator = () => {
         </section>
 
         {/* ============= SECTION 2 ============= */}
-        <section className="bg-white/60 border-y border-border/60">
+        <section id="stage-2" className="bg-white/60 border-y border-border/60">
           <div className="container mx-auto px-4 py-10 sm:py-14">
             <SectionHeading
               kicker="Stage 2"
