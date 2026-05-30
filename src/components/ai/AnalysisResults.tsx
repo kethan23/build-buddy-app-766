@@ -193,11 +193,23 @@ export default function AnalysisResults({ analysis, onStartOver }: Props) {
           <Button variant="outline" onClick={onStartOver} className="flex-1">
             <RefreshCw className="mr-2 h-4 w-4" /> Start Over
           </Button>
-          <Button onClick={() => navigate('/hospitals')} className="flex-1 bg-gradient-to-r from-primary to-secondary">
-            <Hospital className="mr-2 h-4 w-4" /> Browse Hospitals
+          <Button
+            onClick={() =>
+              navigate('/cost-estimator', {
+                state: {
+                  treatment: analysis.recommendedTreatments[0]?.treatment,
+                  severity: analysis.detectedConditions[0]?.severity,
+                  condition: analysis.detectedConditions[0]?.condition,
+                  fromAI: true,
+                },
+              })
+            }
+            className="flex-1 bg-gradient-to-r from-sky-600 to-emerald-600 text-white"
+          >
+            <DollarSign className="mr-2 h-4 w-4" /> Get Smart Cost Estimate
           </Button>
-          <Button onClick={() => navigate('/patient/chat')} variant="secondary" className="flex-1">
-            Talk to AI Assistant
+          <Button onClick={() => navigate('/hospitals')} variant="secondary" className="flex-1">
+            <Hospital className="mr-2 h-4 w-4" /> Browse Hospitals
           </Button>
         </div>
       </ScrollReveal>
