@@ -214,6 +214,47 @@ const CostEstimator = () => {
           </div>
         </section>
 
+        {/* AI link banner */}
+        <section className="container mx-auto px-4 pt-8">
+          {incoming.fromAI && incoming.condition ? (
+            <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-sky-50 p-4 sm:p-5 flex items-start gap-3">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-emerald-600 text-white flex items-center justify-center shrink-0">
+                <Brain className="h-4 w-4" />
+              </div>
+              <div className="flex-1">
+                <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                  Pre-filled from your AI medical analysis
+                </div>
+                <div className="text-sm text-foreground mt-1">
+                  Treatment <strong>{selected.name}</strong> · Severity{" "}
+                  <strong>{severity}</strong> · Condition <strong>{incoming.condition}</strong>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-emerald-50 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <Brain className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-foreground">
+                    Not sure which treatment you need?
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Upload your medical reports — our AI will detect your condition and pre-fill this estimator.
+                  </div>
+                </div>
+              </div>
+              <Button asChild className="bg-gradient-to-r from-sky-600 to-emerald-600 hover:opacity-90 gap-2 shrink-0">
+                <Link to="/patient/ai-analysis">
+                  <Brain className="h-4 w-4" /> Run AI Medical Analysis
+                </Link>
+              </Button>
+            </div>
+          )}
+        </section>
+
         {/* ============= SECTION 1 ============= */}
         <section className="container mx-auto px-4 py-10 sm:py-14">
           <SectionHeading
