@@ -72,6 +72,12 @@ import AgentProfile from "./pages/agent/Profile";
 import AgentPatientDocuments from "./pages/agent/PatientDocuments";
 import AgentPatientTracking from "./pages/agent/PatientTracking";
 import NotFound from "./pages/NotFound";
+import SuccessStories from "./pages/SuccessStories";
+import Pricing from "./pages/Pricing";
+import Blog from "./pages/Blog";
+import Contact from "./pages/Contact";
+import Careers from "./pages/Careers";
+import Press from "./pages/Press";
 
 const queryClient = new QueryClient();
 
@@ -115,6 +121,12 @@ const App = () => {
                   <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
                   <Route path="/visa-info" element={<VisaInfo />} />
                   <Route path="/cost-estimator" element={<CostEstimatorPage />} />
+                  <Route path="/success-stories" element={<SuccessStories />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/careers" element={<Careers />} />
+                  <Route path="/press" element={<Press />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
