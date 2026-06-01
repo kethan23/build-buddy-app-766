@@ -298,7 +298,7 @@ const CostEstimator = () => {
 
           {/* Result cards */}
           <div className="mt-8 grid lg:grid-cols-3 gap-4">
-            <Card className="p-6 bg-gradient-to-br from-sky-600 to-emerald-600 text-white border-0 shadow-xl">
+            <div className="p-6 rounded-xl bg-gradient-to-br from-sky-600 to-emerald-600 text-white shadow-xl">
               <div className="text-xs uppercase tracking-widest opacity-80">Estimated cost in India</div>
               <div className="font-heading text-3xl sm:text-4xl font-bold mt-2">
                 {format(selected.india[0])} – {format(selected.india[1])}
@@ -319,7 +319,8 @@ const CostEstimator = () => {
                   </div>
                 ))}
               </div>
-            </Card>
+            </div>
+
 
             <Card className="p-6 lg:col-span-2 bg-white border-border/60">
               <div className="flex items-center justify-between mb-4">
@@ -642,7 +643,7 @@ const CostEstimator = () => {
             </Card>
 
             {/* CTA */}
-            <Card className="lg:col-span-2 p-6 bg-gradient-to-br from-sky-600 to-emerald-600 text-white border-0 shadow-xl">
+            <div className="lg:col-span-2 p-6 rounded-xl bg-gradient-to-br from-sky-600 to-emerald-600 text-white shadow-xl">
               <MessageSquare className="h-6 w-6 opacity-90" />
               <h3 className="font-heading text-xl font-bold mt-3">Talk to a medical coordinator</h3>
               <p className="text-sm opacity-90 mt-2">
@@ -662,7 +663,8 @@ const CostEstimator = () => {
               <Button asChild variant="secondary" className="mt-6 w-full bg-white text-sky-700 hover:bg-white/90">
                 <Link to="/support">Talk to a coordinator</Link>
               </Button>
-            </Card>
+            </div>
+
           </div>
         </section>
 
