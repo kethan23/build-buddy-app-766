@@ -12,8 +12,8 @@ const Footer = () => {
       { label: "Success Stories", href: "/success-stories" },
     ],
     "For Hospitals": [
-      { label: "List Your Hospital", href: "/hospital-registration" },
-      { label: "Hospital Portal", href: "/hospital/login" },
+      { label: "List Your Hospital", href: "/auth?role=hospital" },
+      { label: "Hospital Portal", href: "/auth" },
       { label: "Pricing", href: "/pricing" },
     ],
     "Resources": [
