@@ -40,22 +40,19 @@ const Navbar = () => {
     '/patient/dashboard';
 
   const primaryLinks = [
-    { label: t('nav.home'), href: "/" },
     { label: t('nav.hospitals'), href: "/hospitals" },
     { label: t('nav.treatments'), href: "/treatments" },
+    { label: 'Cost Estimator', href: "/cost-estimator" },
     { label: 'Visa', href: "/visa-info" },
-    ...(user ? [
-      { label: 'Dashboard', href: '/patient/dashboard' },
-      ...(role === 'admin' ? [{ label: 'Admin Dashboard', href: '/admin/dashboard' }] : []),
-      ...(role === 'hospital' ? [{ label: 'Hospital Dashboard', href: '/hospital/dashboard' }] : []),
-      ...(role === 'agent' ? [{ label: 'Agent Dashboard', href: '/agent/dashboard' }] : []),
-      { label: 'Messages', href: role === 'admin' ? '/admin/communications' : role === 'hospital' ? '/hospital/chat' : '/patient/inbox' },
-    ] : []),
   ];
 
   const secondaryLinks = [
     { label: t('nav.howItWorks'), href: "/how-it-works" },
+    { label: 'Success Stories', href: "/success-stories" },
     { label: t('nav.about'), href: "/about" },
+    { label: 'Pricing', href: "/pricing" },
+    { label: 'Blog', href: "/blog" },
+    { label: 'Contact', href: "/contact" },
     { label: t('nav.support'), href: "/support" },
   ];
 
