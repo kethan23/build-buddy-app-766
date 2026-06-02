@@ -32,10 +32,10 @@ const Index = () => {
       <Navbar />
       <main className="flex-1">
         <HeroSection />
-        <TreatmentCategories />
-        <CostEstimator />
-        <FeaturedHospitals />
         <HowItWorks />
+        <TreatmentCategories />
+        <FeaturedHospitals />
+        <CostEstimator />
         <Testimonials />
         <Newsletter />
       </main>

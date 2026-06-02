@@ -26,7 +26,8 @@ import {
   Loader2,
   Brain,
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { setPatientContext } from "@/lib/patientContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SEO from "@/components/SEO";
@@ -77,6 +78,7 @@ const SEVERITY_MULT: Record<string, number> = { Mild: 0.85, Moderate: 1.0, Sever
 const CostEstimator = () => {
   const { format, currency } = useCurrency();
   const location = useLocation();
+  const navigate = useNavigate();
   const incoming = (location.state || {}) as {
     treatment?: string;
     severity?: string;
@@ -126,10 +128,21 @@ const CostEstimator = () => {
 
   useEffect(() => {
     if (incoming.fromAI) {
-      // Scroll to stage 2 questionnaire shortly after mount
       setTimeout(() => {
         document.getElementById("stage-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 300);
+      return;
+    }
+    // Fallback: hydrate from shared patient context (e.g. set by AI Analysis earlier)
+    if (!incoming.treatment) {
+      import("@/lib/patientContext").then(({ getPatientContext }) => {
+        const ctx = getPatientContext();
+        if (ctx.treatment) {
+          setSelected(matchTreatment(ctx.treatment));
+          if (ctx.severity) setSeverity(normalizeSeverity(ctx.severity));
+          setStage(2);
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -660,9 +673,29 @@ const CostEstimator = () => {
                   </div>
                 ))}
               </div>
-              <Button asChild variant="secondary" className="mt-6 w-full bg-white text-sky-700 hover:bg-white/90">
-                <Link to="/support">Talk to a coordinator</Link>
-              </Button>
+              <div className="mt-6 grid sm:grid-cols-2 gap-2">
+                <Button asChild variant="secondary" className="w-full bg-white text-sky-700 hover:bg-white/90">
+                  <Link to="/support">Talk to a coordinator</Link>
+                </Button>
+                <Button
+                  onClick={() => {
+                    setPatientContext({
+                      treatment: selected.name,
+                      treatmentKey: selected.key,
+                      severity,
+                      city,
+                      budgetMin: personalized ? Math.round(personalized[0]) : selected.india[0],
+                      budgetMax: personalized ? Math.round(personalized[1]) : selected.india[1],
+                      source: "cost-estimator",
+                    });
+                    navigate(`/hospitals?treatment=${selected.key}&city=${encodeURIComponent(city)}`);
+                  }}
+                  variant="outline"
+                  className="w-full bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white"
+                >
+                  See matching hospitals
+                </Button>
+              </div>
             </div>
 
           </div>

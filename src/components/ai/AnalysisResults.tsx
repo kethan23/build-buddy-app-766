@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import type { MedicalAnalysis } from '@/pages/patient/AIAnalysis';
 import { useNavigate } from 'react-router-dom';
+import { setPatientContext } from '@/lib/patientContext';
 
 interface Props {
   analysis: MedicalAnalysis;
@@ -194,7 +195,13 @@ export default function AnalysisResults({ analysis, onStartOver }: Props) {
             <RefreshCw className="mr-2 h-4 w-4" /> Start Over
           </Button>
           <Button
-            onClick={() =>
+            onClick={() => {
+              setPatientContext({
+                treatment: analysis.recommendedTreatments[0]?.treatment,
+                severity: analysis.detectedConditions[0]?.severity,
+                condition: analysis.detectedConditions[0]?.condition,
+                source: 'ai-analysis',
+              });
               navigate('/cost-estimator', {
                 state: {
                   treatment: analysis.recommendedTreatments[0]?.treatment,
@@ -202,13 +209,24 @@ export default function AnalysisResults({ analysis, onStartOver }: Props) {
                   condition: analysis.detectedConditions[0]?.condition,
                   fromAI: true,
                 },
-              })
-            }
+              });
+            }}
             className="flex-1 bg-gradient-to-r from-sky-600 to-emerald-600 text-white"
           >
             <DollarSign className="mr-2 h-4 w-4" /> Get Smart Cost Estimate
           </Button>
-          <Button onClick={() => navigate('/hospitals')} variant="secondary" className="flex-1">
+          <Button
+            onClick={() => {
+              setPatientContext({
+                treatment: analysis.recommendedTreatments[0]?.treatment,
+                condition: analysis.detectedConditions[0]?.condition,
+                source: 'ai-analysis',
+              });
+              navigate('/hospitals');
+            }}
+            variant="secondary"
+            className="flex-1"
+          >
             <Hospital className="mr-2 h-4 w-4" /> Browse Hospitals
           </Button>
         </div>
