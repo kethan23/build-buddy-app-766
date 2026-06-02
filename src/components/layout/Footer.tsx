@@ -8,12 +8,14 @@ const Footer = () => {
     "For Patients": [
       { label: "Find Hospitals", href: "/hospitals" },
       { label: "Browse Treatments", href: "/treatments" },
+      { label: "Cost Estimator", href: "/cost-estimator" },
+      { label: "AI Medical Analysis", href: "/patient/ai-analysis" },
       { label: "How It Works", href: "/how-it-works" },
       { label: "Success Stories", href: "/success-stories" },
     ],
     "For Hospitals": [
       { label: "List Your Hospital", href: "/auth?role=hospital" },
-      { label: "Hospital Portal", href: "/auth" },
+      { label: "Hospital Login", href: "/auth" },
       { label: "Pricing", href: "/pricing" },
     ],
     "Resources": [
