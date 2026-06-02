@@ -662,9 +662,29 @@ const CostEstimator = () => {
                   </div>
                 ))}
               </div>
-              <Button asChild variant="secondary" className="mt-6 w-full bg-white text-sky-700 hover:bg-white/90">
-                <Link to="/support">Talk to a coordinator</Link>
-              </Button>
+              <div className="mt-6 grid sm:grid-cols-2 gap-2">
+                <Button asChild variant="secondary" className="w-full bg-white text-sky-700 hover:bg-white/90">
+                  <Link to="/support">Talk to a coordinator</Link>
+                </Button>
+                <Button
+                  onClick={() => {
+                    setPatientContext({
+                      treatment: selected.name,
+                      treatmentKey: selected.key,
+                      severity,
+                      city,
+                      budgetMin: personalized ? Math.round(personalized[0]) : selected.india[0],
+                      budgetMax: personalized ? Math.round(personalized[1]) : selected.india[1],
+                      source: "cost-estimator",
+                    });
+                    navigate(`/hospitals?treatment=${selected.key}&city=${encodeURIComponent(city)}`);
+                  }}
+                  variant="outline"
+                  className="w-full bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white"
+                >
+                  See matching hospitals
+                </Button>
+              </div>
             </div>
 
           </div>
