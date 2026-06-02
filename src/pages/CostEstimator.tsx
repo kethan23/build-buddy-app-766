@@ -128,10 +128,21 @@ const CostEstimator = () => {
 
   useEffect(() => {
     if (incoming.fromAI) {
-      // Scroll to stage 2 questionnaire shortly after mount
       setTimeout(() => {
         document.getElementById("stage-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 300);
+      return;
+    }
+    // Fallback: hydrate from shared patient context (e.g. set by AI Analysis earlier)
+    if (!incoming.treatment) {
+      import("@/lib/patientContext").then(({ getPatientContext }) => {
+        const ctx = getPatientContext();
+        if (ctx.treatment) {
+          setSelected(matchTreatment(ctx.treatment));
+          if (ctx.severity) setSeverity(normalizeSeverity(ctx.severity));
+          setStage(2);
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
