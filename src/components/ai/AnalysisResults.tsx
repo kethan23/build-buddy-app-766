@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import type { MedicalAnalysis } from '@/pages/patient/AIAnalysis';
 import { useNavigate } from 'react-router-dom';
+import { setPatientContext } from '@/lib/patientContext';
 
 interface Props {
   analysis: MedicalAnalysis;
