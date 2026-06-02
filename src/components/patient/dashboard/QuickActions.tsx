@@ -1,19 +1,20 @@
 import { ScrollReveal } from '@/hooks/useScrollAnimation';
 import { Card, CardContent } from '@/components/ui/card';
 import { VisaStatusCard } from '@/components/patient/VisaStatusCard';
-import { Search, FileText, Calendar, Bell, Brain } from 'lucide-react';
+import { Brain, Calculator, Hospital, MessageSquare, Calendar } from 'lucide-react';
 import { NavigateFunction } from 'react-router-dom';
 
 interface QuickActionsProps {
   navigate: NavigateFunction;
 }
 
+// Ordered to match the patient journey: Analyze → Estimate → Match → Inquire → Book
 const actions = [
-  { icon: Brain, title: 'AI Analysis', desc: 'Analyze medical reports', path: '/patient/ai-analysis', gradient: 'from-primary/15 to-accent/10', iconBg: 'bg-primary/15', iconColor: 'text-primary' },
-  { icon: Search, title: 'Search Hospitals', desc: 'Find the perfect hospital', path: '/patient/search', gradient: 'from-secondary/15 to-secondary/5', iconBg: 'bg-secondary/15', iconColor: 'text-secondary-foreground' },
-  { icon: FileText, title: 'View Inquiries', desc: 'Track your inquiries', path: '/patient/inquiries', gradient: 'from-accent/15 to-accent/5', iconBg: 'bg-accent/15', iconColor: 'text-accent-foreground' },
-  { icon: Calendar, title: 'Book Consultation', desc: 'Schedule appointments', path: '/patient/bookings', gradient: 'from-success/15 to-success/5', iconBg: 'bg-success/15', iconColor: 'text-foreground' },
-  { icon: Bell, title: 'Notifications', desc: 'Stay updated', path: null, gradient: 'from-info/15 to-info/5', iconBg: 'bg-info/15', iconColor: 'text-foreground' },
+  { icon: Brain, title: 'AI Analysis', desc: 'Analyze your reports', path: '/patient/ai-analysis', gradient: 'from-primary/15 to-accent/10', iconBg: 'bg-primary/15', iconColor: 'text-primary' },
+  { icon: Calculator, title: 'Estimate Cost', desc: 'Get a smart quote', path: '/cost-estimator', gradient: 'from-secondary/15 to-secondary/5', iconBg: 'bg-secondary/15', iconColor: 'text-secondary-foreground' },
+  { icon: Hospital, title: 'Find Hospitals', desc: 'Verified partners', path: '/hospitals', gradient: 'from-accent/15 to-accent/5', iconBg: 'bg-accent/15', iconColor: 'text-accent-foreground' },
+  { icon: MessageSquare, title: 'My Inquiries', desc: 'Hospital responses', path: '/patient/inquiries', gradient: 'from-success/15 to-success/5', iconBg: 'bg-success/15', iconColor: 'text-foreground' },
+  { icon: Calendar, title: 'My Bookings', desc: 'Upcoming visits', path: '/patient/bookings', gradient: 'from-info/15 to-info/5', iconBg: 'bg-info/15', iconColor: 'text-foreground' },
 ];
 
 export function QuickActions({ navigate }: QuickActionsProps) {
