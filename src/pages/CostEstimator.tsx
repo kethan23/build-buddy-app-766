@@ -78,6 +78,7 @@ const SEVERITY_MULT: Record<string, number> = { Mild: 0.85, Moderate: 1.0, Sever
 const CostEstimator = () => {
   const { format, currency } = useCurrency();
   const location = useLocation();
+  const navigate = useNavigate();
   const incoming = (location.state || {}) as {
     treatment?: string;
     severity?: string;
