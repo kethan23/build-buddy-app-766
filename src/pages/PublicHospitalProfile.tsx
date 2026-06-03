@@ -89,8 +89,8 @@ const PublicHospitalProfile = () => {
 
   const handleOpenInquiry = (type: 'consultation' | 'inquiry') => {
     if (!user) {
-      toast.error('Please login to send an inquiry');
-      navigate('/auth');
+      toast.info('Please sign in to continue — we\'ll bring you right back.');
+      navigate(`/auth?redirect=${encodeURIComponent(`/hospital/${id}`)}`);
       return;
     }
     setInquiryType(type);
