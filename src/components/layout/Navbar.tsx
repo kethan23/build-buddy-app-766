@@ -44,6 +44,7 @@ const Navbar = () => {
     { label: t('nav.treatments'), href: "/treatments" },
     { label: 'Cost Estimator', href: "/cost-estimator" },
     { label: 'Visa', href: "/visa-info" },
+    ...(user && role === 'patient' ? [{ label: 'Dashboard', href: '/patient/dashboard' }] : []),
   ];
 
   const secondaryLinks = [
