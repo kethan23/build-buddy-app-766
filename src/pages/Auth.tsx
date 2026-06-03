@@ -58,7 +58,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [authMode, setAuthMode] = useState<"signin" | "signup" | "magic" | "reset">("signin");
 
-  // Redirect based on user role
+  // Redirect based on user role (honor ?redirect= for patients)
   useEffect(() => {
     const redirectBasedOnRole = async () => {
       if (user && !loading) {
@@ -69,6 +69,9 @@ const Auth = () => {
           .single();
 
         const role = roleData?.role || 'patient';
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        const safeRedirect = redirect && redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : null;
 
         if (role === 'admin') {
           navigate('/admin/dashboard');
@@ -76,6 +79,8 @@ const Auth = () => {
           navigate('/hospital/dashboard');
         } else if (role === 'agent') {
           navigate('/agent/dashboard');
+        } else if (safeRedirect) {
+          navigate(safeRedirect);
         } else {
           navigate('/patient/dashboard');
         }
