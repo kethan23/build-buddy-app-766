@@ -39,6 +39,9 @@ const AgentPatientTracking = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editData, setEditData] = useState<Record<string, any>>({});
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
+  const [commissions, setCommissions] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -84,6 +87,32 @@ const AgentPatientTracking = () => {
             setEditData(newT);
           }
         }
+
+        // Load bookings + payments for this patient (if linked to an auth user)
+        if (p?.patient_user_id) {
+          const [{ data: bk }, { data: py }] = await Promise.all([
+            supabase
+              .from('bookings')
+              .select('id, appointment_id, treatment_name, status, total_amount, currency, appointment_date, created_at, hospitals(name)')
+              .eq('user_id', p.patient_user_id)
+              .order('created_at', { ascending: false }),
+            supabase
+              .from('payments')
+              .select('id, amount, currency, status, payment_method, transaction_id, payment_date, created_at, booking_id')
+              .eq('user_id', p.patient_user_id)
+              .order('created_at', { ascending: false }),
+          ]);
+          setBookings(bk || []);
+          setPayments(py || []);
+        }
+
+        // Commissions for this agent_patient
+        const { data: cm } = await supabase
+          .from('agent_commissions')
+          .select('id, treatment_amount, commission_rate, commission_amount, status, payment_date, created_at, booking_id')
+          .eq('agent_patient_id', patientId)
+          .order('created_at', { ascending: false });
+        setCommissions(cm || []);
       }
       setLoading(false);
     };
