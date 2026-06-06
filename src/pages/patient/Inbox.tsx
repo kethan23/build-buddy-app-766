@@ -329,7 +329,18 @@
  
            {/* Chat View */}
            <Card className="lg:col-span-2">
-             {selectedItem ? (
+             {showAI ? (
+               <div className="p-4">
+                 <div className="flex items-center justify-between mb-3">
+                   <div className="flex items-center gap-2">
+                     <Bot className="h-5 w-5 text-primary" />
+                     <h3 className="font-semibold">AI Assistant</h3>
+                   </div>
+                   <Button variant="ghost" size="sm" onClick={() => setShowAI(false)}>Close</Button>
+                 </div>
+                 <AIChatbot />
+               </div>
+             ) : selectedItem ? (
                selectedItem.type === 'hospital' ? (
                  <ChatInterface conversationId={selectedItem.id} />
                ) : (
@@ -343,7 +354,7 @@
                  <MessageSquare className="h-16 w-16 text-muted-foreground mb-4" />
                  <h3 className="text-xl font-semibold mb-2">Select a Conversation</h3>
                  <p className="text-muted-foreground max-w-md">
-                   Choose a conversation from the list to view messages from hospitals or support tickets.
+                   Choose a conversation from the list, open the AI Assistant, or create a support ticket.
                  </p>
                </div>
              )}
