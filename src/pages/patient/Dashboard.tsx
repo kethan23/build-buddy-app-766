@@ -6,8 +6,6 @@ import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OnboardingForm } from '@/components/patient/OnboardingForm';
 import { DocumentUpload } from '@/components/patient/DocumentUpload';
-import { StatusTracking } from '@/components/patient/StatusTracking';
-import { VisaProgressTracker } from '@/components/patient/VisaProgressTracker';
 import { JourneyTracker } from '@/components/patient/JourneyTracker';
 import { ScrollReveal } from '@/hooks/useScrollAnimation';
 import { useNavigate } from 'react-router-dom';
