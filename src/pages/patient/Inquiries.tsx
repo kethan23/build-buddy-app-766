@@ -229,7 +229,7 @@ const Inquiries = () => {
       .maybeSingle();
 
     if (conversation) {
-      navigate(`/patient/chat?conversation=${conversation.id}`);
+      navigate(`/patient/inbox?conversation=${conversation.id}`);
     } else {
       toast({
         title: 'No conversation yet',

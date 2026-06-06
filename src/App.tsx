@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ComparisonProvider } from "@/contexts/ComparisonContext";
@@ -149,7 +149,7 @@ const App = () => {
                   <Route path="/hospital/analytics" element={<ProtectedHospitalRoute><HospitalAnalytics /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/chat" element={<ProtectedHospitalRoute><HospitalChat /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/visa-support" element={<ProtectedHospitalRoute><HospitalVisaSupport /></ProtectedHospitalRoute>} />
-                  <Route path="/hospital/support" element={<ProtectedHospitalRoute><PatientSupport /></ProtectedHospitalRoute>} />
+                  <Route path="/hospital/support" element={<Navigate to="/hospital/dashboard" replace />} />
                   <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
                   <Route path="/admin/hospitals" element={<ProtectedAdminRoute><AdminHospitals /></ProtectedAdminRoute>} />
                   <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />

@@ -1,4 +1,5 @@
  import { useState, useEffect } from 'react';
+ import { useSearchParams } from 'react-router-dom';
  import { useAuth } from '@/contexts/AuthContext';
  import { supabase } from '@/integrations/supabase/client';
  import Navbar from '@/components/layout/Navbar';
@@ -9,14 +10,15 @@
  import { Badge } from '@/components/ui/badge';
  import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
  import { Button } from '@/components/ui/button';
- import { 
-   MessageSquare, Building2, HeadphonesIcon, 
-   Clock, CheckCircle, AlertCircle, Loader2, Plus
+ import {
+   MessageSquare, Building2, HeadphonesIcon,
+   Clock, CheckCircle, AlertCircle, Loader2, Plus, Bot
  } from 'lucide-react';
  import { formatDistanceToNow } from 'date-fns';
  import ChatInterface from '@/components/chat/ChatInterface';
  import SupportChatView from '@/components/support/SupportChatView';
  import CreateSupportTicket from '@/components/support/CreateSupportTicket';
+ import AIChatbot from '@/components/ai/AIChatbot';
  
  interface HospitalConversation {
    id: string;
@@ -42,19 +44,34 @@
  
  export default function PatientInbox() {
    const { user } = useAuth();
+   const [searchParams] = useSearchParams();
    const [conversations, setConversations] = useState<HospitalConversation[]>([]);
    const [tickets, setTickets] = useState<SupportTicket[]>([]);
    const [loading, setLoading] = useState(true);
    const [selectedItem, setSelectedItem] = useState<InboxItem | null>(null);
    const [activeTab, setActiveTab] = useState('all');
- 
+   const [showAI, setShowAI] = useState(false);
+
    useEffect(() => {
      if (user) {
        fetchAllMessages();
        subscribeToUpdates();
      }
    }, [user]);
- 
+
+   // Deep-link: /patient/inbox?conversation=<id> or ?ticket=<id>
+   useEffect(() => {
+     const convId = searchParams.get('conversation');
+     const ticketId = searchParams.get('ticket');
+     if (convId) {
+       const match = conversations.find((c) => c.id === convId);
+       if (match) setSelectedItem(match);
+     } else if (ticketId) {
+       const match = tickets.find((t) => t.id === ticketId);
+       if (match) setSelectedItem(match);
+     }
+   }, [searchParams, conversations, tickets]);
+
    const fetchAllMessages = async () => {
      setLoading(true);
      await Promise.all([fetchConversations(), fetchTickets()]);
@@ -250,15 +267,21 @@
                All your conversations in one place
              </p>
            </div>
-           <CreateSupportTicket
-             trigger={
-               <Button className="gap-2">
-                 <Plus className="h-4 w-4" />
-                 New Support Ticket
-               </Button>
-             }
-             onCreated={fetchTickets}
-           />
+           <div className="flex items-center gap-2">
+             <Button variant="outline" className="gap-2" onClick={() => { setShowAI(true); setSelectedItem(null); }}>
+               <Bot className="h-4 w-4" />
+               AI Assistant
+             </Button>
+             <CreateSupportTicket
+               trigger={
+                 <Button className="gap-2">
+                   <Plus className="h-4 w-4" />
+                   New Support Ticket
+                 </Button>
+               }
+               onCreated={fetchTickets}
+             />
+           </div>
          </div>
  
          <div className="grid lg:grid-cols-3 gap-6">
@@ -306,7 +329,18 @@
  
            {/* Chat View */}
            <Card className="lg:col-span-2">
-             {selectedItem ? (
+             {showAI ? (
+               <div className="p-4">
+                 <div className="flex items-center justify-between mb-3">
+                   <div className="flex items-center gap-2">
+                     <Bot className="h-5 w-5 text-primary" />
+                     <h3 className="font-semibold">AI Assistant</h3>
+                   </div>
+                   <Button variant="ghost" size="sm" onClick={() => setShowAI(false)}>Close</Button>
+                 </div>
+                 <AIChatbot />
+               </div>
+             ) : selectedItem ? (
                selectedItem.type === 'hospital' ? (
                  <ChatInterface conversationId={selectedItem.id} />
                ) : (
@@ -320,7 +354,7 @@
                  <MessageSquare className="h-16 w-16 text-muted-foreground mb-4" />
                  <h3 className="text-xl font-semibold mb-2">Select a Conversation</h3>
                  <p className="text-muted-foreground max-w-md">
-                   Choose a conversation from the list to view messages from hospitals or support tickets.
+                   Choose a conversation from the list, open the AI Assistant, or create a support ticket.
                  </p>
                </div>
              )}
