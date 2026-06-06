@@ -267,15 +267,21 @@
                All your conversations in one place
              </p>
            </div>
-           <CreateSupportTicket
-             trigger={
-               <Button className="gap-2">
-                 <Plus className="h-4 w-4" />
-                 New Support Ticket
-               </Button>
-             }
-             onCreated={fetchTickets}
-           />
+           <div className="flex items-center gap-2">
+             <Button variant="outline" className="gap-2" onClick={() => { setShowAI(true); setSelectedItem(null); }}>
+               <Bot className="h-4 w-4" />
+               AI Assistant
+             </Button>
+             <CreateSupportTicket
+               trigger={
+                 <Button className="gap-2">
+                   <Plus className="h-4 w-4" />
+                   New Support Ticket
+                 </Button>
+               }
+               onCreated={fetchTickets}
+             />
+           </div>
          </div>
  
          <div className="grid lg:grid-cols-3 gap-6">
