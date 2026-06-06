@@ -261,6 +261,180 @@ const AgentPatientTracking = () => {
             );
           })}
         </div>
+
+        {/* Payment & Booking Visibility */}
+        {!patient?.patient_user_id && (
+          <Card className="border-dashed">
+            <CardContent className="p-6 text-sm text-muted-foreground">
+              Booking and payment data will appear here once this patient creates a login account.
+              Until then, only the manual tracking above is available.
+            </CardContent>
+          </Card>
+        )}
+
+        {patient?.patient_user_id && (
+          <>
+            {/* Financial summary */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
+                    <DollarSign className="h-4 w-4" /> Total Booked
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-foreground">
+                    {bookings.reduce((sum, b) => sum + Number(b.total_amount || 0), 0).toLocaleString()}
+                    <span className="text-sm text-muted-foreground ml-1">{bookings[0]?.currency || 'USD'}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">{bookings.length} booking(s)</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
+                    <CreditCard className="h-4 w-4" /> Paid
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">
+                    {payments
+                      .filter((p) => p.status === 'completed' || p.status === 'succeeded')
+                      .reduce((sum, p) => sum + Number(p.amount || 0), 0)
+                      .toLocaleString()}
+                    <span className="text-sm text-muted-foreground ml-1">{payments[0]?.currency || 'USD'}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {payments.filter((p) => p.status === 'completed' || p.status === 'succeeded').length} successful payment(s)
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
+                    <Receipt className="h-4 w-4" /> Commission
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-primary">
+                    {commissions.reduce((sum, c) => sum + Number(c.commission_amount || 0), 0).toLocaleString()}
+                    <span className="text-sm text-muted-foreground ml-1">USD</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {commissions.filter((c) => c.status === 'paid').length} paid · {commissions.filter((c) => c.status === 'pending').length} pending
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Bookings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Calendar className="h-4 w-4 text-primary" /> Bookings
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {bookings.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No bookings yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {bookings.map((b) => (
+                      <div key={b.id} className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border bg-card">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-foreground">{b.treatment_name}</span>
+                            <Badge variant="outline">{b.status}</Badge>
+                          </div>
+                          <div className="text-xs text-muted-foreground space-x-3">
+                            {b.appointment_id && <span className="font-mono">#{b.appointment_id}</span>}
+                            {b.hospitals?.name && <span>{b.hospitals.name}</span>}
+                            {b.appointment_date && <span>{new Date(b.appointment_date).toLocaleDateString()}</span>}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold text-foreground">
+                            {Number(b.total_amount || 0).toLocaleString()} <span className="text-xs text-muted-foreground">{b.currency || 'USD'}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Payments */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <CreditCard className="h-4 w-4 text-primary" /> Payments
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {payments.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No payments recorded yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {payments.map((p) => {
+                      const ok = p.status === 'completed' || p.status === 'succeeded';
+                      return (
+                        <div key={p.id} className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border bg-card">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-foreground">
+                                {Number(p.amount || 0).toLocaleString()} {p.currency || 'USD'}
+                              </span>
+                              <Badge variant={ok ? 'default' : p.status === 'failed' ? 'destructive' : 'secondary'}>
+                                {p.status}
+                              </Badge>
+                            </div>
+                            <div className="text-xs text-muted-foreground space-x-3">
+                              {p.payment_method && <span>{p.payment_method}</span>}
+                              {p.transaction_id && <span className="font-mono">{p.transaction_id}</span>}
+                              <span>{new Date(p.payment_date || p.created_at).toLocaleString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Commissions */}
+            {commissions.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Receipt className="h-4 w-4 text-primary" /> Your Commissions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {commissions.map((c) => (
+                      <div key={c.id} className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border bg-card">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-foreground">
+                              {Number(c.commission_amount || 0).toLocaleString()} USD
+                            </span>
+                            <Badge variant={c.status === 'paid' ? 'default' : 'secondary'}>{c.status}</Badge>
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {Number(c.commission_rate || 0)}% on {Number(c.treatment_amount || 0).toLocaleString()} USD
+                            {c.payment_date && <> · paid {new Date(c.payment_date).toLocaleDateString()}</>}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </>
+        )}
       </div>
     </AgentLayout>
   );
