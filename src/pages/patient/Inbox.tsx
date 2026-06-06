@@ -44,12 +44,14 @@
  
  export default function PatientInbox() {
    const { user } = useAuth();
+   const [searchParams] = useSearchParams();
    const [conversations, setConversations] = useState<HospitalConversation[]>([]);
    const [tickets, setTickets] = useState<SupportTicket[]>([]);
    const [loading, setLoading] = useState(true);
    const [selectedItem, setSelectedItem] = useState<InboxItem | null>(null);
    const [activeTab, setActiveTab] = useState('all');
- 
+   const [showAI, setShowAI] = useState(false);
+
    useEffect(() => {
      if (user) {
        fetchAllMessages();
