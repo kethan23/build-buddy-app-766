@@ -1,4 +1,5 @@
  import { useState, useEffect } from 'react';
+ import { useSearchParams } from 'react-router-dom';
  import { useAuth } from '@/contexts/AuthContext';
  import { supabase } from '@/integrations/supabase/client';
  import Navbar from '@/components/layout/Navbar';
@@ -9,14 +10,15 @@
  import { Badge } from '@/components/ui/badge';
  import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
  import { Button } from '@/components/ui/button';
- import { 
-   MessageSquare, Building2, HeadphonesIcon, 
-   Clock, CheckCircle, AlertCircle, Loader2, Plus
+ import {
+   MessageSquare, Building2, HeadphonesIcon,
+   Clock, CheckCircle, AlertCircle, Loader2, Plus, Bot
  } from 'lucide-react';
  import { formatDistanceToNow } from 'date-fns';
  import ChatInterface from '@/components/chat/ChatInterface';
  import SupportChatView from '@/components/support/SupportChatView';
  import CreateSupportTicket from '@/components/support/CreateSupportTicket';
+ import AIChatbot from '@/components/ai/AIChatbot';
  
  interface HospitalConversation {
    id: string;
