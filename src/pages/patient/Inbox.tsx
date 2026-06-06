@@ -58,7 +58,20 @@
        subscribeToUpdates();
      }
    }, [user]);
- 
+
+   // Deep-link: /patient/inbox?conversation=<id> or ?ticket=<id>
+   useEffect(() => {
+     const convId = searchParams.get('conversation');
+     const ticketId = searchParams.get('ticket');
+     if (convId) {
+       const match = conversations.find((c) => c.id === convId);
+       if (match) setSelectedItem(match);
+     } else if (ticketId) {
+       const match = tickets.find((t) => t.id === ticketId);
+       if (match) setSelectedItem(match);
+     }
+   }, [searchParams, conversations, tickets]);
+
    const fetchAllMessages = async () => {
      setLoading(true);
      await Promise.all([fetchConversations(), fetchTickets()]);
