@@ -149,7 +149,7 @@ const App = () => {
                   <Route path="/hospital/analytics" element={<ProtectedHospitalRoute><HospitalAnalytics /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/chat" element={<ProtectedHospitalRoute><HospitalChat /></ProtectedHospitalRoute>} />
                   <Route path="/hospital/visa-support" element={<ProtectedHospitalRoute><HospitalVisaSupport /></ProtectedHospitalRoute>} />
-                  <Route path="/hospital/support" element={<ProtectedHospitalRoute><PatientInbox /></ProtectedHospitalRoute>} />
+                  <Route path="/hospital/support" element={<Navigate to="/hospital/dashboard" replace />} />
                   <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
                   <Route path="/admin/hospitals" element={<ProtectedAdminRoute><AdminHospitals /></ProtectedAdminRoute>} />
                   <Route path="/admin/users" element={<ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
