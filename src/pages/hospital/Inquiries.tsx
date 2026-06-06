@@ -155,7 +155,7 @@ const HospitalInquiries = () => {
         .maybeSingle();
 
       if (existingConversation) {
-        navigate(`/patient/inbox?conversation=${existingConversation.id}`);
+        navigate(`/hospital/chat?conversation=${existingConversation.id}`);
         return;
       }
 
@@ -177,7 +177,7 @@ const HospitalInquiries = () => {
         return;
       }
 
-      navigate(`/patient/inbox?conversation=${newConversation.id}`);
+      navigate(`/hospital/chat?conversation=${newConversation.id}`);
     } catch (error) {
       console.error('Error:', error);
       toast.error('Failed to start conversation');
