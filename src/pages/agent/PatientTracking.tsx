@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, FileSearch, Plane, MapPin, Hospital, Stethoscope, Heart, CheckCircle } from 'lucide-react';
+import { ArrowLeft, FileSearch, Plane, MapPin, Hospital, Stethoscope, Heart, CheckCircle, CreditCard, Calendar, DollarSign, Receipt } from 'lucide-react';
 
 const STAGES = [
   { key: 'inquiry', label: 'Inquiry', icon: FileSearch, statusKey: 'inquiry_status', notesKey: 'inquiry_notes' },
