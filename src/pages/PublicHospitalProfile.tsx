@@ -89,12 +89,6 @@ const PublicHospitalProfile = () => {
   };
 
   const handleOpenInquiry = (type: 'consultation' | 'inquiry') => {
-    if (!user) {
-      toast.info('Please sign in to continue — we\'ll bring you right back.');
-      const back = `/hospital/${id}?action=${type === 'consultation' ? 'consultation' : 'quote'}`;
-      navigate(`/auth?redirect=${encodeURIComponent(back)}`);
-      return;
-    }
     setInquiryType(type);
     setUploadedDocs([]);
     setInquiryDialogOpen(true);
@@ -162,7 +156,11 @@ const PublicHospitalProfile = () => {
   };
 
   const handleSubmitInquiry = async () => {
-    if (!user || !hospital) return;
+    if (!hospital) return;
+    if (!user) {
+      toast.error('Please sign in first, then submit this form from the hospital page.');
+      return;
+    }
     if (!inquiryForm.treatmentType.trim()) { toast.error('Please enter treatment type'); return; }
     if (!inquiryForm.message.trim()) { toast.error('Please enter your message'); return; }
 
@@ -188,35 +186,32 @@ const PublicHospitalProfile = () => {
         }
       }
 
-      // Also create a conversation + first message so the thread appears in the patient inbox immediately
-      try {
-        const { data: conversation, error: convError } = await supabase
-          .from('conversations')
-          .insert({
-            patient_id: user.id,
-            hospital_id: hospital.id,
-            inquiry_id: inquiry?.id,
-            status: 'active',
-            last_message_at: new Date().toISOString(),
-          })
-          .select()
-          .single();
+      // Also create a conversation + first message so the thread appears in the patient inbox immediately.
+      const { data: conversation, error: convError } = await supabase
+        .from('conversations')
+        .insert({
+          patient_id: user.id,
+          hospital_id: hospital.id,
+          inquiry_id: inquiry?.id,
+          status: 'active',
+          last_message_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
 
-        if (convError) throw convError;
-        if (conversation) {
-          await supabase.from('messages').insert({
-            conversation_id: conversation.id,
-            sender_id: user.id,
-            sender_role: 'patient',
-            content: inquiryType === 'consultation'
-              ? `[Consultation Request] Treatment: ${inquiryForm.treatmentType}\n\n${inquiryForm.message}`
-              : `Treatment: ${inquiryForm.treatmentType}\n\n${inquiryForm.message}`,
-            message_type: 'text',
-          });
-        }
-      } catch (convErr) {
-        console.warn('conversation create failed', convErr);
-      }
+      if (convError) throw convError;
+
+      const { error: messageError } = await supabase.from('messages').insert({
+        conversation_id: conversation.id,
+        sender_id: user.id,
+        sender_role: 'patient',
+        content: inquiryType === 'consultation'
+          ? `[Consultation Request] Treatment: ${inquiryForm.treatmentType}\n\n${inquiryForm.message}`
+          : `Treatment: ${inquiryForm.treatmentType}\n\n${inquiryForm.message}`,
+        message_type: 'text',
+      });
+
+      if (messageError) throw messageError;
 
       toast.success(
         inquiryType === 'consultation'
