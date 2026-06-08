@@ -353,7 +353,7 @@ const PublicHospitalProfile = () => {
 
         {/* Inquiry Dialog */}
         <Dialog open={inquiryDialogOpen} onOpenChange={setInquiryDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto elegant-card">
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto rounded-xl border border-primary/20 bg-card shadow-2xl">
             <DialogHeader>
               <DialogTitle>
                 {inquiryType === 'consultation' ? 'Request Consultation' : 'Send Inquiry'}
