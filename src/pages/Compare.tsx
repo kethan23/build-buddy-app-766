@@ -307,7 +307,7 @@ const Compare = () => {
                           <Button 
                             variant="outline" 
                             className="w-full"
-                            onClick={() => navigate('/auth?tab=signup')}
+                            onClick={() => navigate(`/hospital/${hospital.id}?action=quote`)}
                           >
                             Get Quote
                           </Button>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
@@ -32,6 +32,7 @@ interface UploadedDocument {
 const PublicHospitalProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const [hospital, setHospital] = useState<any>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
@@ -90,13 +91,27 @@ const PublicHospitalProfile = () => {
   const handleOpenInquiry = (type: 'consultation' | 'inquiry') => {
     if (!user) {
       toast.info('Please sign in to continue — we\'ll bring you right back.');
-      navigate(`/auth?redirect=${encodeURIComponent(`/hospital/${id}`)}`);
+      const back = `/hospital/${id}?action=${type === 'consultation' ? 'consultation' : 'quote'}`;
+      navigate(`/auth?redirect=${encodeURIComponent(back)}`);
       return;
     }
     setInquiryType(type);
     setUploadedDocs([]);
     setInquiryDialogOpen(true);
   };
+
+  // Auto-open dialog when arriving with ?action=quote or ?action=consultation
+  useEffect(() => {
+    if (loading || !hospital) return;
+    const action = searchParams.get('action');
+    if (action === 'quote' || action === 'consultation') {
+      handleOpenInquiry(action === 'consultation' ? 'consultation' : 'inquiry');
+      // Clear the param so it doesn't re-trigger
+      searchParams.delete('action');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, hospital]);
 
   const handleFileAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -173,11 +188,15 @@ const PublicHospitalProfile = () => {
         }
       }
 
-      toast.success(inquiryType === 'consultation' ? 'Consultation request sent!' : 'Inquiry sent!');
+      toast.success(
+        inquiryType === 'consultation'
+          ? 'Consultation request sent! View it anytime in your dashboard inbox.'
+          : 'Inquiry sent! View it anytime in your dashboard inbox.'
+      );
       setInquiryDialogOpen(false);
       setInquiryForm({ treatmentType: '', message: '', preferredDate: '' });
       setUploadedDocs([]);
-      navigate('/patient/inquiries');
+      // Stay on the hospital page — do not redirect.
     } catch (error: any) {
       toast.error(error.message || 'Failed to send inquiry');
     } finally {

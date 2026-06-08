@@ -305,7 +305,7 @@ const Hospitals = () => {
                                 >
                                   View Details
                                 </Button>
-                                <Button variant="outline" className="border-border/50" onClick={() => navigate('/auth?tab=signup')}>
+                                <Button variant="outline" className="border-border/50" onClick={() => navigate(`/hospital/${hospital.id}?action=quote`)}>
                                   Get Quote
                                 </Button>
                                 <Button 
