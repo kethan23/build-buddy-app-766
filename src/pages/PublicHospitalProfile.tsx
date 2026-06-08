@@ -91,13 +91,27 @@ const PublicHospitalProfile = () => {
   const handleOpenInquiry = (type: 'consultation' | 'inquiry') => {
     if (!user) {
       toast.info('Please sign in to continue — we\'ll bring you right back.');
-      navigate(`/auth?redirect=${encodeURIComponent(`/hospital/${id}`)}`);
+      const back = `/hospital/${id}?action=${type === 'consultation' ? 'consultation' : 'quote'}`;
+      navigate(`/auth?redirect=${encodeURIComponent(back)}`);
       return;
     }
     setInquiryType(type);
     setUploadedDocs([]);
     setInquiryDialogOpen(true);
   };
+
+  // Auto-open dialog when arriving with ?action=quote or ?action=consultation
+  useEffect(() => {
+    if (loading || !hospital) return;
+    const action = searchParams.get('action');
+    if (action === 'quote' || action === 'consultation') {
+      handleOpenInquiry(action === 'consultation' ? 'consultation' : 'inquiry');
+      // Clear the param so it doesn't re-trigger
+      searchParams.delete('action');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, hospital]);
 
   const handleFileAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
