@@ -188,6 +188,36 @@ const PublicHospitalProfile = () => {
         }
       }
 
+      // Also create a conversation + first message so the thread appears in the patient inbox immediately
+      try {
+        const { data: conversation, error: convError } = await supabase
+          .from('conversations')
+          .insert({
+            patient_id: user.id,
+            hospital_id: hospital.id,
+            inquiry_id: inquiry?.id,
+            status: 'active',
+            last_message_at: new Date().toISOString(),
+          })
+          .select()
+          .single();
+
+        if (convError) throw convError;
+        if (conversation) {
+          await supabase.from('messages').insert({
+            conversation_id: conversation.id,
+            sender_id: user.id,
+            sender_role: 'patient',
+            content: inquiryType === 'consultation'
+              ? `[Consultation Request] Treatment: ${inquiryForm.treatmentType}\n\n${inquiryForm.message}`
+              : `Treatment: ${inquiryForm.treatmentType}\n\n${inquiryForm.message}`,
+            message_type: 'text',
+          });
+        }
+      } catch (convErr) {
+        console.warn('conversation create failed', convErr);
+      }
+
       toast.success(
         inquiryType === 'consultation'
           ? 'Consultation request sent! View it anytime in your dashboard inbox.'
