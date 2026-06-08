@@ -32,6 +32,7 @@ interface UploadedDocument {
 const PublicHospitalProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const [hospital, setHospital] = useState<any>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
