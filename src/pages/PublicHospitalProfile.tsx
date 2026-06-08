@@ -188,11 +188,15 @@ const PublicHospitalProfile = () => {
         }
       }
 
-      toast.success(inquiryType === 'consultation' ? 'Consultation request sent!' : 'Inquiry sent!');
+      toast.success(
+        inquiryType === 'consultation'
+          ? 'Consultation request sent! View it anytime in your dashboard inbox.'
+          : 'Inquiry sent! View it anytime in your dashboard inbox.'
+      );
       setInquiryDialogOpen(false);
       setInquiryForm({ treatmentType: '', message: '', preferredDate: '' });
       setUploadedDocs([]);
-      navigate('/patient/inquiries');
+      // Stay on the hospital page — do not redirect.
     } catch (error: any) {
       toast.error(error.message || 'Failed to send inquiry');
     } finally {
