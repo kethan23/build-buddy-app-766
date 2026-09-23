@@ -9,7 +9,6 @@ import {
   FileText,
   FolderOpen,
   HelpCircle,
-  Search,
   Stethoscope,
   Upload,
 } from 'lucide-react';
@@ -59,7 +58,7 @@ const requestStatusClass: Record<string, string> = {
 };
 
 const formatStatus = (value?: string | null) =>
-  value ? value.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()) : 'Pending';
+  value ? value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()) : 'Pending';
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -83,6 +82,19 @@ const Dashboard = () => {
   const [data, setData] = useState<DashboardData>(emptyData);
   const [loading, setLoading] = useState(true);
   const [documentsOpen, setDocumentsOpen] = useState(false);
+  const [appointmentOpen, setAppointmentOpen] = useState(false);
+  const [failedSections, setFailedSections] = useState<string[]>([]);
+
+  const closeDocuments = (open: boolean) => {
+    setDocumentsOpen(open);
+    if (!open && user) {
+      void supabase.from('documents').select('*').eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .then(({ data: documents, error }) => {
+          if (!error && documents) setData((previous) => ({ ...previous, documents }));
+        });
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -114,7 +126,7 @@ const Dashboard = () => {
         supabase.from('documents').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         supabase
           .from('patient_journey_tracking')
-          .select('*')
+          .select('current_stage, updated_at')
           .eq('patient_id', user.id)
           .order('updated_at', { ascending: false })
           .limit(1),
@@ -127,6 +139,10 @@ const Dashboard = () => {
       ]);
 
       if (!active) return;
+      const sections = ['profile', 'inquiries', 'bookings', 'appointments', 'documents', 'journey', 'visas'];
+      setFailedSections(results.flatMap((result, index) =>
+        result.status === 'rejected' || result.value.error ? [sections[index]] : [],
+      ));
       const value = (index: number, fallback: any) => {
         const result = results[index];
         if (result.status !== 'fulfilled' || result.value.error) return fallback;
@@ -151,11 +167,18 @@ const Dashboard = () => {
     };
   }, [user]);
 
-  const hasActivity = data.inquiries.length > 0 || data.bookings.length > 0 || data.documents.length > 0 || data.visas.length > 0;
+  const hasActivity = data.inquiries.length > 0 || data.bookings.length > 0 || data.appointments.length > 0 || data.documents.length > 0 || data.journeys.length > 0 || data.visas.length > 0;
+  const isNewPatient = !hasActivity && failedSections.length === 0;
   const journey = data.journeys[0];
-  const upcomingAppointment = data.appointments[0] || data.bookings
-    .filter((booking) => booking.appointment_date && new Date(booking.appointment_date) >= new Date())
-    .sort((a, b) => new Date(a.appointment_date).getTime() - new Date(b.appointment_date).getTime())[0];
+  const upcomingAppointment = [
+    ...data.appointments.filter((appointment) => !['cancelled', 'completed'].includes(appointment.status)),
+    ...data.bookings.filter((booking) =>
+      booking.appointment_date &&
+      new Date(booking.appointment_date) >= new Date() &&
+      !['cancelled', 'completed'].includes(booking.status) &&
+      !data.appointments.some((appointment) => appointment.booking_id === booking.id),
+    ),
+  ].sort((a, b) => new Date(a.appointment_date).getTime() - new Date(b.appointment_date).getTime())[0];
 
   const currentStage = useMemo<JourneyStageKey>(() => {
     const trackedStage = journey?.current_stage;
@@ -173,15 +196,23 @@ const Dashboard = () => {
   const completedStages = stageOrder.slice(0, stageOrder.indexOf(currentStage));
 
   const nextStep = useMemo(() => {
-    if (!hasActivity) {
+    if (isNewPatient) {
       return {
-        title: 'Tell us what medical help you need',
-        description: "We'll guide you to suitable hospitals and the next steps for your care.",
+        title: 'Welcome to your medical journey 👋',
+        description: "Tell us what you need help with, and we'll guide you through the next steps.",
         label: 'Start Medical Assistance',
         action: () => navigate('/patient/ai-analysis'),
       };
     }
-    if (data.documents.length === 0) {
+    if (!hasActivity && failedSections.length > 0) {
+      return {
+        title: 'Your journey is temporarily unavailable',
+        description: 'Please try loading your medical journey again.',
+        label: 'Refresh dashboard',
+        action: () => window.location.reload(),
+      };
+    }
+    if (data.documents.length === 0 && !failedSections.includes('documents')) {
       return {
         title: 'Upload your medical reports',
         description: 'Your reports help specialists understand your case and prepare a more useful response.',
@@ -227,7 +258,7 @@ const Dashboard = () => {
       label: 'View Hospitals',
       action: () => navigate('/hospitals'),
     };
-  }, [currentStage, data.documents.length, data.inquiries, hasActivity, navigate, upcomingAppointment]);
+  }, [currentStage, data.documents.length, data.inquiries, failedSections, hasActivity, isNewPatient, navigate, upcomingAppointment]);
 
   const requests = useMemo(() => [
     ...data.inquiries.map((inquiry) => ({
@@ -235,6 +266,7 @@ const Dashboard = () => {
       type: inquiry.treatment_type?.toLowerCase().includes('consult') ? 'Doctor Consultation' : 'Hospital Inquiry',
       name: inquiry.hospitals?.name || inquiry.treatment_type,
       status: inquiry.status,
+      createdAt: inquiry.created_at,
       action: () => navigate('/patient/inquiries'),
     })),
     ...data.bookings.map((booking) => ({
@@ -242,6 +274,7 @@ const Dashboard = () => {
       type: 'Treatment Request',
       name: booking.hospitals?.name || booking.treatment_name,
       status: booking.status,
+      createdAt: booking.created_at,
       action: () => navigate('/patient/bookings'),
     })),
     ...data.visas.map((visa) => ({
@@ -249,9 +282,10 @@ const Dashboard = () => {
       type: 'Visa & Travel Assistance',
       name: visa.hospital_name || 'Medical travel support',
       status: visa.workflow_stage || visa.application_status,
+      createdAt: visa.created_at,
       action: () => navigate('/patient/visa-application'),
     })),
-  ].slice(0, 5), [data.bookings, data.inquiries, data.visas, navigate]);
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5), [data.bookings, data.inquiries, data.visas, navigate]);
 
   const documentGroups = useMemo(() => {
     const counts = new Map<string, number>();
@@ -277,6 +311,8 @@ const Dashboard = () => {
 
   const appointmentDate = upcomingAppointment?.appointment_date ? new Date(upcomingAppointment.appointment_date) : null;
   const firstName = data.profile?.full_name?.trim().split(/\s+/)[0] || 'there';
+  const appointmentHospital = upcomingAppointment?.hospitals?.name || 'Hospital consultation';
+  const appointmentFormat = upcomingAppointment?.video_consultations?.length ? 'Online consultation' : 'Hospital appointment';
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -284,20 +320,18 @@ const Dashboard = () => {
       <main className="flex-1">
         <div className="container mx-auto max-w-6xl px-4 py-8 sm:py-10">
           <header className="mb-9">
-            <p className="mb-2 text-sm font-medium text-primary">My Medical Journey</p>
             <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">{getGreeting()}, {firstName} 👋</h1>
             <p className="mt-2 text-base text-muted-foreground">Let's keep your medical journey moving.</p>
           </header>
 
           <div className="space-y-8">
-            <section aria-labelledby="journey-title" className="rounded-lg border bg-card p-5 sm:p-7">
-              <div className="mb-6 flex items-start justify-between gap-4">
-                <div>
-                  <h2 id="journey-title" className="text-xl font-semibold">Your Medical Journey</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">A clear view of where you are now.</p>
-                </div>
-                <Badge variant="outline" className="shrink-0 border-primary/30 bg-primary/5 text-primary">In progress</Badge>
-              </div>
+            {failedSections.length > 0 && (
+              <p role="status" className="border-l-2 border-warning bg-warning/10 px-4 py-3 text-sm text-foreground">
+                Some journey details could not be loaded. Refresh this page to try again.
+              </p>
+            )}
+            <section aria-labelledby="journey-title">
+              <h2 id="journey-title" className="mb-6 text-xl font-semibold">My Medical Journey</h2>
               <PatientJourneyOverview currentStage={currentStage} completedStages={completedStages} />
             </section>
 
@@ -311,6 +345,12 @@ const Dashboard = () => {
                 {nextStep.label}
                 <ArrowRight className="h-4 w-4" />
               </Button>
+              {isNewPatient && (
+                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:mt-0">
+                  <Button variant="link" className="h-auto p-0" onClick={() => navigate('/hospitals')}>Find Hospital</Button>
+                  <Button variant="link" className="h-auto p-0" onClick={() => navigate('/hospitals')}>Find Doctor</Button>
+                </div>
+              )}
             </section>
 
             <section aria-labelledby="appointment-title">
@@ -323,15 +363,15 @@ const Dashboard = () => {
                   <div className="min-w-0">
                     <p className="font-semibold">{upcomingAppointment.doctors?.name || upcomingAppointment.treatment_name || 'Medical consultation'}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {upcomingAppointment.doctors?.specialty || upcomingAppointment.hospitals?.name || 'Hospital consultation'}
+                      {upcomingAppointment.doctors?.specialty || appointmentHospital}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground">
                       <span className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{appointmentDate.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                       <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{appointmentDate.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</span>
-                      <span className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" />{upcomingAppointment.video_consultations?.length ? 'Online consultation' : 'Hospital appointment'}</span>
+                      <span className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" />{appointmentFormat}</span>
                     </div>
                   </div>
-                  <Button variant="outline" onClick={() => navigate('/patient/bookings')} className="mt-5 w-full sm:mt-0 sm:w-auto">View Details</Button>
+                  <Button variant="outline" onClick={() => setAppointmentOpen(true)} className="mt-5 w-full sm:mt-0 sm:w-auto">View Details</Button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3 rounded-lg border bg-card px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
@@ -348,7 +388,6 @@ const Dashboard = () => {
                     <FileText className="h-5 w-5 text-primary" />
                     <h2 id="requests-title" className="text-xl font-semibold">My Requests</h2>
                   </div>
-                  {requests.length > 0 && <Button variant="link" size="sm" onClick={() => navigate('/patient/inquiries')}>View all</Button>}
                 </div>
                 <div className="overflow-hidden rounded-lg border bg-card">
                   {requests.length > 0 ? requests.map((request, index) => (
@@ -364,8 +403,7 @@ const Dashboard = () => {
                     </div>
                   )) : (
                     <div className="p-5">
-                      <p className="text-sm text-muted-foreground">You haven't submitted any requests yet.</p>
-                      <Button variant="link" className="mt-2 h-auto p-0" onClick={() => navigate('/hospitals')}>Find a hospital</Button>
+                      <p className="text-sm text-muted-foreground">{failedSections.some((section) => ['inquiries', 'bookings', 'visas'].includes(section)) ? 'Your requests are temporarily unavailable.' : "You haven't submitted any requests yet."}</p>
                     </div>
                   )}
                 </div>
@@ -381,19 +419,19 @@ const Dashboard = () => {
                 </div>
                 <div className="overflow-hidden rounded-lg border bg-card">
                   {documentGroups.length > 0 ? documentGroups.map(([group, count], index) => (
-                    <button
+                    <Button
                       key={group}
-                      type="button"
+                      variant="ghost"
                       onClick={() => setDocumentsOpen(true)}
-                      className={`flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-muted/40 ${index ? 'border-t' : ''}`}
+                      className={`h-auto w-full justify-between rounded-none p-4 text-left ${index ? 'border-t' : ''}`}
                     >
                       <span className="text-sm font-medium">{group}</span>
                       <span className="text-sm text-muted-foreground">{count} {count === 1 ? 'file' : 'files'}</span>
-                    </button>
+                    </Button>
                   )) : (
                     <div className="p-5">
-                      <p className="text-sm text-muted-foreground">You haven't uploaded any medical documents yet.</p>
-                      <Button variant="outline" size="sm" className="mt-4" onClick={() => setDocumentsOpen(true)}><Upload className="h-4 w-4" />Upload Reports</Button>
+                      <p className="text-sm text-muted-foreground">{failedSections.includes('documents') ? 'Your documents are temporarily unavailable.' : "You haven't uploaded any medical documents yet."}</p>
+                      {!failedSections.includes('documents') && <Button variant="outline" size="sm" className="mt-4" onClick={() => setDocumentsOpen(true)}><Upload className="h-4 w-4" />Upload Reports</Button>}
                     </div>
                   )}
                 </div>
@@ -405,7 +443,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                 {[
                   { label: 'Find a Hospital', icon: Building2, action: () => navigate('/hospitals') },
-                  { label: 'Find a Doctor', icon: Search, action: () => navigate('/hospitals') },
+                  { label: 'Find a Doctor', icon: Stethoscope, action: () => navigate('/hospitals') },
                   { label: 'Upload Reports', icon: Upload, action: () => setDocumentsOpen(true) },
                   { label: 'Get Help', icon: HelpCircle, action: () => navigate('/patient/inbox') },
                 ].map((item) => (
@@ -432,13 +470,32 @@ const Dashboard = () => {
       </main>
       <Footer />
 
-      <Dialog open={documentsOpen} onOpenChange={setDocumentsOpen}>
+       <Dialog open={documentsOpen} onOpenChange={closeDocuments}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Medical Documents</DialogTitle>
             <DialogDescription>Upload and manage the reports shared for your care journey.</DialogDescription>
           </DialogHeader>
           <DocumentUpload />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={appointmentOpen} onOpenChange={setAppointmentOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Appointment details</DialogTitle>
+            <DialogDescription>{upcomingAppointment?.doctors?.name || upcomingAppointment?.treatment_name || 'Medical consultation'}</DialogDescription>
+          </DialogHeader>
+          {appointmentDate && (
+            <dl className="grid grid-cols-[auto_1fr] gap-x-5 gap-y-3 text-sm">
+              <dt className="text-muted-foreground">Hospital</dt><dd>{appointmentHospital}</dd>
+              {upcomingAppointment?.doctors?.specialty && <><dt className="text-muted-foreground">Specialty</dt><dd>{upcomingAppointment.doctors.specialty}</dd></>}
+              <dt className="text-muted-foreground">Date</dt><dd>{appointmentDate.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</dd>
+              <dt className="text-muted-foreground">Time</dt><dd>{appointmentDate.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</dd>
+              <dt className="text-muted-foreground">Format</dt><dd>{appointmentFormat}</dd>
+              {upcomingAppointment?.status && <><dt className="text-muted-foreground">Status</dt><dd>{formatStatus(upcomingAppointment.status)}</dd></>}
+            </dl>
+          )}
+          {upcomingAppointment?.booking_id && <Button variant="outline" onClick={() => navigate('/patient/bookings')}>View booking <ArrowRight className="h-4 w-4" /></Button>}
         </DialogContent>
       </Dialog>
     </div>
