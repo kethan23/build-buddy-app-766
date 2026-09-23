@@ -9,7 +9,6 @@ import {
   FileText,
   FolderOpen,
   HelpCircle,
-  Search,
   Stethoscope,
   Upload,
 } from 'lucide-react';
@@ -83,6 +82,7 @@ const Dashboard = () => {
   const [data, setData] = useState<DashboardData>(emptyData);
   const [loading, setLoading] = useState(true);
   const [documentsOpen, setDocumentsOpen] = useState(false);
+  const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [failedSections, setFailedSections] = useState<string[]>([]);
 
   const closeDocuments = (open: boolean) => {
@@ -126,7 +126,7 @@ const Dashboard = () => {
         supabase.from('documents').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         supabase
           .from('patient_journey_tracking')
-          .select('*')
+          .select('current_stage, updated_at')
           .eq('patient_id', user.id)
           .order('updated_at', { ascending: false })
           .limit(1),
@@ -311,6 +311,8 @@ const Dashboard = () => {
 
   const appointmentDate = upcomingAppointment?.appointment_date ? new Date(upcomingAppointment.appointment_date) : null;
   const firstName = data.profile?.full_name?.trim().split(/\s+/)[0] || 'there';
+  const appointmentHospital = upcomingAppointment?.hospitals?.name || 'Hospital consultation';
+  const appointmentFormat = upcomingAppointment?.video_consultations?.length ? 'Online consultation' : 'Hospital appointment';
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -344,7 +346,7 @@ const Dashboard = () => {
                 <ArrowRight className="h-4 w-4" />
               </Button>
               {isNewPatient && (
-                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:hidden">
+                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 sm:mt-0">
                   <Button variant="link" className="h-auto p-0" onClick={() => navigate('/hospitals')}>Find Hospital</Button>
                   <Button variant="link" className="h-auto p-0" onClick={() => navigate('/hospitals')}>Find Doctor</Button>
                 </div>
@@ -361,15 +363,15 @@ const Dashboard = () => {
                   <div className="min-w-0">
                     <p className="font-semibold">{upcomingAppointment.doctors?.name || upcomingAppointment.treatment_name || 'Medical consultation'}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {upcomingAppointment.doctors?.specialty || upcomingAppointment.hospitals?.name || 'Hospital consultation'}
+                      {upcomingAppointment.doctors?.specialty || appointmentHospital}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground">
                       <span className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{appointmentDate.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                       <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{appointmentDate.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</span>
-                      <span className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" />{upcomingAppointment.video_consultations?.length ? 'Online consultation' : 'Hospital appointment'}</span>
+                      <span className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" />{appointmentFormat}</span>
                     </div>
                   </div>
-                  <Button variant="outline" onClick={() => navigate('/patient/bookings')} className="mt-5 w-full sm:mt-0 sm:w-auto">View Details</Button>
+                  <Button variant="outline" onClick={() => setAppointmentOpen(true)} className="mt-5 w-full sm:mt-0 sm:w-auto">View Details</Button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3 rounded-lg border bg-card px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
@@ -475,6 +477,25 @@ const Dashboard = () => {
             <DialogDescription>Upload and manage the reports shared for your care journey.</DialogDescription>
           </DialogHeader>
           <DocumentUpload />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={appointmentOpen} onOpenChange={setAppointmentOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Appointment details</DialogTitle>
+            <DialogDescription>{upcomingAppointment?.doctors?.name || upcomingAppointment?.treatment_name || 'Medical consultation'}</DialogDescription>
+          </DialogHeader>
+          {appointmentDate && (
+            <dl className="grid grid-cols-[auto_1fr] gap-x-5 gap-y-3 text-sm">
+              <dt className="text-muted-foreground">Hospital</dt><dd>{appointmentHospital}</dd>
+              {upcomingAppointment?.doctors?.specialty && <><dt className="text-muted-foreground">Specialty</dt><dd>{upcomingAppointment.doctors.specialty}</dd></>}
+              <dt className="text-muted-foreground">Date</dt><dd>{appointmentDate.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</dd>
+              <dt className="text-muted-foreground">Time</dt><dd>{appointmentDate.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</dd>
+              <dt className="text-muted-foreground">Format</dt><dd>{appointmentFormat}</dd>
+              {upcomingAppointment?.status && <><dt className="text-muted-foreground">Status</dt><dd>{formatStatus(upcomingAppointment.status)}</dd></>}
+            </dl>
+          )}
+          {upcomingAppointment?.booking_id && <Button variant="outline" onClick={() => navigate('/patient/bookings')}>View booking <ArrowRight className="h-4 w-4" /></Button>}
         </DialogContent>
       </Dialog>
     </div>
