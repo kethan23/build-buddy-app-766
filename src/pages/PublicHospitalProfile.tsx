@@ -283,6 +283,9 @@ const PublicHospitalProfile = () => {
       />
       <Navbar />
       <main className="flex-1">
+        <div className="container mx-auto px-4 pt-4">
+          <PageBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Hospitals', to: '/hospitals' }, { label: hospital.name }]} className="mb-0" />
+        </div>
         <HospitalHeroSection
           hospital={hospital}
           onRequestConsultation={() => handleOpenInquiry('consultation')}
