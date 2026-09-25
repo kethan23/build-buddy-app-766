@@ -1,3 +1,4 @@
+import PageBreadcrumb from '@/components/shared/PageBreadcrumb';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -119,6 +120,7 @@ const Bookings = () => {
                 <Package className="h-4 w-4" />
                 Treatment Bookings
               </div>
+              <PageBreadcrumb items={[{label:'Dashboard',to:'/patient/dashboard'},{label:'My Bookings'}]} />
               <h1 className="text-3xl md:text-4xl font-heading font-bold mb-2">My Bookings</h1>
               <p className="text-muted-foreground">View and manage your treatment bookings and appointments</p>
             </div>

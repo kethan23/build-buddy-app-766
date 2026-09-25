@@ -1,3 +1,4 @@
+import PageBreadcrumb from '@/components/shared/PageBreadcrumb';
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -77,6 +78,7 @@ const Compare = () => {
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div>
+                  <PageBreadcrumb items={[{label:'Home',to:'/'},{label:'Hospitals',to:'/hospitals'},{label:'Compare'}]} />
                   <h1 className="font-heading font-bold text-3xl">Compare Hospitals</h1>
                   <p className="text-muted-foreground">
                     Comparing {selectedHospitals.length} hospital{selectedHospitals.length > 1 ? 's' : ''}
