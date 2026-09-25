@@ -35,8 +35,8 @@ const Index = () => {
         <HowItWorks />
         <TreatmentCategories />
         <FeaturedHospitals />
-        <CostEstimator />
         <Testimonials />
+        <CostEstimator />
         <Newsletter />
       </main>
       <Footer />
