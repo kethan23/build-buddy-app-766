@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Stethoscope,
   Upload,
+  MessageSquare as MessageSquareIcon, CreditCard as CreditCardIcon,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -446,9 +447,9 @@ const Dashboard = () => {
               <h2 id="quick-actions-title" className="mb-3 text-base font-semibold">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {[
-                  { label: 'Messages', icon: MessageSquare, action: () => navigate('/patient/inbox') },
+                  { label: 'Messages', icon: MessageSquareIcon, action: () => navigate('/patient/inbox') },
                   { label: 'Upload Reports', icon: Upload, action: () => setDocumentsOpen(true) },
-                  { label: 'Payments', icon: CreditCard, action: () => navigate('/patient/payments') },
+                  { label: 'Payments', icon: CreditCardIcon, action: () => navigate('/patient/payments') },
                   { label: 'Find a Hospital', icon: Building2, action: () => navigate('/hospitals') },
                   { label: 'Find a Doctor', icon: Stethoscope, action: () => navigate('/hospitals') },
                   { label: 'Get Help', icon: HelpCircle, action: () => navigate('/patient/inbox') },
