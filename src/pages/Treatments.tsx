@@ -1,3 +1,4 @@
+import PageBreadcrumb from '@/components/shared/PageBreadcrumb';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
@@ -75,6 +76,7 @@ const Treatments = () => {
                 <Sparkles className="h-4 w-4" />
                 World-Class Medical Care
               </div>
+              <PageBreadcrumb items={[{label:'Home',to:'/'},{label:'Treatments'}]} className="justify-center flex" />
               <h1 className="font-heading font-bold text-4xl md:text-5xl mb-4 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text">
                 Medical <span className="text-primary">Treatments</span>
               </h1>

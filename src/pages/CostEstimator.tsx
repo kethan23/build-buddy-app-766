@@ -1,3 +1,4 @@
+import PageBreadcrumb from '@/components/shared/PageBreadcrumb';
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -203,6 +204,7 @@ const CostEstimator = () => {
                   AI-powered smart estimator
                 </span>
               </div>
+              <PageBreadcrumb items={[{label:'Home',to:'/'},{label:'Cost Estimator'}]} className="justify-center flex" />
               <h1 className="font-heading text-3xl sm:text-5xl font-bold text-foreground leading-tight">
                 Know your treatment cost
                 <span className="block bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">

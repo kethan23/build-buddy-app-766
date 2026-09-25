@@ -1,3 +1,4 @@
+import PageBreadcrumb from '@/components/shared/PageBreadcrumb';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -69,6 +70,7 @@ const Payments = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
+          <PageBreadcrumb items={[{label:'Dashboard',to:'/patient/dashboard'},{label:'Payments'}]} />
           <h1 className="text-3xl font-heading font-bold mb-2">Payment History</h1>
           <p className="text-muted-foreground">View and manage your transaction history</p>
         </div>

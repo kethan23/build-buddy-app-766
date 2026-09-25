@@ -1,3 +1,4 @@
+import PageBreadcrumb from '@/components/shared/PageBreadcrumb';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -163,6 +164,7 @@ const Profile = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
+          <PageBreadcrumb items={[{label:'Dashboard',to:'/patient/dashboard'},{label:'Profile'}]} />
           <h1 className="text-3xl font-heading font-bold mb-2">Profile Management</h1>
           <p className="text-muted-foreground">Manage your personal information and medical history</p>
         </div>

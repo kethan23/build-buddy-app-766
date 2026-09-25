@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Stethoscope,
   Upload,
+  MessageSquare as MessageSquareIcon, CreditCard as CreditCardIcon,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -330,18 +331,13 @@ const Dashboard = () => {
                 Some journey details could not be loaded. Refresh this page to try again.
               </p>
             )}
-            <section aria-labelledby="journey-title">
-              <h2 id="journey-title" className="mb-6 text-xl font-semibold">My Medical Journey</h2>
-              <PatientJourneyOverview currentStage={currentStage} completedStages={completedStages} />
-            </section>
-
             <section aria-labelledby="next-step-title" className="rounded-lg border border-primary/25 bg-primary/5 p-5 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-7">
               <div className="max-w-2xl">
                 <p className="mb-1 text-xs font-semibold uppercase text-primary">Your next step</p>
                 <h2 id="next-step-title" className="text-xl font-semibold">{nextStep.title}</h2>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{nextStep.description}</p>
               </div>
-              <Button onClick={nextStep.action} className="mt-5 w-full shrink-0 sm:mt-0 sm:w-auto">
+              <Button onClick={nextStep.action} size="lg" className="mt-5 w-full shrink-0 sm:mt-0 sm:w-auto">
                 {nextStep.label}
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -351,6 +347,13 @@ const Dashboard = () => {
                   <Button variant="link" className="h-auto p-0" onClick={() => navigate('/hospitals')}>Find Doctor</Button>
                 </div>
               )}
+            </section>
+
+            <p className="border-b pb-2 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your current journey</p>
+
+            <section aria-labelledby="journey-title">
+              <h2 id="journey-title" className="mb-6 text-xl font-semibold">My Medical Journey</h2>
+              <PatientJourneyOverview currentStage={currentStage} completedStages={completedStages} />
             </section>
 
             <section aria-labelledby="appointment-title">
@@ -438,13 +441,17 @@ const Dashboard = () => {
               </section>
             </div>
 
+            <p className="border-b pb-2 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Manage</p>
+
             <section aria-labelledby="quick-actions-title">
               <h2 id="quick-actions-title" className="mb-3 text-base font-semibold">Quick Actions</h2>
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {[
+                  { label: 'Messages', icon: MessageSquareIcon, action: () => navigate('/patient/inbox') },
+                  { label: 'Upload Reports', icon: Upload, action: () => setDocumentsOpen(true) },
+                  { label: 'Payments', icon: CreditCardIcon, action: () => navigate('/patient/payments') },
                   { label: 'Find a Hospital', icon: Building2, action: () => navigate('/hospitals') },
                   { label: 'Find a Doctor', icon: Stethoscope, action: () => navigate('/hospitals') },
-                  { label: 'Upload Reports', icon: Upload, action: () => setDocumentsOpen(true) },
                   { label: 'Get Help', icon: HelpCircle, action: () => navigate('/patient/inbox') },
                 ].map((item) => (
                   <Button key={item.label} variant="outline" className="h-14 justify-start px-4" onClick={item.action}>
