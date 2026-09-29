@@ -370,6 +370,7 @@ const PublicHospitalProfile = () => {
             </DialogHeader>
 
             <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">1 · Your medical need</p>
               <div>
                 <Label htmlFor="treatmentType">Treatment Type *</Label>
                 <Input
@@ -377,16 +378,6 @@ const PublicHospitalProfile = () => {
                   placeholder="e.g., Cardiac Surgery, Orthopedic, etc."
                   value={inquiryForm.treatmentType}
                   onChange={(e) => setInquiryForm(prev => ({ ...prev, treatmentType: e.target.value }))}
-                />
-              </div>
-              <div>
-                <Label htmlFor="preferredDate">Preferred Date (optional)</Label>
-                <Input
-                  id="preferredDate"
-                  type="date"
-                  value={inquiryForm.preferredDate}
-                  onChange={(e) => setInquiryForm(prev => ({ ...prev, preferredDate: e.target.value }))}
-                  min={new Date().toISOString().split('T')[0]}
                 />
               </div>
               <div>
@@ -398,7 +389,21 @@ const PublicHospitalProfile = () => {
                   value={inquiryForm.message}
                   onChange={(e) => setInquiryForm(prev => ({ ...prev, message: e.target.value }))}
                 />
+                <p className="mt-1 text-xs text-muted-foreground">Include symptoms, past diagnosis, and any questions for the hospital.</p>
               </div>
+              <p className="pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">2 · Preferences</p>
+              <div>
+                <Label htmlFor="preferredDate">Preferred Date (optional)</Label>
+                <Input
+                  id="preferredDate"
+                  type="date"
+                  value={inquiryForm.preferredDate}
+                  onChange={(e) => setInquiryForm(prev => ({ ...prev, preferredDate: e.target.value }))}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              <p className="pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">3 · Reports</p>
+
 
               {/* Document Upload Section */}
               <div className="space-y-3">
@@ -454,7 +459,12 @@ const PublicHospitalProfile = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <div className="h-20 lg:hidden" aria-hidden="true" />
       </main>
+      <div className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t bg-background/95 p-3 backdrop-blur lg:hidden">
+        <Button variant="outline" className="flex-1" onClick={() => handleOpenInquiry('inquiry')}>Get Quote</Button>
+        <Button className="flex-1" onClick={() => handleOpenInquiry('consultation')}>Request Consultation</Button>
+      </div>
       <Footer />
     </div>
   );
