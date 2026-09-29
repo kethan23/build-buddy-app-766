@@ -39,6 +39,9 @@ const Navbar = () => {
     role === 'hospital' ? '/hospital/dashboard' :
     '/patient/dashboard';
 
+  const { pathname } = useLocation();
+  const isActivePath = (href: string) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/') || (href === '/hospitals' && pathname.startsWith('/hospital/'));
   const primaryLinks = [
     { label: t('nav.hospitals'), href: "/hospitals" },
     { label: t('nav.treatments'), href: "/treatments" },
@@ -121,7 +124,8 @@ const Navbar = () => {
               <Link
                 key={link.href}
                 to={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                aria-current={isActivePath(link.href) ? 'page' : undefined}
+                className={`text-sm font-medium transition-colors hover:text-primary ${isActivePath(link.href) ? 'text-primary border-b-2 border-primary pb-0.5' : 'text-foreground/80'}`}
               >
                 {link.label}
               </Link>
