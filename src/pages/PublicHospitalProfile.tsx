@@ -459,7 +459,12 @@ const PublicHospitalProfile = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <div className="h-20 lg:hidden" aria-hidden="true" />
       </main>
+      <div className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t bg-background/95 p-3 backdrop-blur lg:hidden">
+        <Button variant="outline" className="flex-1" onClick={() => handleOpenInquiry('inquiry')}>Get Quote</Button>
+        <Button className="flex-1" onClick={() => handleOpenInquiry('consultation')}>Request Consultation</Button>
+      </div>
       <Footer />
     </div>
   );
