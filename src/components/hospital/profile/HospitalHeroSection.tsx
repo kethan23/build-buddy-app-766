@@ -31,29 +31,29 @@ const HospitalHeroSection = ({ hospital, onRequestConsultation }: HospitalHeroSe
       <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
 
       {/* Hospital Info Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-8">
-        <div className="container mx-auto flex items-end gap-6">
+      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8">
+        <div className="container mx-auto px-0 sm:px-4 flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-6">
           {hospital.logo_url && (
-            <div className="relative">
+            <div className="relative shrink-0 w-16 h-16 sm:w-24 sm:h-24">
               <img
                 src={hospital.logo_url}
                 alt={`${hospital.name} logo`}
-                className="h-24 w-24 rounded-xl bg-background/90 backdrop-blur-sm p-2 shadow-strong border border-border/20"
+                className="h-full w-full object-contain rounded-xl bg-background/90 backdrop-blur-sm p-2 shadow-strong border border-border/20"
               />
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full flex items-center justify-center border-2 border-background">
                 <Award className="h-3 w-3 text-primary-foreground" />
               </div>
             </div>
           )}
-          <div className="flex-1 animate-fade-in">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-4xl font-heading font-bold text-white drop-shadow-lg">{hospital.name}</h1>
-              <Badge className="bg-success/90 backdrop-blur-sm text-primary-foreground border-0 shadow-lg">
+          <div className="flex-1 min-w-0 animate-fade-in">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+              <h1 className="text-2xl sm:text-4xl font-heading font-bold text-white drop-shadow-lg break-words">{hospital.name}</h1>
+              <Badge className="bg-success/90 backdrop-blur-sm text-primary-foreground border-0 shadow-lg shrink-0">
                 <Award className="h-3 w-3 mr-1" />
                 Verified
               </Badge>
             </div>
-            <div className="flex items-center gap-4 text-white/90">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm sm:text-base text-white/90">
               <span className="flex items-center gap-1.5">
                 <MapPin className="h-4 w-4" />
                 {hospital.city}, {hospital.country}
@@ -62,7 +62,7 @@ const HospitalHeroSection = ({ hospital, onRequestConsultation }: HospitalHeroSe
                 <span className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-full px-3 py-1">
                   <Star className="h-4 w-4 fill-warning text-warning" />
                   {hospital.rating.toFixed(1)}
-                  <span className="text-white/70 text-sm">({hospital.total_reviews} reviews)</span>
+                  <span className="text-white/70 text-xs sm:text-sm">({hospital.total_reviews} reviews)</span>
                 </span>
               )}
               {hospital.established_year && (
@@ -75,7 +75,7 @@ const HospitalHeroSection = ({ hospital, onRequestConsultation }: HospitalHeroSe
           </div>
           <Button
             size="lg"
-            className="btn-gradient text-white px-8 shadow-lg animate-fade-in"
+            className="hidden sm:inline-flex btn-gradient text-white px-8 shadow-lg animate-fade-in"
             style={{ animationDelay: '0.2s' }}
             onClick={onRequestConsultation}
           >
