@@ -59,7 +59,7 @@ export const CookieConsent = () => {
       role="dialog"
       aria-live="polite"
       aria-label="Cookie consent"
-      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 z-[100] max-w-md rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl p-5 animate-in slide-in-from-bottom-4"
+      className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 z-[100] max-w-md rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl p-5 animate-in slide-in-from-bottom-4"
     >
       <button
         onClick={rejectNonEssential}
