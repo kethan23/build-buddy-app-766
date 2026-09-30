@@ -299,9 +299,9 @@ const PublicHospitalProfile = () => {
             <div className="absolute -top-32 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute top-20 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="grid lg:grid-cols-3 gap-8 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
               {/* Main Content Area */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-6 min-w-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className="w-full justify-start glass-card border-0 p-1 overflow-x-auto flex-nowrap">
                     <TabsTrigger value="about" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm shrink-0 px-2.5 sm:px-4">
