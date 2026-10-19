@@ -85,12 +85,31 @@ const App = () => {
   // Register service worker for PWA
   useEffect(() => {
     console.log("App component mounted");
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then((registration) => console.log("SW registered:", registration))
-        .catch((error) => console.log("SW registration failed:", error));
+    if (!("serviceWorker" in navigator)) return;
+    const host = window.location.hostname;
+    const inIframe = (() => {
+      try { return window.self !== window.top; } catch { return true; }
+    })();
+    const isPreview =
+      !import.meta.env.PROD ||
+      inIframe ||
+      host === "localhost" ||
+      host.startsWith("id-preview--") ||
+      host.includes("lovableproject.com");
+
+    if (isPreview) {
+      // Never run the offline cache in preview/dev — it serves stale code.
+      navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister()));
+      if ("caches" in window) {
+        caches.keys().then((keys) => keys.filter((k) => k.startsWith("mediconnect")).forEach((k) => caches.delete(k)));
+      }
+      return;
     }
+
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((registration) => console.log("SW registered:", registration))
+      .catch((error) => console.log("SW registration failed:", error));
   }, []);
 
   console.log("App rendering");
