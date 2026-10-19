@@ -123,14 +123,23 @@ const Footer = () => {
           <p className="text-xs sm:text-sm text-muted-foreground">
             © 2025 MediConnect. {t('footer.allRights')}
           </p>
-          <div className="flex space-x-4 sm:space-x-6">
-            <Link to="/privacy" className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+            <Link
+              to="/privacy"
+              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
               {t('footer.privacy')}
             </Link>
-            <Link to="/terms" className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Link
+              to="/terms"
+              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
               {t('footer.terms')}
             </Link>
-            <Link to="/cookies" className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Link
+              to="/cookies"
+              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
               Cookies
             </Link>
           </div>
