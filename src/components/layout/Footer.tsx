@@ -5,6 +5,12 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t } = useTranslation();
   const footerLinks = {
+    "Quick Links": [
+      { label: "Home", href: "/" },
+      { label: "Hospitals", href: "/hospitals" },
+      { label: "Dashboard", href: "/patient/dashboard" },
+      { label: "Messages", href: "/patient/inbox" },
+    ],
     "For Patients": [
       { label: "Find Hospitals", href: "/hospitals" },
       { label: "Browse Treatments", href: "/treatments" },
