@@ -5,6 +5,12 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t } = useTranslation();
   const footerLinks = {
+    "Quick Links": [
+      { label: "Home", href: "/" },
+      { label: "Hospitals", href: "/hospitals" },
+      { label: "Dashboard", href: "/patient/dashboard" },
+      { label: "Messages", href: "/patient/inbox" },
+    ],
     "For Patients": [
       { label: "Find Hospitals", href: "/hospitals" },
       { label: "Browse Treatments", href: "/treatments" },
@@ -36,7 +42,7 @@ const Footer = () => {
   return (
     <footer className="bg-muted border-t">
       <div className="container mx-auto px-4 py-8 sm:py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
           {/* Brand Section */}
           <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1 mb-2 lg:mb-0">
             <Link to="/" className="flex items-center space-x-2 mb-3 sm:mb-4">
