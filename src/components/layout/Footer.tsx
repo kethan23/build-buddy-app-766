@@ -39,6 +39,9 @@ const Footer = () => {
     ],
   };
 
+  const linkPill =
+    "inline-flex w-full items-center gap-2 rounded-xl border border-border/70 bg-background px-3 py-2 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
+
   return (
     <footer className="bg-muted border-t">
       <div className="container mx-auto px-4 py-8 sm:py-12">
@@ -74,13 +77,10 @@ const Footer = () => {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h3 className="font-heading font-semibold text-sm sm:text-base mb-2.5 sm:mb-4">{title}</h3>
-              <ul className="space-y-1.5 sm:space-y-2">
+              <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      to={link.href}
-                      className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link to={link.href} className={linkPill}>
                       {link.label}
                     </Link>
                   </li>
@@ -123,14 +123,23 @@ const Footer = () => {
           <p className="text-xs sm:text-sm text-muted-foreground">
             © 2025 MediConnect. {t('footer.allRights')}
           </p>
-          <div className="flex space-x-4 sm:space-x-6">
-            <Link to="/privacy" className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+            <Link
+              to="/privacy"
+              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
               {t('footer.privacy')}
             </Link>
-            <Link to="/terms" className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Link
+              to="/terms"
+              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
               {t('footer.terms')}
             </Link>
-            <Link to="/cookies" className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Link
+              to="/cookies"
+              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
               Cookies
             </Link>
           </div>
