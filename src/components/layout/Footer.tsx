@@ -39,6 +39,9 @@ const Footer = () => {
     ],
   };
 
+  const linkPill =
+    "inline-flex w-full items-center gap-2 rounded-xl border border-border/70 bg-background px-3 py-2 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
+
   return (
     <footer className="bg-muted border-t">
       <div className="container mx-auto px-4 py-8 sm:py-12">
