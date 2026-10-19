@@ -77,13 +77,10 @@ const Footer = () => {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h3 className="font-heading font-semibold text-sm sm:text-base mb-2.5 sm:mb-4">{title}</h3>
-              <ul className="space-y-1.5 sm:space-y-2">
+              <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      to={link.href}
-                      className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link to={link.href} className={linkPill}>
                       {link.label}
                     </Link>
                   </li>
