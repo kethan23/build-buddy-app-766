@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mediconnect-v2';
+const CACHE_NAME = 'mediconnect-v3';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -37,7 +37,22 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (['style', 'script', 'image', 'font'].includes(req.destination)) {
+  // Network-first for code and styles so updates always reach users.
+  if (['style', 'script'].includes(req.destination)) {
+    event.respondWith(
+      fetch(req).then((res) => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(req, clone));
+        }
+        return res;
+      }).catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Cache-first for images and fonts.
+  if (['image', 'font'].includes(req.destination)) {
     event.respondWith(
       caches.match(req).then((cached) => {
         const fetchPromise = fetch(req).then((res) => {
