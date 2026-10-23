@@ -236,6 +236,7 @@ const Navbar = () => {
                       {link.label}
                     </Link>
                   ))}
+                  {pathname === '/' && (<>
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-2">Language & Currency</p>
                   <div className="flex gap-2 px-3">
                     <Select value={i18n.language} onValueChange={handleLanguageChange}>
@@ -249,6 +250,7 @@ const Navbar = () => {
                     </Select>
                     <CurrencySelector />
                   </div>
+                  </>)}
                   <div className="pt-4">
                     {user ? (
                       <Button className="w-full" onClick={() => { signOut(); setIsOpen(false); }}>
