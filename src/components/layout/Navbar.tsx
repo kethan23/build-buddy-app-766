@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Globe, MoreHorizontal, Brain } from "lucide-react";
+import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -45,9 +45,13 @@ const Navbar = () => {
   const primaryLinks = [
     { label: t('nav.hospitals'), href: "/hospitals" },
     { label: t('nav.treatments'), href: "/treatments" },
-    { label: 'Cost Estimator', href: "/cost-estimator" },
-    { label: 'Visa', href: "/visa-info" },
-    ...(user && role === 'patient' ? [{ label: 'Dashboard', href: '/patient/dashboard' }] : []),
+  ];
+
+  const planLinks = [
+    { label: 'Cost Estimator', href: "/cost-estimator", desc: 'Compare treatment prices' },
+    { label: 'Visa Help', href: "/visa-info", desc: 'Medical visa guidance' },
+    { label: 'AI Report Analysis', href: "/patient/ai-analysis", desc: 'Understand your reports' },
+    { label: 'Compare Hospitals', href: "/compare", desc: 'Side-by-side view' },
   ];
 
   const secondaryLinks = [
@@ -64,7 +68,6 @@ const Navbar = () => {
     i18n.changeLanguage(value);
   };
 
-  const allLinks = [...primaryLinks, ...secondaryLinks];
 
   const roleLinks: { label: string; href: string }[] = [];
   if (user && role === 'admin') {
@@ -101,62 +104,47 @@ const Navbar = () => {
             <span className="font-heading font-bold text-lg sm:text-xl text-primary">MediConnect</span>
           </Link>
 
-          {/* AI Analysis Search Bar */}
-          <button
-            onClick={() => navigate("/patient/ai-analysis")}
-            className="hidden sm:flex items-center gap-2 flex-1 max-w-xs lg:max-w-sm mx-3 lg:mx-4 px-3 py-1.5 rounded-full bg-muted/50 border border-border/60 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer group"
-          >
-            <Brain className="h-3.5 w-3.5 text-primary shrink-0" />
-            <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors truncate">AI Medical Analysis...</span>
-            <span className="text-[8px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full leading-none shrink-0">BETA</span>
-          </button>
-          {/* Mobile AI button */}
-          <button
-            onClick={() => navigate("/patient/ai-analysis")}
-            className="sm:hidden flex items-center justify-center h-8 w-8 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors ml-auto mr-1"
-          >
-            <Brain className="h-4 w-4 text-primary" />
-          </button>
-
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center gap-1 mx-4 flex-1 justify-center">
             {primaryLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
                 aria-current={isActivePath(link.href) ? 'page' : undefined}
-                className={`text-sm font-medium transition-colors hover:text-primary ${isActivePath(link.href) ? 'text-primary border-b-2 border-primary pb-0.5' : 'text-foreground/80'}`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:text-primary hover:bg-primary/5 ${isActivePath(link.href) ? 'text-primary bg-primary/5' : 'text-foreground/80'}`}
               >
                 {link.label}
               </Link>
             ))}
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-sm font-medium text-foreground/80 hover:text-primary gap-1">
-                  More <MoreHorizontal className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className={`text-sm font-medium gap-1 ${planLinks.some(l => isActivePath(l.href)) ? 'text-primary' : 'text-foreground/80'}`}>
+                  Plan Your Trip <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                {secondaryLinks.map((link) => (
+              <DropdownMenuContent align="center" className="w-[420px] p-2 grid grid-cols-2 gap-1">
+                {planLinks.map((link) => (
                   <DropdownMenuItem key={link.href} asChild>
-                    <Link to={link.href} className="w-full cursor-pointer">
-                      {link.label}
+                    <Link to={link.href} className="flex flex-col items-start gap-0.5 cursor-pointer rounded-lg p-3">
+                      <span className="text-sm font-medium">{link.label}</span>
+                      <span className="text-xs text-muted-foreground">{link.desc}</span>
                     </Link>
                   </DropdownMenuItem>
                 ))}
-                {roleLinks.length > 0 && (
-                  <>
-                    <DropdownMenuSeparator />
-                    {roleLinks.map((link) => (
-                      <DropdownMenuItem key={link.href} asChild>
-                        <Link to={link.href} className="w-full cursor-pointer">
-                          {link.label}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </>
-                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-sm font-medium text-foreground/80 gap-1">
+                  Learn <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-48">
+                {secondaryLinks.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link to={link.href} className="w-full cursor-pointer">{link.label}</Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -164,10 +152,11 @@ const Navbar = () => {
           {/* Right Section */}
           <div className="flex items-center space-x-1.5 sm:space-x-3">
             {/* Language Selector - compact on mobile */}
+            <div className="hidden lg:flex items-center gap-2">
             <Select value={i18n.language} onValueChange={handleLanguageChange}>
-              <SelectTrigger className="w-10 sm:w-24 h-8 sm:h-9 px-2 sm:px-3">
+              <SelectTrigger className="w-24 h-9 px-3">
                 <Globe className="h-4 w-4 shrink-0" />
-                <span className="hidden sm:inline ml-1"><SelectValue /></span>
+                <span className="ml-1"><SelectValue /></span>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
@@ -178,17 +167,31 @@ const Navbar = () => {
             </Select>
 
             <CurrencySelector />
+            </div>
 
             {user && <NotificationCenter />}
 
             {user ? (
               <>
-                <Button size="sm" variant="ghost" className="hidden lg:flex" asChild>
-                  <Link to={dashboardHref}>{t('nav.dashboard')}</Link>
-                </Button>
-                <Button size="sm" variant="outline" className="hidden lg:flex" onClick={() => signOut()}>
-                  {t('nav.signOut')}
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="sm" variant="outline" className="hidden lg:flex gap-1">
+                      My Account <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    {roleLinks.map((link) => (
+                      <DropdownMenuItem key={link.href} asChild>
+                        <Link to={link.href} className="w-full cursor-pointer">{link.label}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                    {roleLinks.length === 0 && (
+                      <DropdownMenuItem asChild><Link to={dashboardHref}>{t('nav.dashboard')}</Link></DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">{t('nav.signOut')}</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : (
               <Button size="sm" className="hidden sm:flex text-xs sm:text-sm h-8 sm:h-9 px-3 sm:px-4" asChild>
@@ -204,35 +207,46 @@ const Navbar = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] sm:w-[300px] px-5 pt-6">
-                <div className="flex flex-col space-y-1 mt-6">
-                  {allLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg"
-                    >
+                <div className="flex flex-col space-y-0.5 mt-4 overflow-y-auto max-h-[calc(100vh-4rem)] pb-6">
+                  {roleLinks.length > 0 && (<>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-1">My Account</p>
+                  {roleLinks.map((link) => (
+                    <Link key={link.href} to={link.href} onClick={() => setIsOpen(false)} className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg">
                       {link.label}
                     </Link>
                   ))}
-                  {roleLinks.length > 0 && (
-                    <>
-                      <div className="h-px bg-border my-3" />
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-1">
-                        {role} Portal
-                      </p>
-                      {roleLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          to={link.href}
-                          onClick={() => setIsOpen(false)}
-                          className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg"
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </>
-                  )}
+                  </>)}
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-1">Find Care</p>
+                  {primaryLinks.map((link) => (
+                    <Link key={link.href} to={link.href} onClick={() => setIsOpen(false)} className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg">
+                      {link.label}
+                    </Link>
+                  ))}
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-1">Plan Your Trip</p>
+                  {planLinks.map((link) => (
+                    <Link key={link.href} to={link.href} onClick={() => setIsOpen(false)} className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg">
+                      {link.label}
+                    </Link>
+                  ))}
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-1">Learn</p>
+                  {secondaryLinks.map((link) => (
+                    <Link key={link.href} to={link.href} onClick={() => setIsOpen(false)} className="text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 transition-colors py-2.5 px-3 rounded-lg">
+                      {link.label}
+                    </Link>
+                  ))}
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-2">Language & Currency</p>
+                  <div className="flex gap-2 px-3">
+                    <Select value={i18n.language} onValueChange={handleLanguageChange}>
+                      <SelectTrigger className="w-28 h-9"><Globe className="h-4 w-4 mr-1" /><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="ar">العربية</SelectItem>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="fr">Français</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <CurrencySelector />
+                  </div>
                   <div className="pt-4">
                     {user ? (
                       <Button className="w-full" onClick={() => { signOut(); setIsOpen(false); }}>
