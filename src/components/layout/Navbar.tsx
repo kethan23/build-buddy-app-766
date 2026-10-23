@@ -151,9 +151,10 @@ const Navbar = () => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-1.5 sm:space-x-3">
-            {/* Language Selector - compact on mobile */}
-            <div className="hidden lg:flex items-center gap-2">
-            <Select value={i18n.language} onValueChange={handleLanguageChange}>
+            {/* Language Selector - only on home page; choice applies site-wide */}
+            {pathname === '/' && (
+              <div className="hidden lg:flex items-center gap-2">
+              <Select value={i18n.language} onValueChange={handleLanguageChange}>
               <SelectTrigger className="w-24 h-9 px-3">
                 <Globe className="h-4 w-4 shrink-0" />
                 <span className="ml-1"><SelectValue /></span>
@@ -167,7 +168,8 @@ const Navbar = () => {
             </Select>
 
             <CurrencySelector />
-            </div>
+              </div>
+            )}
 
             {user && <NotificationCenter />}
 
