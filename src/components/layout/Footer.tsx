@@ -5,12 +5,6 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t } = useTranslation();
   const footerLinks = {
-    "Quick Links": [
-      { label: "Home", href: "/" },
-      { label: "Hospitals", href: "/hospitals" },
-      { label: "Dashboard", href: "/patient/dashboard" },
-      { label: "Messages", href: "/patient/inbox" },
-    ],
     "For Patients": [
       { label: "Find Hospitals", href: "/hospitals" },
       { label: "Browse Treatments", href: "/treatments" },
@@ -39,13 +33,27 @@ const Footer = () => {
     ],
   };
 
+  const quickActions = [
+    { label: "Home", href: "/" },
+    { label: "Hospitals", href: "/hospitals" },
+    { label: "Dashboard", href: "/patient/dashboard" },
+    { label: "Messages", href: "/patient/inbox" },
+  ];
+
   const linkPill =
-    "inline-flex w-full items-center gap-2 rounded-xl border border-border/70 bg-background px-3 py-2 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
+    "text-xs sm:text-sm text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:underline";
 
   return (
-    <footer className="bg-muted border-t">
+    <footer className="bg-muted border-t pb-16 lg:pb-0">
       <div className="container mx-auto px-4 py-8 sm:py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-8 sm:mb-10">
+          {quickActions.map((a) => (
+            <Link key={a.href} to={a.href} className="flex items-center justify-center rounded-xl border border-border bg-background px-3 py-3 text-sm font-medium text-foreground shadow-sm transition-colors hover:border-primary/50 hover:text-primary">
+              {a.label}
+            </Link>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8">
           {/* Brand Section */}
           <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1 mb-2 lg:mb-0">
             <Link to="/" className="flex items-center space-x-2 mb-3 sm:mb-4">
@@ -77,7 +85,7 @@ const Footer = () => {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h3 className="font-heading font-semibold text-sm sm:text-base mb-2.5 sm:mb-4">{title}</h3>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link.href}>
                     <Link to={link.href} className={linkPill}>
@@ -126,19 +134,19 @@ const Footer = () => {
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             <Link
               to="/privacy"
-              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               {t('footer.privacy')}
             </Link>
             <Link
               to="/terms"
-              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               {t('footer.terms')}
             </Link>
             <Link
               to="/cookies"
-              className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               Cookies
             </Link>

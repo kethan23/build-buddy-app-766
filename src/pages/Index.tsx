@@ -7,7 +7,6 @@ import HowItWorks from "@/components/home/HowItWorks";
 import Testimonials from "@/components/home/Testimonials";
 import Newsletter from "@/components/home/Newsletter";
 import CostEstimator from "@/components/home/CostEstimator";
-import StickyMobileCTA from "@/components/home/StickyMobileCTA";
 import SEO from "@/components/SEO";
 
 const Index = () => {
@@ -40,7 +39,6 @@ const Index = () => {
         <Newsletter />
       </main>
       <Footer />
-      <StickyMobileCTA />
     </div>
   );
 };
