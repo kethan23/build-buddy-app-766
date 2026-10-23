@@ -151,9 +151,10 @@ const Navbar = () => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-1.5 sm:space-x-3">
-            {/* Language Selector - compact on mobile */}
-            <div className="hidden lg:flex items-center gap-2">
-            <Select value={i18n.language} onValueChange={handleLanguageChange}>
+            {/* Language Selector - only on home page; choice applies site-wide */}
+            {pathname === '/' && (
+              <div className="hidden lg:flex items-center gap-2">
+              <Select value={(i18n.language || 'en').split('-')[0]} onValueChange={handleLanguageChange}>
               <SelectTrigger className="w-24 h-9 px-3">
                 <Globe className="h-4 w-4 shrink-0" />
                 <span className="ml-1"><SelectValue /></span>
@@ -167,7 +168,8 @@ const Navbar = () => {
             </Select>
 
             <CurrencySelector />
-            </div>
+              </div>
+            )}
 
             {user && <NotificationCenter />}
 
@@ -234,9 +236,10 @@ const Navbar = () => {
                       {link.label}
                     </Link>
                   ))}
+                  {pathname === '/' && (<>
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mt-4 mb-2">Language & Currency</p>
                   <div className="flex gap-2 px-3">
-                    <Select value={i18n.language} onValueChange={handleLanguageChange}>
+                    <Select value={(i18n.language || 'en').split('-')[0]} onValueChange={handleLanguageChange}>
                       <SelectTrigger className="w-28 h-9"><Globe className="h-4 w-4 mr-1" /><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="en">English</SelectItem>
@@ -247,6 +250,7 @@ const Navbar = () => {
                     </Select>
                     <CurrencySelector />
                   </div>
+                  </>)}
                   <div className="pt-4">
                     {user ? (
                       <Button className="w-full" onClick={() => { signOut(); setIsOpen(false); }}>
