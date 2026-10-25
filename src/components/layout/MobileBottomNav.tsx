@@ -1,20 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Search, MessageCircle, LayoutDashboard, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useUserRole } from "@/hooks/useUserRole";
 
 /** App-like bottom tab bar for phones and tablets on public + patient pages. */
 const MobileBottomNav = () => {
   const { pathname } = useLocation();
   const { user } = useAuth();
-  const { role } = useUserRole();
 
-  // Portals with their own navigation, and hospital profile (has its own action bar)
+  // Portals with their own navigation hide the tab bar (path-based, so it never
+  // flickers when an async role check resolves).
   const hidden =
     /^\/(admin|agent|auth|reset-password)/.test(pathname) ||
     /^\/hospital\/(dashboard|profile|packages|inquiries|appointments|analytics|chat|visa)/.test(pathname) ||
-    /^\/hospital\/[^/]+$/.test(pathname) ||
-    (user && (role === "hospital" || role === "admin" || role === "agent"));
+    /^\/hospital\/[^/]+$/.test(pathname);
   if (hidden) return null;
 
   const tabs = [
