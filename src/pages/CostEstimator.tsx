@@ -164,6 +164,11 @@ const CostEstimator = () => {
     return mid * mult;
   }, [selected, severity, city, category, room, previous]);
 
+  const resetResults = () => {
+    setPersonalized(null);
+    setFinalQuote(null);
+  };
+
   const runEstimate = async () => {
     setComputing(true);
     await new Promise((r) => setTimeout(r, 900));
@@ -343,7 +348,7 @@ const CostEstimator = () => {
                 <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1">
                   <TrendingDown className="h-3 w-3" />
                   Save up to{" "}
-                  {Math.round(((selected.usa - selected.india[1]) / selected.usa) * 100)}%
+                  {Math.round(((selected.usa - selected.india[0]) / selected.usa) * 100)}%
                 </div>
               </div>
               <div className="grid sm:grid-cols-3 gap-3">
@@ -399,18 +404,18 @@ const CostEstimator = () => {
                         <OptionGrid
                           options={["Mild", "Moderate", "Severe"]}
                           value={severity}
-                          onChange={setSeverity}
+                          onChange={(v) => { setSeverity(v); resetResults(); }}
                         />
                       </QuestionBlock>
                     )}
                     {step === 1 && (
                       <QuestionBlock title="Have you undergone previous treatment for this?">
-                        <OptionGrid options={["Yes", "No"]} value={previous} onChange={setPrevious} />
+                        <OptionGrid options={["Yes", "No"]} value={previous} onChange={(v) => { setPrevious(v); resetResults(); }} />
                       </QuestionBlock>
                     )}
                     {step === 2 && (
                       <QuestionBlock title="Preferred city in India">
-                        <OptionGrid options={CITIES} value={city} onChange={setCity} columns={3} />
+                        <OptionGrid options={CITIES} value={city} onChange={(v) => { setCity(v); resetResults(); }} columns={3} />
                       </QuestionBlock>
                     )}
                     {step === 3 && (
@@ -418,7 +423,7 @@ const CostEstimator = () => {
                         <OptionGrid
                           options={["Budget", "Standard", "Premium"]}
                           value={category}
-                          onChange={setCategory}
+                          onChange={(v) => { setCategory(v); resetResults(); }}
                         />
                       </QuestionBlock>
                     )}
@@ -427,7 +432,7 @@ const CostEstimator = () => {
                         <OptionGrid
                           options={["Shared", "Private", "Deluxe"]}
                           value={room}
-                          onChange={setRoom}
+                          onChange={(v) => { setRoom(v); resetResults(); }}
                         />
                       </QuestionBlock>
                     )}
@@ -500,7 +505,7 @@ const CostEstimator = () => {
                       {format(personalized[0])} – {format(personalized[1])}
                     </div>
                     <div className="inline-flex items-center gap-1.5 mt-2 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
-                      <ShieldCheck className="h-3 w-3" /> Accuracy ~85%
+                      <ShieldCheck className="h-3 w-3" /> Indicative estimate
                     </div>
 
                     <div className="mt-5 space-y-2">
@@ -522,7 +527,8 @@ const CostEstimator = () => {
                     </div>
 
                     <p className="text-[11px] text-muted-foreground mt-4 leading-relaxed">
-                      Estimated based on similar patient cases and partner hospital pricing.
+                      Indicative estimate only — not medical advice and not a confirmed hospital price. The treating
+                      hospital confirms the final cost after reviewing your reports.
                     </p>
                   </motion.div>
                 ) : (
@@ -539,8 +545,8 @@ const CostEstimator = () => {
         <section className="container mx-auto px-4 py-10 sm:py-14">
           <SectionHeading
             kicker="Stage 3"
-            title="Hospital Reviewed Final Quote"
-            subtitle="A board-certified specialist reviews your reports and confirms a fixed, written quote."
+            title="Detailed Final Estimate"
+            subtitle="A personalized cost summary you can use to request actual quotations from partner hospitals."
           />
 
           <div className="mt-8 grid lg:grid-cols-5 gap-6">
@@ -551,11 +557,11 @@ const CostEstimator = () => {
                     <FileCheck2 className="h-7 w-7" />
                   </div>
                   <h3 className="font-heading text-xl font-semibold text-foreground">
-                    Ready for a doctor-reviewed final quote?
+                    Ready for your detailed estimate?
                   </h3>
                   <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-                    Our medical team reviews your reports and confirms a fixed quote from a partner hospital — usually
-                    within 24 hours.
+                    This generates an itemized estimate you can share with hospitals to receive their actual
+                    quotations — real prices are always confirmed by the hospital.
                   </p>
                   <Button
                     onClick={runFinalQuote}
@@ -563,14 +569,14 @@ const CostEstimator = () => {
                     className="mt-5 gap-2 bg-gradient-to-r from-sky-600 to-emerald-600 hover:opacity-90"
                   >
                     {finalLoading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" /> Reviewing reports…
-                      </>
-                    ) : (
-                      <>
-                        Request final quote <ArrowRight className="h-4 w-4" />
-                      </>
-                    )}
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" /> Calculating…
+                        </>
+                      ) : (
+                        <>
+                          Generate detailed estimate <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
                   </Button>
                   {!personalized && (
                     <p className="text-[11px] text-muted-foreground mt-3">
@@ -583,13 +589,13 @@ const CostEstimator = () => {
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div>
                       <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">
-                        Hospital reviewed final quote
+                        Detailed final estimate
                       </div>
                       <div className="font-heading text-4xl sm:text-5xl font-bold mt-2 text-foreground">
                         {format(finalQuote)}
                       </div>
-                      <div className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1">
-                        <ShieldCheck className="h-3.5 w-3.5" /> Fixed price — locked & written
+                      <div className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-1">
+                        <ShieldCheck className="h-3.5 w-3.5" /> Estimate only — not a hospital quotation
                       </div>
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -599,8 +605,8 @@ const CostEstimator = () => {
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-3 mt-6">
-                    <InfoRow icon={Building2} label="Hospital" value={`Apollo ${city}`} />
-                    <InfoRow icon={Stethoscope} label="Doctor Assigned" value={selected.doctor} />
+                    <InfoRow icon={Building2} label="Hospital" value={`Partner hospital in ${city} — confirmed after you request quotes`} />
+                    <InfoRow icon={Stethoscope} label="Specialist" value="Assigned by the hospital after review" />
                     <InfoRow icon={BedDouble} label="Stay Duration" value={`${selected.stayDays} days (${room} room)`} />
                     <InfoRow icon={Plane} label="Visa & Translator" value="Included" />
                   </div>
@@ -649,8 +655,9 @@ const CostEstimator = () => {
                   <div className="mt-5 rounded-xl bg-sky-50 border border-sky-200 p-3 flex items-start gap-2.5">
                     <ShieldCheck className="h-4 w-4 text-sky-700 mt-0.5 shrink-0" />
                     <p className="text-xs text-sky-900 leading-relaxed">
-                      This quotation is reviewed by hospital specialists and will remain{" "}
-                      <strong>fixed</strong> unless treatment requirements change.
+                      This is a preliminary estimate, not medical advice and not a confirmed price. Actual treatment
+                      costs are confirmed by the hospital after reviewing your medical reports, and may change if
+                      your treatment requirements change.
                     </p>
                   </div>
                 </motion.div>

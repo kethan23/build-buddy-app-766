@@ -2300,6 +2300,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      commission_internal_marker: { Args: never; Returns: undefined }
       create_hospital_profile: {
         Args: {
           p_city: string
