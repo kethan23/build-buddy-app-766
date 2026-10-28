@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
@@ -65,20 +65,9 @@ const Footer = () => {
             <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 max-w-xs">
               {t('footer.tagline')}
             </p>
-            <div className="flex space-x-3">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Twitter className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-            </div>
+            <p className="text-xs text-muted-foreground">
+              support@mediconnect.com
+            </p>
           </div>
 
           {/* Links Sections */}

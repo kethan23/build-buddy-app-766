@@ -1,11 +1,45 @@
-import { Mail, ArrowRight } from "lucide-react";
+import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "react-i18next";
 import { ScrollReveal } from "@/hooks/useScrollAnimation";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const Newsletter = () => {
   const { t } = useTranslation();
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed || submitting) return;
+
+    setSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from("newsletter_subscribers")
+        .insert({ email: trimmed });
+
+      if (error) {
+        if (error.code === "23505") {
+          toast.info("You're already subscribed — thank you!");
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success("You're subscribed! Look out for our next update.");
+      }
+      setEmail("");
+    } catch (err) {
+      console.error("Newsletter subscribe error:", err);
+      toast.error("Could not subscribe right now. Please try again later.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section className="relative py-12 sm:py-20 overflow-hidden">
@@ -19,7 +53,7 @@ const Newsletter = () => {
         <ScrollReveal>
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 mb-5 sm:mb-7">
-              <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground" />
+              <Mail className="h-6 w-6 sm:h-8 w-8 text-primary-foreground" />
             </div>
             <h2 className="font-heading font-bold text-xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 text-primary-foreground">
               {t('newsletter.title')}
@@ -28,15 +62,24 @@ const Newsletter = () => {
               {t('newsletter.subtitle')}
             </p>
             <div className="max-w-lg mx-auto p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/15">
-              <form className="flex flex-col sm:flex-row gap-2">
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
                 <Input
                   type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('newsletter.placeholder')}
                   className="bg-primary-foreground text-foreground border-0 flex-1 h-10 sm:h-12 rounded-lg sm:rounded-xl px-4 sm:px-5 placeholder:text-muted-foreground text-sm"
                 />
-                <Button type="submit" variant="secondary" size="lg" className="h-10 sm:h-12 rounded-lg sm:rounded-xl px-5 sm:px-6 font-semibold gap-2 shrink-0 text-sm">
-                  {t('newsletter.subscribe')}
-                  <ArrowRight className="h-4 w-4" />
+                <Button type="submit" variant="secondary" size="lg" disabled={submitting} className="h-10 sm:h-12 rounded-lg sm:rounded-xl px-5 sm:px-6 font-semibold gap-2 shrink-0 text-sm">
+                  {submitting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      {t('newsletter.subscribe')}
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </form>
             </div>
