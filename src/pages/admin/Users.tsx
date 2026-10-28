@@ -186,9 +186,9 @@ const AdminUsers = () => {
                 View and manage platform users
               </p>
             </div>
-            <Button onClick={() => navigate("/admin/create-admin")}>
-              Create Admin User
-            </Button>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            Admin accounts are provisioned by the platform owner from the Supabase dashboard.
+          </div>
           </div>
 
           <div className="relative">
