@@ -41,39 +41,33 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import CurrencySelector from "@/components/CurrencySelector";
 
 /* ---------------- Treatment data (USD base for currency conversion) ---------------- */
-type TreatmentKey =
-  | "heart-surgery"
-  | "knee-replacement"
-  | "ivf"
-  | "cancer"
-  | "dental-implants"
-  | "cosmetic";
+import {
+  TREATMENTS as BASE_TREATMENTS,
+  CITIES,
+  matchTreatment,
+  normalizeSeverity,
+  computePersonalizedMid,
+  type TreatmentInfo,
+  type TreatmentKey,
+} from "@/lib/costEstimator";
 
-interface Treatment {
-  key: TreatmentKey;
-  name: string;
+interface Treatment extends TreatmentInfo {
   icon: React.ElementType;
-  india: [number, number]; // USD range
-  usa: number;
-  uae: number;
-  stayDays: number;
-  doctor: string;
 }
 
-const TREATMENTS: Treatment[] = [
-  { key: "heart-surgery", name: "Heart Surgery (CABG)", icon: Heart, india: [4500, 7500], usa: 100000, uae: 40000, stayDays: 8, doctor: "Dr. Arun Mehta, MCh Cardiothoracic" },
-  { key: "knee-replacement", name: "Knee Replacement", icon: Bone, india: [4000, 6500], usa: 35000, uae: 22000, stayDays: 5, doctor: "Dr. Priya Nair, MS Ortho" },
-  { key: "ivf", name: "IVF Treatment", icon: Baby, india: [2500, 4500], usa: 20000, uae: 12000, stayDays: 14, doctor: "Dr. Kavita Rao, DGO" },
-  { key: "cancer", name: "Cancer Treatment", icon: Activity, india: [6000, 18000], usa: 150000, uae: 60000, stayDays: 21, doctor: "Dr. Sanjay Iyer, DM Oncology" },
-  { key: "dental-implants", name: "Dental Implants", icon: Smile, india: [600, 1500], usa: 5000, uae: 3500, stayDays: 3, doctor: "Dr. Neha Shah, MDS" },
-  { key: "cosmetic", name: "Cosmetic Surgery", icon: Sparkles, india: [2000, 6000], usa: 18000, uae: 11000, stayDays: 4, doctor: "Dr. Rohan Kapoor, MCh Plastic" },
-];
+const TREATMENT_ICONS: Record<TreatmentKey, React.ElementType> = {
+  "heart-surgery": Heart,
+  "knee-replacement": Bone,
+  ivf: Baby,
+  cancer: Activity,
+  "dental-implants": Smile,
+  cosmetic: Sparkles,
+};
 
-const CITIES = ["Hyderabad", "Chennai", "Bangalore", "Delhi", "Mumbai"];
-const CITY_MULT: Record<string, number> = { Hyderabad: 0.92, Chennai: 0.95, Bangalore: 1.0, Delhi: 1.05, Mumbai: 1.1 };
-const CATEGORY_MULT: Record<string, number> = { Budget: 0.82, Standard: 1.0, Premium: 1.25 };
-const ROOM_MULT: Record<string, number> = { Shared: 0.95, Private: 1.0, Deluxe: 1.12 };
-const SEVERITY_MULT: Record<string, number> = { Mild: 0.85, Moderate: 1.0, Severe: 1.2 };
+const TREATMENTS: Treatment[] = BASE_TREATMENTS.map((t) => ({
+  ...t,
+  icon: TREATMENT_ICONS[t.key],
+}));
 
 /* ---------------- Page ---------------- */
 const CostEstimator = () => {
@@ -87,33 +81,9 @@ const CostEstimator = () => {
     fromAI?: boolean;
   };
 
-  const matchTreatment = (name?: string): Treatment => {
-    if (!name) return TREATMENTS[0];
-    const n = name.toLowerCase();
-    const kw: Array<[string[], TreatmentKey]> = [
-      [["heart", "cardiac", "cabg", "bypass", "valve"], "heart-surgery"],
-      [["knee", "hip", "joint", "ortho"], "knee-replacement"],
-      [["ivf", "fertility", "infertil"], "ivf"],
-      [["cancer", "tumor", "oncology", "chemo", "radiation"], "cancer"],
-      [["dental", "implant", "tooth"], "dental-implants"],
-      [["cosmetic", "plastic", "rhinoplasty", "liposuction"], "cosmetic"],
-    ];
-    for (const [keys, key] of kw) {
-      if (keys.some((k) => n.includes(k))) {
-        return TREATMENTS.find((t) => t.key === key) || TREATMENTS[0];
-      }
-    }
-    return TREATMENTS[0];
-  };
+  const withIcon = (t: TreatmentInfo): Treatment => ({ ...t, icon: TREATMENT_ICONS[t.key] });
 
-  const normalizeSeverity = (s?: string): string => {
-    const v = (s || "").toLowerCase();
-    if (v.includes("mild")) return "Mild";
-    if (v.includes("sev") || v.includes("crit")) return "Severe";
-    return "Moderate";
-  };
-
-  const [selected, setSelected] = useState<Treatment>(() => matchTreatment(incoming.treatment));
+  const [selected, setSelected] = useState<Treatment>(() => withIcon(matchTreatment(incoming.treatment)));
   const [stage, setStage] = useState<1 | 2 | 3>(incoming.fromAI ? 2 : 1);
 
   // Section 2 state
@@ -139,7 +109,7 @@ const CostEstimator = () => {
       import("@/lib/patientContext").then(({ getPatientContext }) => {
         const ctx = getPatientContext();
         if (ctx.treatment) {
-          setSelected(matchTreatment(ctx.treatment));
+          setSelected(withIcon(matchTreatment(ctx.treatment)));
           if (ctx.severity) setSeverity(normalizeSeverity(ctx.severity));
           setStage(2);
         }
@@ -152,17 +122,18 @@ const CostEstimator = () => {
   const [finalLoading, setFinalLoading] = useState(false);
   const [finalQuote, setFinalQuote] = useState<number | null>(null);
 
-  const personalizedMid = useMemo(() => {
-    const [lo, hi] = selected.india;
-    const mid = (lo + hi) / 2;
-    const mult =
-      SEVERITY_MULT[severity] *
-      CITY_MULT[city] *
-      CATEGORY_MULT[category] *
-      ROOM_MULT[room] *
-      (previous === "Yes" ? 1.08 : 1);
-    return mid * mult;
-  }, [selected, severity, city, category, room, previous]);
+  const personalizedMid = useMemo(
+    () =>
+      computePersonalizedMid({
+        treatmentKey: selected.key,
+        severity,
+        city,
+        category,
+        room,
+        previousSurgery: previous === "Yes",
+      }),
+    [selected, severity, city, category, room, previous]
+  );
 
   const resetResults = () => {
     setPersonalized(null);
@@ -189,7 +160,7 @@ const CostEstimator = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-50/40 via-background to-emerald-50/30">
       <SEO
         title="Smart Treatment Cost Estimator — MediConnect"
-        description="3-stage transparent medical treatment cost estimation in India. Get initial range, personalized estimate, and final hospital-reviewed quote with no hidden charges."
+        description="3-stage transparent medical treatment cost estimation in India — initial range, personalized estimate, and a detailed indicative estimate. Not a confirmed hospital price."
         path="/cost-estimator"
       />
       <Navbar />
@@ -217,8 +188,8 @@ const CostEstimator = () => {
                 </span>
               </h1>
               <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-                Three transparent stages — broad estimate, personalized estimate, and a final hospital-reviewed
-                fixed quote. No hidden charges, ever.
+                Three transparent stages — broad estimate, personalized estimate, and a detailed indicative
+                estimate to share with hospitals for their actual quotes.
               </p>
 
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2">

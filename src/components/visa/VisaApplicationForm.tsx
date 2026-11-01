@@ -84,7 +84,7 @@ export function VisaApplicationForm() {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<CountryRequirement[]>([]);
   const [selectedCountryReqs, setSelectedCountryReqs] = useState<CountryRequirement | null>(null);
-  const [uploadedDocs, setUploadedDocs] = useState<Record<string, boolean>>({});
+  const [uploadedDocs, setUploadedDocs] = useState<Record<string, { path: string; name: string; size: number; type: string }>>({});
   const [uploading, setUploading] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<FormData>({
@@ -189,7 +189,16 @@ export function VisaApplicationForm() {
 
       if (uploadError) throw uploadError;
 
-      setUploadedDocs(prev => ({ ...prev, [docType]: true }));
+      // Replace any previously uploaded file for this document type
+      const previous = uploadedDocs[docType];
+      if (previous?.path) {
+        await supabase.storage.from('medical-documents').remove([previous.path]);
+      }
+
+      setUploadedDocs(prev => ({
+        ...prev,
+        [docType]: { path: filePath, name: file.name, size: file.size, type: file.type },
+      }));
       toast.success(`${DOCUMENT_LABELS[docType] || docType} uploaded successfully`);
     } catch (error) {
       console.error('Upload error:', error);
@@ -231,6 +240,7 @@ export function VisaApplicationForm() {
     if (!user || !formData.consent_given) return;
 
     setLoading(true);
+    let createdApplicationId: string | null = null;
     try {
       // Create visa application
       const { data: application, error: appError } = await supabase
@@ -257,6 +267,7 @@ export function VisaApplicationForm() {
         .single();
 
       if (appError) throw appError;
+      createdApplicationId = application.id;
 
       // Add attendants if any
       if (formData.attendants.length > 0 && application) {
@@ -285,11 +296,46 @@ export function VisaApplicationForm() {
           });
       }
 
-      toast.success('Visa application submitted successfully!');
+      // Link uploaded documents into the documents table so the admin
+      // verification workflow (and checklist) sees them
+      const docEntries = Object.entries(uploadedDocs);
+      if (docEntries.length > 0) {
+        const { error: docsError } = await supabase
+          .from('documents')
+          .insert(docEntries.map(([docType, meta]) => ({
+            user_id: user.id,
+            file_name: meta.name,
+            file_url: meta.path,
+            file_type: meta.type || 'application/octet-stream',
+            file_size: meta.size,
+            document_type: docType,
+            category: 'visa',
+            description: `Visa document: ${DOCUMENT_LABELS[docType] || docType}`,
+            verification_status: 'pending',
+            visa_application_id: application.id,
+          })));
+
+        if (docsError) throw docsError;
+      }
+
+      toast.success('Visa application submitted successfully! Final visa approval is decided solely by the embassy.');
+      setUploadedDocs({});
       navigate('/patient/dashboard');
     } catch (error) {
       console.error('Submission error:', error);
-      toast.error('Failed to submit application');
+      // Roll back partially created records so no orphan application remains
+      if (createdApplicationId) {
+        await supabase.from('documents').delete().eq('visa_application_id', createdApplicationId);
+        await supabase.from('visa_workflow_logs').delete().eq('visa_application_id', createdApplicationId);
+        await supabase.from('visa_attendants').delete().eq('visa_application_id', createdApplicationId);
+        await supabase.from('visa_applications').delete().eq('id', createdApplicationId);
+      }
+      // Clean up uploaded storage files for the failed submission
+      const paths = Object.values(uploadedDocs).map(d => d.path);
+      if (paths.length > 0) {
+        await supabase.storage.from('medical-documents').remove(paths);
+      }
+      toast.error('Failed to submit application. Uploaded files were cleaned up — please try again.');
     } finally {
       setLoading(false);
     }
