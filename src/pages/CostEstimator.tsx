@@ -188,8 +188,8 @@ const CostEstimator = () => {
                 </span>
               </h1>
               <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-                Three transparent stages — broad estimate, personalized estimate, and a final hospital-reviewed
-                fixed quote. No hidden charges, ever.
+                Three transparent stages — broad estimate, personalized estimate, and a detailed indicative
+                estimate to share with hospitals for their actual quotes.
               </p>
 
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
