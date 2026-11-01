@@ -43,6 +43,7 @@ import CurrencySelector from "@/components/CurrencySelector";
 /* ---------------- Treatment data (USD base for currency conversion) ---------------- */
 import {
   TREATMENTS as BASE_TREATMENTS,
+  CITIES,
   matchTreatment,
   normalizeSeverity,
   computePersonalizedMid,
@@ -108,7 +109,7 @@ const CostEstimator = () => {
       import("@/lib/patientContext").then(({ getPatientContext }) => {
         const ctx = getPatientContext();
         if (ctx.treatment) {
-          setSelected(matchTreatment(ctx.treatment));
+          setSelected(withIcon(matchTreatment(ctx.treatment)));
           if (ctx.severity) setSeverity(normalizeSeverity(ctx.severity));
           setStage(2);
         }
@@ -121,17 +122,18 @@ const CostEstimator = () => {
   const [finalLoading, setFinalLoading] = useState(false);
   const [finalQuote, setFinalQuote] = useState<number | null>(null);
 
-  const personalizedMid = useMemo(() => {
-    const [lo, hi] = selected.india;
-    const mid = (lo + hi) / 2;
-    const mult =
-      SEVERITY_MULT[severity] *
-      CITY_MULT[city] *
-      CATEGORY_MULT[category] *
-      ROOM_MULT[room] *
-      (previous === "Yes" ? 1.08 : 1);
-    return mid * mult;
-  }, [selected, severity, city, category, room, previous]);
+  const personalizedMid = useMemo(
+    () =>
+      computePersonalizedMid({
+        treatmentKey: selected.key,
+        severity,
+        city,
+        category,
+        room,
+        previousSurgery: previous === "Yes",
+      }),
+    [selected, severity, city, category, room, previous]
+  );
 
   const resetResults = () => {
     setPersonalized(null);
@@ -158,7 +160,7 @@ const CostEstimator = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-50/40 via-background to-emerald-50/30">
       <SEO
         title="Smart Treatment Cost Estimator — MediConnect"
-        description="3-stage transparent medical treatment cost estimation in India. Get initial range, personalized estimate, and final hospital-reviewed quote with no hidden charges."
+        description="3-stage transparent medical treatment cost estimation in India — initial range, personalized estimate, and a detailed indicative estimate. Not a confirmed hospital price."
         path="/cost-estimator"
       />
       <Navbar />
