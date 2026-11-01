@@ -84,7 +84,7 @@ export function VisaApplicationForm() {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<CountryRequirement[]>([]);
   const [selectedCountryReqs, setSelectedCountryReqs] = useState<CountryRequirement | null>(null);
-  const [uploadedDocs, setUploadedDocs] = useState<Record<string, boolean>>({});
+  const [uploadedDocs, setUploadedDocs] = useState<Record<string, { path: string; name: string; size: number; type: string }>>({});
   const [uploading, setUploading] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<FormData>({
@@ -189,7 +189,16 @@ export function VisaApplicationForm() {
 
       if (uploadError) throw uploadError;
 
-      setUploadedDocs(prev => ({ ...prev, [docType]: true }));
+      // Replace any previously uploaded file for this document type
+      const previous = uploadedDocs[docType];
+      if (previous?.path) {
+        await supabase.storage.from('medical-documents').remove([previous.path]);
+      }
+
+      setUploadedDocs(prev => ({
+        ...prev,
+        [docType]: { path: filePath, name: file.name, size: file.size, type: file.type },
+      }));
       toast.success(`${DOCUMENT_LABELS[docType] || docType} uploaded successfully`);
     } catch (error) {
       console.error('Upload error:', error);
